@@ -1,0 +1,677 @@
+/* `source(none)` turns off Tailwind's automatic content detection, which walks
+   the entire project root — including directories it has no business reading,
+   such as tooling dotfolders. The three explicit sources below cover every
+   file in this codebase that can contain a class name. */
+@import "tailwindcss" source(none);
+
+@source "../app";
+@source "../components";
+@source "../lib";
+
+@plugin "@tailwindcss/container-queries";
+@plugin "@tailwindcss/typography";
+
+/* ==========================================================================
+   DESIGN TOKENS
+   Warm couture palette: bone ground, espresso ink, dusty-rose accent.
+   Declared once here; every component consumes them through Tailwind
+   utilities (bg-background, text-accent, border-border, font-display, ...).
+   Never hardcode a hex value outside this block.
+   ========================================================================== */
+
+@theme {
+  /* -- Colour ------------------------------------------------------------ */
+  --color-background: #f2f0ed; /* bone page ground */
+  --color-surface: #e9e4e0; /* muted panels, image wells, skeletons */
+  --color-surface-deep: #ded7d2; /* pressed / nested panels */
+  --color-foreground: #3b2b2b; /* deep espresso, primary ink */
+  --color-muted-foreground: #8c7b79; /* secondary copy, captions */
+  --color-subtle: #c9bfbd; /* tertiary, washed rose-grey */
+  --color-accent: #b08c8c; /* dusty rose — brand, price, active */
+  --color-accent-deep: #96706f; /* rose, hover / pressed */
+  --color-border: #dcd5d1; /* hairline rules */
+  --color-on-media: #fbfaf8; /* ink that sits over imagery */
+
+  /* -- Type families ----------------------------------------------------- */
+  /* Loaded via <link> in app/layout.tsx. To self-host later, swap those tags
+     for next/font/google and point these at the generated CSS variables. */
+  --font-display:
+    "Cormorant Garamond", "Cormorant", "Times New Roman", ui-serif, serif;
+  --font-sans:
+    "Jost", "Futura", "Century Gothic", ui-sans-serif, system-ui, sans-serif;
+
+  /* -- Motion ------------------------------------------------------------ */
+  /* Slow and elegant. No springs, no bounce, no overshoot. */
+  --animate-fade-in: fade-in 0.9s var(--ease-luxe) both;
+  --animate-reveal-up: reveal-up 0.9s var(--ease-luxe) both;
+  --animate-carousel: carousel 64s linear infinite;
+  --animate-marquee: carousel 64s linear infinite;
+  --animate-blink: blink 1.4s infinite both;
+  --animate-ken-burns: ken-burns 24s var(--ease-out-soft) both;
+  --animate-drawer-in: drawer-in 0.5s var(--ease-luxe) both;
+  --animate-scroll-cue: scroll-cue 2.6s var(--ease-out-soft) infinite;
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes reveal-up {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 2rem, 0);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* The carousel duplicates its items 3x, so translating -100%/3 loops
+     seamlessly back to the visual start. */
+  @keyframes carousel {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(calc(-100% / 3));
+    }
+  }
+
+  @keyframes blink {
+    0% {
+      opacity: 0.2;
+    }
+    20% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0.2;
+    }
+  }
+
+  @keyframes ken-burns {
+    from {
+      transform: scale(1.02);
+    }
+    to {
+      transform: scale(1.14);
+    }
+  }
+
+  @keyframes drawer-in {
+    from {
+      opacity: 0;
+      transform: translate3d(0, -0.75rem, 0);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* A hairline that travels down its own track, used as the hero scroll cue. */
+  @keyframes scroll-cue {
+    0% {
+      transform: scaleY(0);
+      transform-origin: top center;
+    }
+    45% {
+      transform: scaleY(1);
+      transform-origin: top center;
+    }
+    55% {
+      transform: scaleY(1);
+      transform-origin: bottom center;
+    }
+    100% {
+      transform: scaleY(0);
+      transform-origin: bottom center;
+    }
+  }
+}
+
+/* Non-Tailwind design constants. Kept out of @theme because they are raw
+   values consumed by hand-written CSS, not sources for utility generation. */
+:root {
+  /* Horizontal page gutter and vertical section rhythm, both fluid. */
+  --page-gutter: clamp(1.25rem, 4vw, 4rem);
+  --page-max: 1680px;
+  --section-y: clamp(4rem, 10vw, 9rem);
+  --header-h: 5rem;
+
+  /* Easing */
+  --ease-luxe: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out-soft: cubic-bezier(0.33, 0.66, 0.4, 1);
+
+  /* Durations */
+  --duration-fast: 240ms;
+  --duration-base: 460ms;
+  --duration-slow: 760ms;
+  --duration-slower: 1100ms;
+}
+
+/* ==========================================================================
+   BASE
+   ========================================================================== */
+
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-border);
+  }
+
+  html {
+    /* Fixed warm-light scheme — the palette is the brand identity. */
+    color-scheme: light;
+    -webkit-tap-highlight-color: transparent;
+    scroll-behavior: smooth;
+    scroll-padding-top: var(--header-h);
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    font-weight: 300;
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    letter-spacing: 0.01em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: var(--color-accent);
+    color: var(--color-on-media);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 300;
+    letter-spacing: 0.005em;
+    line-height: 1.08;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Visible, palette-consistent focus ring for keyboard users only. */
+  a,
+  input,
+  button,
+  select,
+  textarea,
+  summary,
+  [tabindex]:not([tabindex="-1"]) {
+    @apply focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+  }
+
+  /* Safari renders a hairline seam on lazily-decoded images. */
+  @supports (font: -apple-system-body) and (-webkit-appearance: none) {
+    img[loading="lazy"] {
+      clip-path: inset(0.6px);
+    }
+  }
+}
+
+/* ==========================================================================
+   TYPE SCALE
+   Composite classes so components never hand-assemble type. Every size is
+   clamp()-based, so it scales continuously instead of stepping at breakpoints.
+   Sits in @layer components, so a utility like `text-sm` still wins.
+   ========================================================================== */
+
+@layer components {
+  /* Hero / campaign headline */
+  .t-display {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(2.75rem, 7.5vw, 6.5rem);
+    line-height: 1;
+    letter-spacing: -0.005em;
+  }
+
+  /* Film title card — the caption laid over campaign video.
+     Smaller and far more tracked than .t-display, which is what makes it read
+     as a title card rather than a headline. */
+  .t-film-title {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(1.5rem, 3.2vw, 2.875rem);
+    line-height: 1.15;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    /* Letter-spacing leaves a trailing gap after the final character, which
+       shifts centred text visibly to the left. Reclaim it. */
+    margin-right: -0.14em;
+  }
+
+  /* Long-form editorial statement, often italic */
+  .t-editorial {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(1.375rem, 2.6vw, 2.25rem);
+    line-height: 1.4;
+    letter-spacing: 0.005em;
+  }
+
+  /* Section heading */
+  .t-section {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(1.75rem, 4vw, 3.25rem);
+    line-height: 1.1;
+  }
+
+  /* Product / card title */
+  .t-product-title {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(1rem, 1.4vw, 1.1875rem);
+    line-height: 1.3;
+    letter-spacing: 0.01em;
+  }
+
+  .t-price {
+    font-family: var(--font-sans);
+    font-weight: 300;
+    font-size: 0.8125rem;
+    letter-spacing: 0.08em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Small uppercase kicker above a heading */
+  .t-eyebrow {
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: 0.625rem;
+    line-height: 1.4;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+
+  /* Navigation and control labels */
+  .t-nav {
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: 0.6875rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .t-body {
+    font-family: var(--font-sans);
+    font-weight: 300;
+    font-size: clamp(0.875rem, 1vw, 0.9375rem);
+    line-height: 1.8;
+  }
+
+  .t-caption {
+    font-family: var(--font-sans);
+    font-weight: 300;
+    font-size: 0.75rem;
+    line-height: 1.6;
+    letter-spacing: 0.06em;
+    color: var(--color-muted-foreground);
+  }
+}
+
+/* ==========================================================================
+   LAYOUT
+   Replaces the ad-hoc `mx-auto max-w-... px-4` repeated across pages.
+   ========================================================================== */
+
+@layer components {
+  /* True full bleed — no gutter, no cap. For hero and banner media. */
+  .layout-full {
+    width: 100%;
+  }
+
+  /* Standard content width. */
+  .layout-wide {
+    width: 100%;
+    max-width: var(--page-max);
+    margin-inline: auto;
+    padding-inline: var(--page-gutter);
+  }
+
+  /* Measure-constrained editorial prose. */
+  .layout-text {
+    width: 100%;
+    max-width: 46rem;
+    margin-inline: auto;
+    padding-inline: var(--page-gutter);
+  }
+
+  /* Vertical section rhythm. */
+  .section-y {
+    padding-block: var(--section-y);
+  }
+
+  .section-y-sm {
+    padding-block: calc(var(--section-y) * 0.55);
+  }
+}
+
+/* ==========================================================================
+   SCROLL REVEAL
+   The IntersectionObserver in components/motion/animated-reveal.tsx only
+   flips data-visible. All the movement is declared here.
+   ========================================================================== */
+
+@layer components {
+  [data-reveal] {
+    transition-property: opacity, transform;
+    transition-duration: var(--duration-slow);
+    transition-timing-function: var(--ease-luxe);
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: opacity, transform;
+  }
+
+  [data-reveal="up"] {
+    opacity: 0;
+    transform: translate3d(0, 2.25rem, 0);
+  }
+
+  [data-reveal="fade"] {
+    opacity: 0;
+  }
+
+  /* Media settles out of a slow zoom. */
+  [data-reveal="zoom"] {
+    opacity: 0;
+    transform: scale(1.06);
+    transition-duration: var(--duration-slower);
+  }
+
+  [data-reveal][data-visible="true"] {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Text wipes up from behind its own baseline. Parent needs overflow hidden.
+     The clip deliberately sits on an inner span rather than on the observed
+     element: Chromium folds clip-path into the rect IntersectionObserver
+     measures, so clipping the observed node pins its ratio at 0 and the reveal
+     can never fire. AnimatedReveal emits this wrapper for masks only. */
+  [data-reveal="mask"] > [data-reveal-mask] {
+    display: block;
+    clip-path: inset(0 0 105% 0);
+    transition: clip-path var(--duration-slow) var(--ease-luxe);
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: clip-path;
+  }
+
+  [data-reveal="mask"][data-visible="true"] > [data-reveal-mask] {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* ==========================================================================
+   CONTROLS
+   ========================================================================== */
+
+@layer components {
+  /* Wipe-fill button. ::before scales up from the baseline on hover. */
+  .btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.625rem;
+    isolation: isolate;
+    overflow: hidden;
+    padding: 0.9375rem 2.5rem;
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: 0.6875rem;
+    line-height: 1;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition:
+      color var(--duration-base) var(--ease-luxe),
+      border-color var(--duration-base) var(--ease-luxe),
+      opacity var(--duration-base) var(--ease-luxe);
+  }
+
+  .btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    transform: scaleY(0);
+    transform-origin: bottom center;
+    transition: transform var(--duration-base) var(--ease-luxe);
+  }
+
+  .btn:hover:not(:disabled)::before {
+    transform: scaleY(1);
+  }
+
+  .btn:disabled,
+  .btn[aria-disabled="true"] {
+    cursor: not-allowed;
+    opacity: 0.45;
+  }
+
+  /* Outlined espresso — the default. Fills to solid on hover. */
+  .btn-primary {
+    color: var(--color-foreground);
+    border-color: var(--color-foreground);
+  }
+  .btn-primary::before {
+    background-color: var(--color-foreground);
+  }
+  .btn-primary:hover:not(:disabled) {
+    color: var(--color-background);
+  }
+
+  /* Solid espresso — for the single strongest action on a page. */
+  .btn-filled {
+    color: var(--color-background);
+    background-color: var(--color-foreground);
+    border-color: var(--color-foreground);
+  }
+  .btn-filled::before {
+    background-color: var(--color-accent-deep);
+  }
+  .btn-filled:hover:not(:disabled) {
+    color: var(--color-on-media);
+    border-color: var(--color-accent-deep);
+  }
+
+  /* Sits over imagery. */
+  .btn-light {
+    color: var(--color-on-media);
+    border-color: color-mix(in oklab, var(--color-on-media) 70%, transparent);
+  }
+  .btn-light::before {
+    background-color: var(--color-on-media);
+  }
+  .btn-light:hover:not(:disabled) {
+    color: var(--color-foreground);
+    border-color: var(--color-on-media);
+  }
+
+  /* Text link with an underline that sweeps in from the left. */
+  .link-sweep {
+    position: relative;
+    display: inline-block;
+    padding-bottom: 0.1875rem;
+  }
+
+  .link-sweep::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1px;
+    background-color: currentColor;
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform var(--duration-base) var(--ease-luxe);
+  }
+
+  .link-sweep:hover::after,
+  .link-sweep[data-active="true"]::after {
+    transform: scaleX(1);
+  }
+
+  /* Permanently underlined variant that retracts on hover — used for
+     "Discover" / "Explore" style calls to action. */
+  .link-retract::after {
+    transform: scaleX(1);
+  }
+  .link-retract:hover::after {
+    transform-origin: right center;
+    transform: scaleX(0);
+  }
+}
+
+/* ==========================================================================
+   HEADER
+   The header's transparency is decided here rather than in JS.
+
+   components/layout/navbar/header-shell.tsx only reports two facts as data
+   attributes — has the hero scrolled out from behind the header, is a panel
+   open. Whether a hero exists to sit over is answered by
+   `body:has([data-hero])`, which means the correct state is already in the
+   server-rendered HTML (no flash of the wrong colour, no `usePathname()`
+   blocking prerender) and it re-evaluates by itself when a client-side
+   navigation swaps the hero in or out.
+   ========================================================================== */
+
+@layer components {
+  .site-header {
+    background-color: color-mix(
+      in oklab,
+      var(--color-background) 95%,
+      transparent
+    );
+    border-bottom-color: var(--color-border);
+    color: var(--color-foreground);
+    backdrop-filter: blur(12px);
+    transition:
+      background-color var(--duration-base) var(--ease-luxe),
+      border-color var(--duration-base) var(--ease-luxe),
+      color var(--duration-base) var(--ease-luxe);
+  }
+
+  /* Transparent for exactly as long as the hero is behind the header, and only
+     while nothing is open over it. `data-scrolled` flips when the hero's bottom
+     edge passes under the header, not at a fixed scroll distance — so the
+     transparent state is scoped to the hero section and nothing else. */
+  body:has([data-hero])
+    .site-header[data-scrolled="false"][data-menu-open="false"] {
+    background-color: transparent;
+    border-bottom-color: transparent;
+    backdrop-filter: none;
+  }
+
+  /* Over film the nav has to read as near-white. Over the typographic hero on
+     the bone ground it keeps the espresso ink `.site-header` already sets,
+     which is why `data-hero="light"` needs no rule of its own. */
+  body:has([data-hero="film"])
+    .site-header[data-scrolled="false"][data-menu-open="false"] {
+    color: var(--color-on-media);
+  }
+}
+
+/* ==========================================================================
+   UTILITIES
+   ========================================================================== */
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Legibility scrim under text laid over photography. */
+@utility media-scrim {
+  background-image: linear-gradient(
+    to top,
+    color-mix(in oklab, #2a1e1e 62%, transparent) 0%,
+    color-mix(in oklab, #2a1e1e 28%, transparent) 42%,
+    transparent 78%
+  );
+}
+
+/* ==========================================================================
+   PROSE — Shopify descriptionHtml and CMS page bodies
+   ========================================================================== */
+
+@layer components {
+  .prose-editorial {
+    font-family: var(--font-sans);
+    font-weight: 300;
+    color: var(--color-muted-foreground);
+  }
+
+  .prose-editorial :where(h1, h2, h3, h4) {
+    color: var(--color-foreground);
+    font-family: var(--font-display);
+  }
+
+  .prose-editorial :where(strong) {
+    color: var(--color-foreground);
+    font-weight: 500;
+  }
+
+  .prose-editorial :where(a) {
+    color: var(--color-accent-deep);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.25em;
+  }
+}
+
+/* ==========================================================================
+   REDUCED MOTION
+   One global kill-switch, so no component has to remember to opt in.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    transition-delay: 0ms !important;
+  }
+
+  /* Reveals must land in their final state, not stay hidden. */
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  [data-reveal-mask] {
+    clip-path: none !important;
+  }
+}
