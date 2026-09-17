@@ -1,6 +1,7 @@
 "use client";
 
 import LogoSquare from "components/logo-square";
+import { CloseOnNavigate } from "components/ui/close-on-navigate";
 import { navigation } from "lib/editorial";
 import type { Collection, Menu } from "lib/shopify/types";
 import Link from "next/link";
@@ -12,7 +13,6 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { CloseOnNavigate } from "components/ui/close-on-navigate";
 import { MegaMenu } from "./mega-menu";
 import MobileMenu from "./mobile-menu";
 import { SearchOverlay } from "./search-overlay";
@@ -99,7 +99,7 @@ export function HeaderShell({
 
           <Link
             href="/"
-            prefetch={true}
+            // prefetch={true}
             aria-label={siteName || "Home"}
             className="flex items-center gap-3"
           >

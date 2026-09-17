@@ -71,7 +71,7 @@ export function FilmPlayer({
     // play() rejects when the browser blocks autoplay — low power mode, a
     // data-saver setting. The poster stays up, which is the right fallback,
     // so there is nothing to handle.
-    const play = () => void video.play().catch(() => {});
+    const play = () => void video.play().catch(() => { });
 
     if (typeof IntersectionObserver === "undefined") {
       play();

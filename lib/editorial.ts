@@ -132,10 +132,29 @@ export const filmGrid = {
   eyebrow: "In Motion",
   heading: "The season on film",
   films: [
-    { src: "", poster: "", label: "Bridal couture, autumn winter 2026" },
-    { src: "", poster: "", label: "Menswear, autumn winter 2026" },
-    { src: "", poster: "", label: "Hand embroidery in the atelier" },
-    { src: "", poster: "", label: "Draping a bias-cut sari" },
+    {
+      src: "https://res.cloudinary.com/demo/video/upload/q_auto,w_720/samples/cld-sample-video.mp4",
+      poster:
+        "https://res.cloudinary.com/demo/video/upload/q_auto,w_720/samples/cld-sample-video.jpg",
+      label: "Bridal couture, autumn winter 2026",
+    },
+    {
+      src: "https://res.cloudinary.com/demo/video/upload/q_auto,w_720/wave.mp4",
+      poster:
+        "https://res.cloudinary.com/demo/video/upload/q_auto,w_720/wave.jpg",
+      label: "Menswear, autumn winter 2026",
+    },
+    {
+      src: "https://media.w3.org/2010/05/sintel/trailer.mp4",
+      poster: "https://media.w3.org/2010/05/sintel/poster.png",
+      label: "Hand embroidery in the atelier",
+    },
+    {
+      src: "https://res.cloudinary.com/demo/video/upload/q_auto,w_720/test_video_r2tk5n.mp4",
+      poster:
+        "https://res.cloudinary.com/demo/video/upload/q_auto,w_720/test_video_r2tk5n.jpg",
+      label: "Draping a bias-cut sari",
+    },
   ] satisfies GridFilm[],
 };
 
