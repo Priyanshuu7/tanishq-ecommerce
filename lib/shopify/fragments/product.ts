@@ -56,6 +56,32 @@ const productFragment = /* GraphQL */ `
     }
     tags
     updatedAt
+    metafields(identifiers: [
+      { namespace: "shopify", key: "fabric" },
+      { namespace: "shopify", key: "color-pattern" },
+      { namespace: "shopify", key: "sleeve-length-type" },
+      { namespace: "shopify", key: "size-type" },
+      { namespace: "shopify", key: "target-gender" },
+      { namespace: "shopify", key: "age-group" },
+
+    ]) {
+      key
+      namespace
+      value
+      references(first: 5) {
+        edges {
+          node {
+            ... on Metaobject {
+              handle
+              fields {
+                key
+                value
+              }
+            }
+          }
+        }
+      }
+    }
   }
   ${imageFragment}
   ${seoFragment}

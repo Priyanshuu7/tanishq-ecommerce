@@ -46,9 +46,26 @@ export function ProductDescription({ product }: { product: Product }) {
 
       <div className="mt-14">
         <Accordion>
-          {product.descriptionHtml ? (
+          {product.descriptionHtml || product.specifications?.length ? (
             <AccordionItem title={productPage.detailsTitle} defaultOpen>
-              <Prose html={product.descriptionHtml} />
+              {product.descriptionHtml ? (
+                <Prose html={product.descriptionHtml} />
+              ) : null}
+
+              {product.specifications?.length ? (
+                <dl className="mt-6 grid grid-cols-2 gap-x-6 gap-y-4 border-t border-border pt-6">
+                  {product.specifications.map((spec) => (
+                    <div key={spec.name}>
+                      <dt className="t-eyebrow text-muted-foreground">
+                        {spec.name}
+                      </dt>
+                      <dd className="mt-1 font-serif text-sm tracking-wide text-foreground">
+                        {spec.value}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              ) : null}
             </AccordionItem>
           ) : null}
 

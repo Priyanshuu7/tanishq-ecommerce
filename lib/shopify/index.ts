@@ -39,6 +39,7 @@ import {
   Menu,
   Page,
   Product,
+  ProductSpecification,
   ShopifyAddToCartOperation,
   ShopifyCart,
   ShopifyCartOperation,
@@ -181,6 +182,68 @@ const reshapeImages = (images: Connection<Image>, productTitle: string) => {
   });
 };
 
+const SPECIFICATION_LABELS: Record<string, string> = {
+  fabric: "Fabric",
+  "color-pattern": "Color",
+  "sleeve-length-type": "Sleeve Length",
+  "size-type": "Fit Type",
+  "target-gender": "Gender",
+  "age-group": "Age Group",
+  neckline: "Neckline",
+};
+
+function formatSpecifications(metafields?: any[]): ProductSpecification[] {
+  if (!metafields || !Array.isArray(metafields)) return [];
+  const specs: ProductSpecification[] = [];
+
+  for (const m of metafields) {
+    if (!m) continue;
+    const specName = SPECIFICATION_LABELS[m.key];
+    if (!specName) continue;
+
+    let value = m.value;
+    const edges = m.references?.edges || [];
+    if (edges.length > 0) {
+      const labels = edges
+        .map((edge: any) => {
+          const fields = edge.node?.fields || [];
+          const labelField = fields.find((f: any) => f.key === "label");
+          return labelField?.value || edge.node?.handle;
+        })
+        .filter(Boolean);
+      if (labels.length > 0) {
+        value = labels.join(", ");
+      }
+    }
+
+    if (value && typeof value === "string") {
+      if (value.startsWith("[") && value.endsWith("]")) {
+        try {
+          const parsed = JSON.parse(value);
+          if (
+            Array.isArray(parsed) &&
+            parsed.every(
+              (p) => typeof p === "string" && !p.startsWith("gid://"),
+            )
+          ) {
+            value = parsed.join(", ");
+          }
+        } catch {
+          // ignore
+        }
+      }
+      if (!value.startsWith("gid://")) {
+        specs.push({
+          name: specName,
+          value,
+        });
+      }
+    }
+  }
+
+  return specs;
+}
+
 const reshapeProduct = (
   product: ShopifyProduct,
   filterHiddenProducts: boolean = true
@@ -192,12 +255,13 @@ const reshapeProduct = (
     return undefined;
   }
 
-  const { images, variants, ...rest } = product;
+  const { images, variants, metafields, ...rest } = product;
 
   return {
     ...rest,
     images: reshapeImages(images, product.title),
     variants: removeEdgesAndNodes(variants),
+    specifications: formatSpecifications(metafields),
   };
 };
 
