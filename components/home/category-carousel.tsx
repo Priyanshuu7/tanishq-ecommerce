@@ -8,11 +8,9 @@ import Link from "next/link";
 /**
  * The four-card collection module.
  *
- * Cards are built from the store's real collections. Shopify collections carry
- * no image in this project's GraphQL fragment (and adding one would mean
- * editing protected queries), so each card borrows the featured image of the
- * first product in that collection. The per-collection lookups run in parallel
- * and are individually cached by `getCollectionProducts`.
+ * Cards are built from the store's real collections. Each card uses the
+ * collection's dedicated image if set in Shopify Admin, or falls back to
+ * the featured image of the first product in that collection.
  */
 export async function CategoryCarousel() {
   const collections = await getCollections();
@@ -23,6 +21,10 @@ export async function CategoryCarousel() {
 
   const cards = await Promise.all(
     featured.map(async (collection) => {
+      if (collection.image) {
+        return { collection, image: collection.image };
+      }
+
       const products = await getCollectionProducts({
         collection: collection.handle,
       });
