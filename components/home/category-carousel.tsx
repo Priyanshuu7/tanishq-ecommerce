@@ -49,10 +49,10 @@ export async function CategoryCarousel() {
             className="group/card shrink-0 basis-[78%] snap-start sm:basis-[46%] lg:basis-auto"
           >
             <AnimatedReveal variant="up" delay={index * 110}>
-              <Link href={collection.path} prefetch={true} className="block">
+              <Link href={collection.path} className="block">
 
-              {/* // will updated this later  */}
-          {/* <Link href={collection.path} prefetch={true} className="block"> */}
+                {/* // will updated this later  */}
+                {/* <Link href={collection.path} prefetch={true} className="block"> */}
                 <div className="relative aspect-[4/5] w-full overflow-hidden bg-surface">
                   {image ? (
                     <Image

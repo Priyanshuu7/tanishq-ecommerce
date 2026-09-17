@@ -17,7 +17,7 @@ export function GridTileImage({
   active,
   label,
   hoverSrc,
-  ratioClassName = "aspect-[3/4]",
+  ratioClassName = "aspect-[4/5]",
   ...props
 }: {
   isInteractive?: boolean;
@@ -47,7 +47,7 @@ export function GridTileImage({
       {props.src ? (
         <Image
           className={clsx(
-            "absolute inset-0 h-full w-full object-cover",
+            "absolute inset-0 h-full w-full object-contain",
             "transition-[opacity,transform] duration-(--duration-slow) ease-[cubic-bezier(0.22,1,0.36,1)]",
             isInteractive && !hoverSrc && "group-hover/card:scale-[1.04]",
             // With a hover image present, the primary fades out instead of
@@ -65,7 +65,7 @@ export function GridTileImage({
           aria-hidden="true"
           fill
           sizes={props.sizes}
-          className="absolute inset-0 h-full w-full scale-[1.02] object-cover opacity-0 transition-[opacity,transform] duration-(--duration-slow) ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/card:scale-100 group-hover/card:opacity-100"
+          className="absolute inset-0 h-full w-full scale-[1.02] object-contain opacity-0 transition-[opacity,transform] duration-(--duration-slow) ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/card:scale-100 group-hover/card:opacity-100"
         />
       ) : null}
 

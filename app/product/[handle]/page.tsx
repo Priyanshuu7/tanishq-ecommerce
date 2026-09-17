@@ -109,6 +109,8 @@ async function ProductView({
             images={product.images.slice(0, 5).map((image: Image) => ({
               src: image.url,
               altText: image.altText,
+              width: image.width,
+              height: image.height,
             }))}
           />
 

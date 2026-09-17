@@ -19,18 +19,23 @@ import Image from "next/image";
 export function Gallery({
   images,
 }: {
-  images: { src: string; altText: string }[];
+  images: {
+    src: string;
+    altText: string;
+    width?: number;
+    height?: number;
+  }[];
 }) {
   if (!images.length) {
     return (
-      <div className="aspect-[3/4] w-full bg-surface" aria-hidden="true" />
+      <div className="aspect-[4/5] w-full bg-surface" aria-hidden="true" />
     );
   }
 
   return (
     <div>
       <ul
-        className="no-scrollbar flex snap-x snap-mandatory gap-2 overflow-x-auto lg:snap-none lg:flex-col lg:gap-3 lg:overflow-visible"
+        className="no-scrollbar flex snap-x snap-mandatory gap-2 overflow-x-auto lg:snap-none lg:flex-col lg:gap-4 lg:overflow-visible"
         aria-label="Product images"
       >
         {images.map((image, index) => (
@@ -40,13 +45,14 @@ export function Gallery({
           >
             <AnimatedReveal
               variant={index === 0 ? "fade" : "up"}
-              className="relative aspect-[3/4] w-full cursor-zoom-in overflow-hidden bg-surface"
+              className="relative w-full cursor-zoom-in overflow-hidden bg-surface"
             >
               <Image
-                className="h-full w-full object-cover transition-transform duration-(--duration-slower) ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/zoom:scale-[1.06]"
-                fill
+                className="h-auto w-full object-contain transition-transform duration-(--duration-slower) ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/zoom:scale-[1.04]"
+                width={image.width || 800}
+                height={image.height || 1000}
                 sizes="(min-width: 1024px) 55vw, 100vw"
-                alt={image.altText}
+                alt={image.altText || ""}
                 src={image.src}
                 priority={index === 0}
               />
