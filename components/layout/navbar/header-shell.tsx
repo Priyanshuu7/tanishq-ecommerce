@@ -1,9 +1,9 @@
 "use client";
 
-import LogoSquare from "components/logo-square";
 import { CloseOnNavigate } from "components/ui/close-on-navigate";
 import { navigation } from "lib/editorial";
 import type { Collection, Menu } from "lib/shopify/types";
+import Image from "next/image";
 import Link from "next/link";
 import {
   Suspense,
@@ -37,12 +37,10 @@ import { SearchOverlay } from "./search-overlay";
 export function HeaderShell({
   menu,
   collections,
-  siteName,
   cart,
 }: {
   menu: Menu[];
   collections: Collection[];
-  siteName: string;
   cart: ReactNode;
 }) {
   const headerRef = useRef<HTMLElement>(null);
@@ -99,16 +97,17 @@ export function HeaderShell({
 
           <Link
             href="/"
-            // prefetch={true}
-            aria-label={siteName || "Home"}
-            className="flex items-center gap-3"
+            aria-label="Solanki Shivranjani"
+            className="flex items-center"
           >
-            <LogoSquare size="sm" />
-            {siteName ? (
-              <span className="font-display hidden truncate text-xl font-normal leading-none tracking-[0.14em] uppercase sm:block">
-                {siteName}
-              </span>
-            ) : null}
+            <Image
+              src="/logo.png"
+              alt="Solanki Shivranjani"
+              width={540}
+              height={200}
+              priority
+              className="brand-logo h-10 w-auto object-contain transition-opacity duration-(--duration-base) hover:opacity-80 sm:h-11 md:h-12"
+            />
           </Link>
         </div>
 

@@ -593,6 +593,12 @@
     .site-header[data-scrolled="false"][data-menu-open="false"] {
     color: var(--color-on-media);
   }
+
+  body:has([data-hero="film"])
+    .site-header[data-scrolled="false"][data-menu-open="false"]
+    .brand-logo {
+    filter: brightness(0) invert(1);
+  }
 }
 
 /* ==========================================================================

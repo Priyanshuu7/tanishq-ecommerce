@@ -3,8 +3,6 @@ import { getCollections, getMenu } from "lib/shopify";
 import { Suspense } from "react";
 import { HeaderShell } from "./header-shell";
 
-const { SITE_NAME } = process.env;
-
 export async function Navbar() {
   // Both of these already return [] when Shopify is unconfigured, so the
   // header renders as a bare logo rather than throwing.
@@ -17,7 +15,6 @@ export async function Navbar() {
     <HeaderShell
       menu={menu}
       collections={collections}
-      siteName={SITE_NAME ?? ""}
       cart={
         <Suspense fallback={null}>
           <CartModal />

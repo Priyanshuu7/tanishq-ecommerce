@@ -380,7 +380,7 @@ export const navigation = {
    */
   editorialLinks: [
     { label: "The House", href: "/search" },
-    { label: "Bespoke", href: "/search" },
+    // { label: "Bespoke", href: "/search" },
     { label: "Stores", href: "/search" },
   ] satisfies CtaLink[],
 };
