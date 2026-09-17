@@ -1,7 +1,7 @@
 "use client";
 
 import { Dialog, Transition } from "@headlessui/react";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon, UserIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { navigation } from "lib/editorial";
 import type { Collection, Menu } from "lib/shopify/types";
 import Link from "next/link";
@@ -17,9 +17,11 @@ import Search, { SearchSkeleton } from "./search";
 export default function MobileMenu({
   menu,
   collections,
+  accountUrl,
 }: {
   menu: Menu[];
   collections: Collection[];
+  accountUrl?: string;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const openMobileMenu = () => setIsOpen(true);
@@ -154,6 +156,19 @@ export default function MobileMenu({
                     </li>
                   ))}
                 </ul>
+
+                {accountUrl ? (
+                  <div className="mt-8 border-t border-border/60 pt-6">
+                    <a
+                      href={accountUrl}
+                      onClick={closeMobileMenu}
+                      className="t-nav flex items-center gap-3 text-muted-foreground transition-colors duration-(--duration-base) hover:text-foreground"
+                    >
+                      <UserIcon className="h-4 w-4" strokeWidth={1.2} />
+                      <span>Account & Orders</span>
+                    </a>
+                  </div>
+                ) : null}
               </div>
             </Dialog.Panel>
           </Transition.Child>

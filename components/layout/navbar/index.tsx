@@ -11,10 +11,15 @@ export async function Navbar() {
     getCollections(),
   ]);
 
+  const domain =
+    process.env.SHOPIFY_STORE_DOMAIN || "https://xvxehh-d0.myshopify.com";
+  const accountUrl = `${domain.replace(/\/$/, "")}/account`;
+
   return (
     <HeaderShell
       menu={menu}
       collections={collections}
+      accountUrl={accountUrl}
       cart={
         <Suspense fallback={null}>
           <CartModal />

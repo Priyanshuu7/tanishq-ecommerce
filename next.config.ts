@@ -11,4 +11,14 @@ export default {
       },
     ],
   },
+
+  async redirects() {
+    return [
+      {
+        source: "/collections/:path*",
+        destination: "/",
+        permanent: false,
+      },
+    ];
+  },
 };

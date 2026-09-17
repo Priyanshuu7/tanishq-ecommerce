@@ -3,6 +3,7 @@
 import { CloseOnNavigate } from "components/ui/close-on-navigate";
 import { navigation } from "lib/editorial";
 import type { Collection, Menu } from "lib/shopify/types";
+import { UserIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -38,10 +39,12 @@ export function HeaderShell({
   menu,
   collections,
   cart,
+  accountUrl,
 }: {
   menu: Menu[];
   collections: Collection[];
   cart: ReactNode;
+  accountUrl?: string;
 }) {
   const headerRef = useRef<HTMLElement>(null);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -93,7 +96,11 @@ export function HeaderShell({
     >
       <div className="layout-wide flex h-(--header-h) items-center gap-6 lg:gap-10">
         <div className="flex flex-1 items-center gap-2 md:flex-none">
-          <MobileMenu menu={menu} collections={collections} />
+          <MobileMenu
+            menu={menu}
+            collections={collections}
+            accountUrl={accountUrl}
+          />
 
           <Link
             href="/"
@@ -146,6 +153,16 @@ export function HeaderShell({
 
         <div className="flex flex-1 items-center justify-end gap-1 md:flex-none">
           <SearchOverlay />
+          {accountUrl ? (
+            <a
+              href={accountUrl}
+              aria-label="Account & Orders"
+              title="Account & Orders"
+              className="flex h-10 w-10 items-center justify-center transition-opacity duration-(--duration-base) hover:opacity-60"
+            >
+              <UserIcon className="h-[18px] w-[18px]" strokeWidth={1.2} />
+            </a>
+          ) : null}
           {cart}
         </div>
       </div>
