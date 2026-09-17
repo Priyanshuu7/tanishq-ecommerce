@@ -61,9 +61,9 @@ function ThreeItemGridItem({
  * own 4:5 ratio and they stack.
  */
 export async function ThreeItemGrid() {
-  // Collections that start with `hidden-*` are hidden from the search page.
+  // Products from the Shopify "Home page" collection.
   const homepageItems = await getCollectionProducts({
-    collection: "hidden-homepage-featured-items",
+    collection: "home-page",
   });
 
   if (!homepageItems[0] || !homepageItems[1] || !homepageItems[2]) return null;
@@ -74,13 +74,19 @@ export async function ThreeItemGrid() {
     <section className="layout-wide section-y">
       <div className="grid gap-4 md:h-[clamp(32rem,60vw,52rem)] md:grid-cols-3 md:grid-rows-2 md:gap-6">
         <ThreeItemGridItem size="full" item={firstProduct} priority={true} />
+
         <ThreeItemGridItem
           size="half"
           item={secondProduct}
           priority={true}
           delay={110}
         />
-        <ThreeItemGridItem size="half" item={thirdProduct} delay={220} />
+
+        <ThreeItemGridItem
+          size="half"
+          item={thirdProduct}
+          delay={220}
+        />
       </div>
     </section>
   );

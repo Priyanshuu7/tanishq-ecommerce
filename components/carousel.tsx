@@ -11,18 +11,19 @@ import Link from "next/link";
  * `animate-carousel` translates the strip by exactly one third of its width,
  * which is why the products below are tripled — the loop point is invisible.
  * The animation pauses on hover so a slide can actually be read and clicked,
- * and `prefers-reduced-motion` stops it outright via the global rule in
- * globals.css.
+ * and `prefers-reduced-motion` stops it outright via the global rule
+ * in `globals.css`.
  */
 export async function Carousel() {
-  // Collections that start with `hidden-*` are hidden from the search page.
+  // Products for the homepage carousel.
   const products = await getCollectionProducts({
-    collection: "hidden-homepage-carousel",
+    collection: "feztive",
   });
 
   if (!products?.length) return null;
 
-  // Purposefully duplicating products to make the carousel loop and not run out of products on wide screens.
+  // Purposefully duplicating products to make the carousel loop
+  // and not run out of products on wide screens.
   const carouselProducts = [...products, ...products, ...products];
 
   return (
@@ -40,8 +41,6 @@ export async function Carousel() {
             <li
               key={`${product.handle}${i}`}
               className="group/card w-[62vw] flex-none sm:w-[38vw] lg:w-[24vw] xl:w-[20vw]"
-              // Only the first pass is real content; the duplicates exist to
-              // hide the loop seam.
               aria-hidden={i >= products.length}
             >
               <Link
@@ -58,7 +57,10 @@ export async function Carousel() {
                 />
 
                 <div className="mt-4 flex flex-col gap-1.5">
-                  <h3 className="t-product-title truncate">{product.title}</h3>
+                  <h3 className="t-product-title truncate">
+                    {product.title}
+                  </h3>
+
                   <Price
                     className="text-muted-foreground"
                     amount={product.priceRange.maxVariantPrice.amount}
