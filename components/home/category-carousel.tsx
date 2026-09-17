@@ -53,7 +53,7 @@ export async function CategoryCarousel() {
 
                 {/* // will updated this later  */}
                 {/* <Link href={collection.path} prefetch={true} className="block"> */}
-                <div className="relative aspect-[4/5] w-full overflow-hidden bg-surface">
+                <div className="relative aspect-[2/3] w-full overflow-hidden bg-surface">
                   {image ? (
                     <Image
                       src={image.url}

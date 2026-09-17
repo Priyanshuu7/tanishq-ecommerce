@@ -416,9 +416,7 @@ export const footer = {
     {
       title: "Keep in Touch",
       links: [
-        { label: "Instagram", href: "https://instagram.com" },
-        { label: "Pinterest", href: "https://pinterest.com" },
-        { label: "YouTube", href: "https://youtube.com" },
+        { label: "Instagram", href: "https://www.instagram.com/label.shivranjani.solanki" },
       ],
     },
   ] satisfies FooterColumn[],
