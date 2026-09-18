@@ -1,6 +1,7 @@
 import Footer from "components/layout/footer";
 import { Suspense } from "react";
 import ChildrenWrapper from "./children-wrapper";
+import Loading from "./loading";
 
 /**
  * Listing shell. The template's three-column sidebar layout is gone: filters
@@ -18,7 +19,7 @@ export default function SearchLayout({
   return (
     <>
       <div className="layout-wide section-y-sm min-h-[70svh]">
-        <Suspense fallback={null}>
+        <Suspense fallback={<Loading />}>
           <ChildrenWrapper>{children}</ChildrenWrapper>
         </Suspense>
       </div>

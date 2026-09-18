@@ -22,7 +22,8 @@ export function CloseOnNavigate({ onNavigate }: { onNavigate: () => void }) {
 
   useEffect(() => {
     onNavigate();
-  }, [pathname, searchParams, onNavigate]);
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  }, [pathname, onNavigate]);
 
   return null;
 }

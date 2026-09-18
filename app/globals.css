@@ -173,7 +173,6 @@
     /* Fixed warm-light scheme — the palette is the brand identity. */
     color-scheme: light;
     -webkit-tap-highlight-color: transparent;
-    scroll-behavior: smooth;
     scroll-padding-top: var(--header-h);
   }
 

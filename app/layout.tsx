@@ -46,11 +46,7 @@ export default async function RootLayout({
   const cart = getCart();
 
   return (
-    <html
-      lang="en"
-      className={rudolphin.variable}
-      data-scroll-behavior="smooth"
-    >
+    <html lang="en" className={rudolphin.variable}>
       <body className="min-h-dvh bg-background text-foreground antialiased">
         {/* React hoists these into <head> itself. `precedence` is what makes
             that legal for the stylesheet — without it React refuses to move a
