@@ -1,9 +1,9 @@
 "use client";
 
+import { UserIcon } from "@heroicons/react/24/outline";
 import { CloseOnNavigate } from "components/ui/close-on-navigate";
 import { navigation } from "lib/editorial";
 import type { Collection, Menu } from "lib/shopify/types";
-import { UserIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -94,8 +94,8 @@ export function HeaderShell({
       data-scrolled={isScrolled ? "true" : "false"}
       data-menu-open={isMegaMenuOpen ? "true" : "false"}
     >
-      <div className="layout-wide flex h-(--header-h) items-center gap-6 lg:gap-10">
-        <div className="flex items-center gap-2 md:min-w-[180px]">
+      <div className="layout-wide flex h-(--header-h) items-center justify-between gap-4 md:gap-6 lg:gap-10">
+        <div className="flex shrink-0 items-center gap-2 md:min-w-[180px]">
           <MobileMenu
             menu={menu}
             collections={collections}
@@ -105,7 +105,7 @@ export function HeaderShell({
           <Link
             href="/"
             aria-label="Solanki Shivranjani"
-            className="flex items-center"
+            className="flex shrink-0 items-center ml-0 md:-ml-4 lg:-ml-24"
           >
             <Image
               src="/logo.png"
@@ -113,8 +113,7 @@ export function HeaderShell({
               width={540}
               height={200}
               priority
-              className="brand-logo h-10 w-auto object-contain transition-opacity duration-(--duration-base) hover:opacity-80 sm:h-11 md:h-12"
-            />
+              className="brand-logo h-8 min-[360px]:h-9 min-[390px]:h-10 sm:h-12 md:h-16 lg:h-[68px] w-auto object-contain transition-opacity duration-(--duration-base) hover:opacity-80" />
           </Link>
         </div>
 
@@ -151,7 +150,7 @@ export function HeaderShell({
           ))}
         </nav>
 
-        <div className="flex items-center justify-end gap-1 md:min-w-[180px]">
+        <div className="flex shrink-0 items-center justify-end gap-0.5 min-[360px]:gap-1 md:min-w-[180px]">
           <SearchOverlay />
           {accountUrl ? (
             <a
