@@ -15,6 +15,8 @@ export type MediaType = "auto" | "image" | "video";
 export type Film = {
   /** Direct link to a video or image file. Local path, Google Drive link, or external URL. */
   src: string;
+  /** Optional mobile-specific media source for responsive portrait framing. */
+  mobileSrc?: string;
   /** Explicit media type override if not inferred from extension. */
   mediaType?: MediaType;
   /**
@@ -72,6 +74,7 @@ export type FooterColumn = {
  */
 export const heroFilm: FilmSection = {
   src: "/Hero-Banner.PNG",
+  mobileSrc: "/Moblie-banner.png",
   poster: "",
   sound: false,
   title: "Fall Winter '26",
@@ -92,7 +95,6 @@ export const heroFallback = {
     "Hand-worked silhouettes for the modern occasion — draped, embroidered, and finished entirely by hand.",
   cta: { label: "Discover", href: "/search" } satisfies CtaLink,
 };
-
 
 export const filmGrid = {
   eyebrow: "In Motion",
@@ -192,7 +194,6 @@ export const featuredProducts = {
   eyebrow: "Selected",
   heading: "This season's pieces",
 };
-
 
 /* -------------------------------------------------------------------------- */
 /* Product detail page                                                         */

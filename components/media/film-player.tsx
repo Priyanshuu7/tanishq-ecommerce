@@ -3,12 +3,14 @@
 import { SpeakerWaveIcon, SpeakerXMarkIcon } from "@heroicons/react/24/outline";
 import clsx from "clsx";
 import type { MediaType } from "lib/editorial";
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 export type FilmPlayerProps = {
   /** Direct link to an .mp4 / .webm file, local image, or Google Drive URL. */
   src: string;
+  /** Optional mobile-specific media source for responsive portrait framing. */
+  mobileSrc?: string;
   poster?: string;
   /** Describes the footage/media for assistive tech. Omit when a caption already names it. */
   label?: string;
@@ -38,7 +40,7 @@ export type FilmPlayerProps = {
  */
 export function resolveMediaSource(
   rawSrc: string,
-  forcedType?: MediaType
+  forcedType?: MediaType,
 ): { src: string; isImage: boolean; isVideo: boolean } {
   if (!rawSrc) {
     return { src: "", isImage: false, isVideo: false };
@@ -50,7 +52,7 @@ export function resolveMediaSource(
 
   // Extract Google Drive ID if provided
   const driveMatch = src.match(
-    /(?:drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?(?:[^&]+&)?id=)|drive\.usercontent\.google\.com\/download\?id=)([a-zA-Z0-9_-]+)/
+    /(?:drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?(?:[^&]+&)?id=)|drive\.usercontent\.google\.com\/download\?id=)([a-zA-Z0-9_-]+)/,
   );
 
   if (driveMatch) {
@@ -67,7 +69,12 @@ export function resolveMediaSource(
   }
 
   // Handle local path shortcuts or missing leading slash
-  if (!src.startsWith("http://") && !src.startsWith("https://") && !src.startsWith("/") && !src.startsWith("data:")) {
+  if (
+    !src.startsWith("http://") &&
+    !src.startsWith("https://") &&
+    !src.startsWith("/") &&
+    !src.startsWith("data:")
+  ) {
     src = `/${src}`;
   }
   if (src.toLowerCase() === "/hero") {
@@ -109,6 +116,7 @@ export function resolveMediaSource(
  */
 export function FilmPlayer({
   src,
+  mobileSrc,
   poster,
   label,
   sound = false,
@@ -119,7 +127,14 @@ export function FilmPlayer({
   mediaType = "auto",
   objectPosition,
 }: FilmPlayerProps) {
-  const media = useMemo(() => resolveMediaSource(src, mediaType), [src, mediaType]);
+  const media = useMemo(
+    () => resolveMediaSource(src, mediaType),
+    [src, mediaType],
+  );
+  const mobileMedia = useMemo(
+    () => (mobileSrc ? resolveMediaSource(mobileSrc, mediaType) : null),
+    [mobileSrc, mediaType],
+  );
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isMuted, setIsMuted] = useState(true);
 
@@ -149,7 +164,7 @@ export function FilmPlayer({
           else video.pause();
         }
       },
-      { threshold: 0.15 }
+      { threshold: 0.15 },
     );
 
     observer.observe(video);
@@ -170,19 +185,66 @@ export function FilmPlayer({
   return (
     <div className="absolute inset-0 overflow-hidden">
       {media.isImage ? (
-        <Image
-          src={media.src}
-          alt={label || ""}
-          fill
-          priority={priority}
-          sizes="100vw"
-          quality={92}
-          className={clsx(
-            "h-full w-full object-cover select-none transition-transform duration-(--duration-slower)",
-            objectPosition,
-            className
-          )}
-        />
+        mobileMedia?.isImage ? (
+          <picture className="absolute inset-0 block h-full w-full">
+            <source
+              media="(min-width: 768px)"
+              srcSet={
+                getImageProps({
+                  src: media.src,
+                  alt: label || "",
+                  fill: true,
+                  priority,
+                  sizes: "100vw",
+                  quality: 92,
+                }).props.srcSet
+              }
+            />
+            <source
+              media="(max-width: 767px)"
+              srcSet={
+                getImageProps({
+                  src: mobileMedia.src,
+                  alt: label || "",
+                  fill: true,
+                  priority,
+                  sizes: "100vw",
+                  quality: 92,
+                }).props.srcSet
+              }
+            />
+            <img
+              {...getImageProps({
+                src: mobileMedia.src,
+                alt: label || "",
+                fill: true,
+                priority,
+                sizes: "100vw",
+                quality: 92,
+              }).props}
+              alt={label || ""}
+              className={clsx(
+                "h-full w-full object-cover select-none transition-transform duration-(--duration-slower)",
+                objectPosition,
+                className,
+              )}
+            />
+          </picture>
+        ) : (
+          <Image
+            src={media.src}
+            alt={label || ""}
+            fill
+            priority={priority}
+            sizes="100vw"
+            quality={92}
+            className={clsx(
+              "h-full w-full object-cover select-none transition-transform duration-(--duration-slower)",
+              objectPosition,
+              className,
+            )}
+          />
+        )
       ) : (
         <video
           ref={videoRef}
@@ -195,7 +257,11 @@ export function FilmPlayer({
           preload={priority ? "auto" : "metadata"}
           aria-label={label}
           aria-hidden={label ? undefined : true}
-          className={clsx("h-full w-full object-cover", objectPosition, className)}
+          className={clsx(
+            "h-full w-full object-cover",
+            objectPosition,
+            className,
+          )}
         />
       )}
 
@@ -209,7 +275,10 @@ export function FilmPlayer({
 
       {/* Bottom editorial scrim so title and CTA pop with cinematic clarity */}
       {scrim ? (
-        <div className="media-scrim pointer-events-none absolute inset-0" aria-hidden="true" />
+        <div
+          className="media-scrim pointer-events-none absolute inset-0"
+          aria-hidden="true"
+        />
       ) : null}
 
       {/* Mute button is only relevant for video with an audio track */}

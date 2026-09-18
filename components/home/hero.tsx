@@ -34,16 +34,17 @@ export function Hero() {
   return (
     <section
       data-hero={hasFilm ? "film" : "light"}
-      className="relative -mt-(--header-h) flex w-full min-h-[92svh] md:min-h-screen flex-col justify-end overflow-hidden pt-(--header-h)"
+      className="relative -mt-(--header-h) flex w-full min-h-screen min-h-dvh flex-col justify-end overflow-hidden pt-(--header-h)"
     >
       {hasFilm ? (
         <FilmPlayer
           src={heroFilm.src}
+          mobileSrc={heroFilm.mobileSrc}
           poster={heroFilm.poster}
           label={heroFilm.label || heroFilm.title}
           sound={heroFilm.sound}
           priority
-          className="hero-editorial-image"
+          className="md:hero-editorial-image object-center"
         />
       ) : (
         <div className="absolute inset-0 bg-surface" aria-hidden="true" />
