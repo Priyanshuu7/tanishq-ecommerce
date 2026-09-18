@@ -63,7 +63,7 @@ function ThreeItemGridItem({
 export async function ThreeItemGrid() {
   // Products from the Shopify "Home page" collection.
   const homepageItems = await getCollectionProducts({
-    collection: "home-page",
+    collection: "ethnic-wear",
   });
 
   if (!homepageItems[0] || !homepageItems[1] || !homepageItems[2]) return null;

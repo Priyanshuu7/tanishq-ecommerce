@@ -1,4 +1,3 @@
-import { Carousel } from "components/carousel";
 import { ThreeItemGrid } from "components/grid/three-items";
 import { CategoryCarousel } from "components/home/category-carousel";
 import { FilmGrid } from "components/home/film-grid";
@@ -38,7 +37,7 @@ export default function HomePage() {
       <CategoryCarousel />
       <ThreeItemGrid />
       <EditorialSection statement={craftStatement} />
-      <Carousel />
+      {/* <Carousel /> */}
       <PullQuote />
       <FullBleedBanner />
       <Footer />

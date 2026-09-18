@@ -23,7 +23,7 @@ export default function ProductGridItems({
             <Link
               className="block"
               href={`/product/${product.handle}`}
-              prefetch={true}
+              prefetch={false}
             >
               <GridTileImage
                 alt={product.title}
