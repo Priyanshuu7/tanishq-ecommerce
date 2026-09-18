@@ -2,46 +2,101 @@
 
 import { SpeakerWaveIcon, SpeakerXMarkIcon } from "@heroicons/react/24/outline";
 import clsx from "clsx";
-import { useEffect, useRef, useState } from "react";
+import type { MediaType } from "lib/editorial";
+import Image from "next/image";
+import { useEffect, useMemo, useRef, useState } from "react";
 
-type FilmPlayerProps = {
-  /** Direct link to an .mp4 / .webm file. See the `Film` type in lib/editorial.ts. */
+export type FilmPlayerProps = {
+  /** Direct link to an .mp4 / .webm file, local image, or Google Drive URL. */
   src: string;
   poster?: string;
-  /** Describes the footage for assistive tech. Omit when a caption already names it. */
+  /** Describes the footage/media for assistive tech. Omit when a caption already names it. */
   label?: string;
-  /** Renders a mute toggle. Playback still starts muted — browsers insist. */
+  /** Renders a mute toggle for videos. Playback still starts muted. */
   sound?: boolean;
-  /** Lays a legibility gradient over the film. Off for the grid tiles. */
+  /** Lays a legibility gradient over the media. */
   scrim?: boolean;
+  /** Lays a subtle dark vignette gradient at the top so transparent headers remain legible. */
+  headerScrim?: boolean;
   /**
-   * The hero film is the page's largest paint, so it fetches immediately.
-   * Everything below the fold asks for metadata only.
+   * The hero media is the page's largest paint, so it fetches immediately.
+   * Everything below the fold asks for metadata / lazy loading only.
    */
   priority?: boolean;
-  /** Applied to the film layer — used for the grid's slow hover scale. */
+  /** Applied to the media layer — e.g. object position, hover scale. */
   className?: string;
+  /** Explicit media type override ("image" | "video" | "auto"). */
+  mediaType?: MediaType;
+  /** Optional custom object-position style / class override. */
+  objectPosition?: string;
 };
 
 /**
- * Autoplaying background film.
+ * Normalizes media sources, converting Google Drive share URLs into
+ * direct image assets or using local cached versions, and determining
+ * whether to render as an optimized image or a video.
+ */
+export function resolveMediaSource(
+  rawSrc: string,
+  forcedType?: MediaType
+): { src: string; isImage: boolean; isVideo: boolean } {
+  if (!rawSrc) {
+    return { src: "", isImage: false, isVideo: false };
+  }
+
+  let src = rawSrc.trim();
+  let isImage = false;
+  let isVideo = false;
+
+  // Extract Google Drive ID if provided
+  const driveMatch = src.match(
+    /(?:drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?(?:[^&]+&)?id=)|drive\.usercontent\.google\.com\/download\?id=)([a-zA-Z0-9_-]+)/
+  );
+
+  if (driveMatch) {
+    const fileId = driveMatch[1];
+    // If it's the known high-res editorial photo, route to local asset for zero-latency loading
+    if (fileId === "1LYlCi8_6rD6XvXdXVSXINgXumTlPRNZW") {
+      src = "/hero-banner.png";
+      isImage = true;
+    } else {
+      // Direct high-resolution image endpoint for Google Drive
+      src = `https://lh3.googleusercontent.com/d/${fileId}`;
+      isImage = true;
+    }
+  }
+
+  if (forcedType === "image") {
+    isImage = true;
+    isVideo = false;
+  } else if (forcedType === "video") {
+    isVideo = true;
+    isImage = false;
+  } else if (!isImage) {
+    const cleanUrl = src.split("?")[0]?.toLowerCase() ?? "";
+    if (/\.(png|jpe?g|webp|avif|gif|svg)$/.test(cleanUrl)) {
+      isImage = true;
+    } else if (/\.(mp4|webm|ogg|mov)$/.test(cleanUrl)) {
+      isVideo = true;
+    } else {
+      // Default to image if not recognized as video
+      isImage = true;
+    }
+  }
+
+  return { src, isImage, isVideo: !isImage };
+}
+
+/**
+ * Editorial Media Player (Film or Still).
  *
- * Renders its own absolutely-positioned media layer, which is why the parent
- * must be `relative` and any caption over it needs `relative z-10`. Owning the
- * layer is what keeps the mute toggle clickable: an earlier arrangement put the
- * video in a `-z-10` well, which pushed the button behind the page.
+ * Renders an optimized Next.js `<Image>` when given an image source (including
+ * Google Drive links), or an autoplaying looping `<video>` when given footage.
  *
- * Three behaviours worth knowing:
- *
- * 1. It plays only while on screen. An IntersectionObserver pauses it on the
- *    way out, which matters most for the 2×2 grid — four simultaneous video
- *    decodes drop frames on a laptop and drain a phone for no benefit, since
- *    only one or two tiles are ever visible.
- * 2. `prefers-reduced-motion` stops it dead and leaves the poster showing. A
- *    silent looping video is precisely the motion that setting exists to
- *    suppress, and CSS cannot pause playback, so this one has to be JS.
- * 3. It starts muted, always — no browser autoplays audio. The `sound` toggle
- *    only becomes meaningful after the visitor's own click.
+ * Preserves luxury editorial styling:
+ * - Transparent header legibility via soft top scrim
+ * - Caption contrast via bottom scrim
+ * - Intelligent focal-point object positioning
  */
 export function FilmPlayer({
   src,
@@ -49,18 +104,21 @@ export function FilmPlayer({
   label,
   sound = false,
   scrim = true,
+  headerScrim = true,
   priority = false,
   className,
+  mediaType = "auto",
+  objectPosition,
 }: FilmPlayerProps) {
-  const ref = useRef<HTMLVideoElement>(null);
+  const media = useMemo(() => resolveMediaSource(src, mediaType), [src, mediaType]);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const [isMuted, setIsMuted] = useState(true);
 
   useEffect(() => {
-    const video = ref.current;
+    if (!media.isVideo) return;
+    const video = videoRef.current;
     if (!video) return;
 
-    // React does not reliably reflect `muted` onto the element, and an unmuted
-    // video is not allowed to autoplay. Assert it before anything else.
     video.muted = true;
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -68,9 +126,6 @@ export function FilmPlayer({
       return;
     }
 
-    // play() rejects when the browser blocks autoplay — low power mode, a
-    // data-saver setting. The poster stays up, which is the right fallback,
-    // so there is nothing to handle.
     const play = () => void video.play().catch(() => {});
 
     if (typeof IntersectionObserver === "undefined") {
@@ -85,43 +140,71 @@ export function FilmPlayer({
           else video.pause();
         }
       },
-      { threshold: 0.15 },
+      { threshold: 0.15 }
     );
 
     observer.observe(video);
     return () => observer.disconnect();
-  }, []);
+  }, [media.isVideo]);
 
   function toggleSound() {
-    const video = ref.current;
+    const video = videoRef.current;
     if (!video) return;
     video.muted = !video.muted;
     setIsMuted(video.muted);
   }
 
+  if (!media.src) {
+    return null;
+  }
+
   return (
     <div className="absolute inset-0 overflow-hidden">
-      <video
-        ref={ref}
-        src={src}
-        poster={poster || undefined}
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload={priority ? "auto" : "metadata"}
-        // Unlabelled film sits behind a caption that already carries the
-        // meaning, so it is decorative rather than an unnamed <video> node.
-        aria-label={label}
-        aria-hidden={label ? undefined : true}
-        className={clsx("h-full w-full object-cover", className)}
-      />
+      {media.isImage ? (
+        <Image
+          src={media.src}
+          alt={label || ""}
+          fill
+          priority={priority}
+          sizes="100vw"
+          quality={92}
+          className={clsx(
+            "h-full w-full object-cover select-none transition-transform duration-(--duration-slower)",
+            objectPosition,
+            className
+          )}
+        />
+      ) : (
+        <video
+          ref={videoRef}
+          src={media.src}
+          poster={poster || undefined}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload={priority ? "auto" : "metadata"}
+          aria-label={label}
+          aria-hidden={label ? undefined : true}
+          className={clsx("h-full w-full object-cover", objectPosition, className)}
+        />
+      )}
 
-      {scrim ? (
-        <div className="media-scrim absolute inset-0" aria-hidden="true" />
+      {/* Top subtle vignette scrim so brand logo and nav links stay readable over light tones */}
+      {headerScrim ? (
+        <div
+          className="pointer-events-none absolute inset-x-0 top-0 h-44 bg-gradient-to-b from-black/55 via-black/20 to-transparent"
+          aria-hidden="true"
+        />
       ) : null}
 
-      {sound ? (
+      {/* Bottom editorial scrim so title and CTA pop with cinematic clarity */}
+      {scrim ? (
+        <div className="media-scrim pointer-events-none absolute inset-0" aria-hidden="true" />
+      ) : null}
+
+      {/* Mute button is only relevant for video with an audio track */}
+      {media.isVideo && sound ? (
         <button
           type="button"
           onClick={toggleSound}

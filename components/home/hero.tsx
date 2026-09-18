@@ -34,15 +34,16 @@ export function Hero() {
   return (
     <section
       data-hero={hasFilm ? "film" : "light"}
-      className="relative -mt-(--header-h) flex min-h-[92svh] flex-col justify-end overflow-hidden pt-(--header-h)"
+      className="relative -mt-(--header-h) flex w-full min-h-[92svh] md:min-h-screen flex-col justify-end overflow-hidden pt-(--header-h)"
     >
       {hasFilm ? (
         <FilmPlayer
           src={heroFilm.src}
           poster={heroFilm.poster}
-          label={heroFilm.label}
+          label={heroFilm.label || heroFilm.title}
           sound={heroFilm.sound}
           priority
+          className="hero-editorial-image"
         />
       ) : (
         <div className="absolute inset-0 bg-surface" aria-hidden="true" />
@@ -76,7 +77,11 @@ function FilmCaption() {
   return (
     <div className="layout-wide relative z-10 pb-20 text-center text-on-media md:pb-28">
       <div className="overflow-hidden">
-        <AnimatedReveal variant="mask" as="h1" className="t-film-title">
+        <AnimatedReveal
+          variant="mask"
+          as="h1"
+          className="t-film-title drop-shadow-[0_2px_16px_rgba(0,0,0,0.5)]"
+        >
           {heroFilm.title}
         </AnimatedReveal>
       </div>
@@ -89,7 +94,7 @@ function FilmCaption() {
         >
           <Link
             href={heroFilm.cta.href}
-            className="t-nav link-sweep link-retract pb-2"
+            className="t-nav link-sweep link-retract pb-2 drop-shadow-[0_2px_10px_rgba(0,0,0,0.45)]"
           >
             {heroFilm.cta.label}
           </Link>

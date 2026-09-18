@@ -624,6 +624,25 @@
   );
 }
 
+/* Focal alignment for editorial hero media:
+   Ensures headroom and floor are fully preserved without vertical cutoff.
+   Frames model symmetrically on mobile and elegantly on wide screens. */
+@utility hero-editorial-image {
+  object-position: 16% 18%;
+  @variant sm {
+    object-position: 16% 20%;
+  }
+  @variant md {
+    object-position: left center;
+  }
+  @variant lg {
+    object-position: left center;
+  }
+  @variant xl {
+    object-position: left center;
+  }
+}
+
 /* ==========================================================================
    PROSE — Shopify descriptionHtml and CMS page bodies
    ========================================================================== */

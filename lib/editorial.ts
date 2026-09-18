@@ -10,9 +10,13 @@ export type EditorialStatement = {
   cta?: CtaLink;
 };
 
+export type MediaType = "auto" | "image" | "video";
+
 export type Film = {
-  /** Direct link to a video file. Leave "" to disable this film. */
+  /** Direct link to a video or image file. Local path, Google Drive link, or external URL. */
   src: string;
+  /** Explicit media type override if not inferred from extension. */
+  mediaType?: MediaType;
   /**
    * Still frame, shown before the first frame decodes and *instead* of the
    * video for visitors who ask for reduced motion. Strongly recommended — the
@@ -20,11 +24,13 @@ export type Film = {
    */
   poster?: string;
   /**
-   * Describes the footage for assistive technology. Omit it when a visible
+   * Describes the media for assistive technology. Omit it when a visible
    * caption already names the film; the player then marks itself decorative
-   * rather than announcing an unlabelled video.
+   * rather than announcing an unlabelled element.
    */
   label?: string;
+  /** Optional custom object position to fine-tune cropping on screen. */
+  objectPosition?: string;
 };
 
 /** A film that fills a band of the page and carries a title over it. */
@@ -62,11 +68,10 @@ export type FooterColumn = {
 /* -------------------------------------------------------------------------- */
 
 /**
- * Opening full-viewport film. Paste a direct video link into `src` and the
- * homepage opens on it, with the header dropping to transparent over the top.
+ * Opening full-viewport editorial media (film or image).
  */
 export const heroFilm: FilmSection = {
-  src: "",
+  src: "https://drive.google.com/file/d/1LYlCi8_6rD6XvXdXVSXINgXumTlPRNZW",
   poster: "",
   sound: false,
   title: "Fall Winter '26",
@@ -81,23 +86,14 @@ export const heroFilm: FilmSection = {
  * film is set it is never shown again, so there is no need to keep it in step.
  */
 export const heroFallback = {
-  eyebrow: "Autumn Winter 2026",
+  eyebrow: "",
   heading: "The Quiet Opulence",
   subheading:
     "Hand-worked silhouettes for the modern occasion — draped, embroidered, and finished entirely by hand.",
   cta: { label: "Discover", href: "/search" } satisfies CtaLink,
 };
 
-/**
- * Square film grid — four tiles, two across, edge to edge with no gaps.
- *
- * The four films butt directly against each other and against both viewport
- * edges, so each tile is exactly half the screen wide. Every tile is a perfect
- * square, so 16:9 footage will be centre-cropped to fit; supply square or
- * portrait masters where you can. Entries with an empty `src` are dropped and
- * the whole section removes itself when none are set, which means films can come
- * online one at a time.
- */
+
 export const filmGrid = {
   eyebrow: "In Motion",
   heading: "The season on film",

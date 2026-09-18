@@ -95,7 +95,7 @@ export function HeaderShell({
       data-menu-open={isMegaMenuOpen ? "true" : "false"}
     >
       <div className="layout-wide flex h-(--header-h) items-center gap-6 lg:gap-10">
-        <div className="flex flex-1 items-center gap-2 md:flex-none">
+        <div className="flex items-center gap-2 md:min-w-[180px]">
           <MobileMenu
             menu={menu}
             collections={collections}
@@ -120,7 +120,7 @@ export function HeaderShell({
 
         <nav
           aria-label="Main"
-          className="hidden flex-1 items-center gap-8 md:flex"
+          className="hidden flex-1 items-center justify-center gap-8 md:flex lg:gap-10"
         >
           <MegaMenu
             collections={collections}
@@ -151,7 +151,7 @@ export function HeaderShell({
           ))}
         </nav>
 
-        <div className="flex flex-1 items-center justify-end gap-1 md:flex-none">
+        <div className="flex items-center justify-end gap-1 md:min-w-[180px]">
           <SearchOverlay />
           {accountUrl ? (
             <a
