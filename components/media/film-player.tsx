@@ -57,13 +57,22 @@ export function resolveMediaSource(
     const fileId = driveMatch[1];
     // If it's the known high-res editorial photo, route to local asset for zero-latency loading
     if (fileId === "1LYlCi8_6rD6XvXdXVSXINgXumTlPRNZW") {
-      src = "/hero-banner.png";
+      src = "/Hero-Banner.PNG";
       isImage = true;
     } else {
       // Direct high-resolution image endpoint for Google Drive
       src = `https://lh3.googleusercontent.com/d/${fileId}`;
       isImage = true;
     }
+  }
+
+  // Handle local path shortcuts or missing leading slash
+  if (!src.startsWith("http://") && !src.startsWith("https://") && !src.startsWith("/") && !src.startsWith("data:")) {
+    src = `/${src}`;
+  }
+  if (src.toLowerCase() === "/hero") {
+    src = "/Hero-Banner.PNG";
+    isImage = true;
   }
 
   if (forcedType === "image") {
