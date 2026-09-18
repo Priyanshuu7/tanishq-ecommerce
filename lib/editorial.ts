@@ -77,7 +77,7 @@ export const heroFilm: FilmSection = {
   mobileSrc: "/Moblie-banner.png",
   poster: "",
   sound: false,
-  title: "Fall Winter '26",
+  title: "Spring Summer, 2026",
   cta: { label: "Discover", href: "/search" },
 };
 

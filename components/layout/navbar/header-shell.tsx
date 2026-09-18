@@ -133,7 +133,7 @@ export function HeaderShell({
               key={item.title}
               href={item.path}
               prefetch={true}
-              className="t-nav link-sweep py-2"
+              className="t-nav link-sweep py-2 text-sm tracking-[0.16em]"
             >
               {item.title}
             </Link>
@@ -143,7 +143,7 @@ export function HeaderShell({
             <Link
               key={link.label}
               href={link.href}
-              className="t-nav link-sweep hidden py-2 lg:inline-block"
+              className="t-nav link-sweep hidden py-2 text-sm tracking-[0.16em] lg:inline-block"
             >
               {link.label}
             </Link>

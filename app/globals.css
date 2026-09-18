@@ -575,6 +575,11 @@
       color var(--duration-base) var(--ease-luxe);
   }
 
+  .site-header nav .t-nav {
+    font-size: 0.875rem;
+    letter-spacing: 0.16em;
+  }
+
   /* Transparent for exactly as long as the hero is behind the header, and only
      while nothing is open over it. `data-scrolled` flips when the hero's bottom
      edge passes under the header, not at a fixed scroll distance — so the

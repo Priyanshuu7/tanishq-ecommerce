@@ -88,7 +88,7 @@ export function MegaMenu({
         aria-controls="mega-menu-panel"
         onClick={() => onOpenChange(!isOpen)}
         data-active={isOpen ? "true" : undefined}
-        className="t-nav link-sweep py-2"
+        className="t-nav link-sweep py-2 text-sm tracking-[0.16em]"
       >
         {navigation.shopLabel}
       </button>

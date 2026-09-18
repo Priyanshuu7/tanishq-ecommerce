@@ -18,7 +18,7 @@ export async function Navbar() {
   return (
     <HeaderShell
       menu={menu}
-      collections={collections}
+      collections={collections} 
       accountUrl={accountUrl}
       cart={
         <Suspense fallback={null}>

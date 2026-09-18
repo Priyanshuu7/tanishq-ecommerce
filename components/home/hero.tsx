@@ -1,6 +1,7 @@
 import { FilmPlayer } from "components/media/film-player";
 import { AnimatedReveal } from "components/motion/animated-reveal";
 import { heroFallback, heroFilm } from "lib/editorial";
+
 import Link from "next/link";
 
 /**
@@ -51,20 +52,6 @@ export function Hero() {
       )}
 
       {hasFilm ? <FilmCaption /> : <TypographicOpening />}
-
-      {/* Scroll cue: a hairline that travels down its own track. */}
-      <div
-        aria-hidden="true"
-        className={`absolute bottom-0 left-1/2 z-10 hidden h-20 w-px -translate-x-1/2 md:block ${
-          hasFilm ? "bg-on-media/25" : "bg-border"
-        }`}
-      >
-        <span
-          className={`animate-scroll-cue block h-full w-px ${
-            hasFilm ? "bg-on-media" : "bg-foreground"
-          }`}
-        />
-      </div>
     </section>
   );
 }

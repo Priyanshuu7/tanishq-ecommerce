@@ -149,7 +149,7 @@ export default function MobileMenu({
                       <Link
                         href={link.href}
                         onClick={closeMobileMenu}
-                        className="t-nav text-muted-foreground transition-colors duration-(--duration-base) hover:text-foreground"
+                        className="t-nav text-sm text-muted-foreground transition-colors duration-(--duration-base) hover:text-foreground"
                       >
                         {link.label}
                       </Link>
