@@ -21,6 +21,12 @@ export async function addItem(
   }
 
   try {
+    let cartId = (await cookies()).get("cartId")?.value;
+    if (!cartId) {
+      const cart = await createCart();
+      cartId = cart.id!;
+      (await cookies()).set("cartId", cartId);
+    }
     await addToCart([{ merchandiseId: selectedVariantId, quantity: 1 }]);
     updateTag(TAGS.cart);
   } catch (e) {

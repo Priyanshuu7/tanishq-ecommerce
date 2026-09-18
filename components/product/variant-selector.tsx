@@ -2,7 +2,8 @@
 
 import clsx from "clsx";
 import { ProductOption, ProductVariant } from "lib/shopify/types";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 type Combination = {
   id: string;
@@ -11,11 +12,9 @@ type Combination = {
 };
 
 /**
- * Option swatches. The selection logic below — combinations, availability
- * filtering, the `formAction` router write that keeps the choice in the URL —
- * is the template's, unchanged. Only the markup and classes are new: squared
- * hairline chips that fill with espresso when active, and a diagonal strike
- * through anything sold out.
+ * Option swatches. Instant client-side state + native history.replaceState
+ * eliminate server roundtrips, making selection 0ms instant while keeping
+ * the URL in sync for sharing and bookmarking.
  */
 export function VariantSelector({
   options,
@@ -24,11 +23,24 @@ export function VariantSelector({
   options: ProductOption[];
   variants: ProductVariant[];
 }) {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const hasNoOptionsOrJustOneOption =
     !options.length ||
     (options.length === 1 && options[0]?.values.length === 1);
+
+  const [selectedOptions, setSelectedOptions] = useState<
+    Record<string, string>
+  >(() => {
+    const initial: Record<string, string> = {};
+    searchParams.forEach((v, k) => (initial[k] = v));
+    return initial;
+  });
+
+  useEffect(() => {
+    const current: Record<string, string> = {};
+    searchParams.forEach((v, k) => (current[k] = v));
+    setSelectedOptions(current);
+  }, [searchParams]);
 
   if (hasNoOptionsOrJustOneOption) {
     return null;
@@ -47,16 +59,20 @@ export function VariantSelector({
   }));
 
   const updateOption = (name: string, value: string) => {
+    setSelectedOptions((prev) => ({ ...prev, [name]: value }));
     const params = new URLSearchParams(searchParams.toString());
     params.set(name, value);
-    router.replace(`?${params.toString()}`, { scroll: false });
+    window.history.replaceState(null, "", `?${params.toString()}`);
   };
 
   return options.map((option) => {
-    const selected = searchParams.get(option.name.toLowerCase());
+    const optionNameLowerCase = option.name.toLowerCase();
+    const selected =
+      selectedOptions[optionNameLowerCase] ??
+      searchParams.get(optionNameLowerCase);
 
     return (
-      <form key={option.id}>
+      <div key={option.id}>
         <dl className="mb-9">
           <dt className="t-eyebrow mb-4 flex items-baseline gap-2 text-muted-foreground">
             {option.name}
@@ -68,35 +84,38 @@ export function VariantSelector({
           </dt>
           <dd className="flex flex-wrap gap-2">
             {option.values.map((value) => {
-              const optionNameLowerCase = option.name.toLowerCase();
-
-              // Base option params on current searchParams so we can preserve any other param state.
-              const optionParams: Record<string, string> = {};
-              searchParams.forEach((v, k) => (optionParams[k] = v));
+              // Base option params on current selection so we can preserve any other param state.
+              const optionParams: Record<string, string> = {
+                ...selectedOptions,
+              };
+              searchParams.forEach((v, k) => {
+                if (!(k in optionParams)) optionParams[k] = v;
+              });
               optionParams[optionNameLowerCase] = value;
 
               // Filter out invalid options and check if the option combination is available for sale.
               const filtered = Object.entries(optionParams).filter(
-                ([key, value]) =>
+                ([key, val]) =>
                   options.find(
-                    (option) =>
-                      option.name.toLowerCase() === key &&
-                      option.values.includes(value),
+                    (opt) =>
+                      opt.name.toLowerCase() === key &&
+                      opt.values.includes(val),
                   ),
               );
               const isAvailableForSale = combinations.find((combination) =>
                 filtered.every(
-                  ([key, value]) =>
-                    combination[key] === value && combination.availableForSale,
+                  ([key, val]) =>
+                    combination[key] === val && combination.availableForSale,
                 ),
               );
 
               // The option is active if it's in the selected options.
-              const isActive = searchParams.get(optionNameLowerCase) === value;
+              const isActive = selected === value;
 
               return (
                 <button
-                  formAction={() => updateOption(optionNameLowerCase, value)}
+                  type="button"
+                  onClick={() => updateOption(optionNameLowerCase, value)}
                   key={value}
                   aria-disabled={!isAvailableForSale}
                   disabled={!isAvailableForSale}
@@ -121,7 +140,7 @@ export function VariantSelector({
             })}
           </dd>
         </dl>
-      </form>
+      </div>
     );
   });
 }

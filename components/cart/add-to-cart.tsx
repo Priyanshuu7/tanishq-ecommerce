@@ -2,10 +2,12 @@
 
 import clsx from "clsx";
 import { addItem } from "components/cart/actions";
+import LoadingDots from "components/loading-dots";
 import { cart as cartCopy } from "lib/editorial";
 import { Product, ProductVariant } from "lib/shopify/types";
 import { useSearchParams } from "next/navigation";
 import { useActionState } from "react";
+import { useFormStatus } from "react-dom";
 import { useCart } from "./cart-context";
 
 function SubmitButton({
@@ -15,6 +17,7 @@ function SubmitButton({
   availableForSale: boolean;
   selectedVariantId: string | undefined;
 }) {
+  const { pending } = useFormStatus();
   const buttonClasses = "btn btn-filled w-full";
 
   if (!availableForSale) {
@@ -38,8 +41,18 @@ function SubmitButton({
   }
 
   return (
-    <button aria-label="Add to cart" className={buttonClasses}>
-      {cartCopy.addToCartLabel}
+    <button
+      aria-label="Add to cart"
+      disabled={pending}
+      className={clsx(buttonClasses, {
+        "cursor-not-allowed opacity-80": pending,
+      })}
+    >
+      {pending ? (
+        <LoadingDots className="bg-background" />
+      ) : (
+        cartCopy.addToCartLabel
+      )}
     </button>
   );
 }
@@ -73,7 +86,7 @@ export function AddToCart({ product }: { product: Product }) {
     <form
       action={async () => {
         addCartItem(finalVariant, product);
-        addItemAction();
+        await addItemAction();
       }}
     >
       <SubmitButton

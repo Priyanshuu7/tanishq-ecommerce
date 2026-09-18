@@ -2,6 +2,7 @@
 
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
+import clsx from "clsx";
 import LoadingDots from "components/loading-dots";
 import Price from "components/price";
 import { DEFAULT_OPTION } from "lib/constants";
@@ -32,6 +33,7 @@ type MerchandiseSearchParams = {
 export default function CartModal() {
   const { cart, updateCartItem } = useCart();
   const [isOpen, setIsOpen] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
   const quantityRef = useRef(cart?.totalQuantity);
   const openCart = () => setIsOpen(true);
   const closeCart = () => setIsOpen(false);
@@ -54,6 +56,12 @@ export default function CartModal() {
       quantityRef.current = cart?.totalQuantity;
     }
   }, [isOpen, cart?.totalQuantity, quantityRef]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setIsRedirecting(false);
+    }
+  }, [isOpen]);
 
   return (
     <>
@@ -241,9 +249,26 @@ export default function CartModal() {
                       </div>
                     </dl>
 
-                    <form action={redirectToCheckout} className="mt-6">
-                      <CheckoutButton />
-                    </form>
+                    {cart.checkoutUrl ? (
+                      <a
+                        href={cart.checkoutUrl}
+                        onClick={() => setIsRedirecting(true)}
+                        className={clsx(
+                          "btn btn-filled mt-6 flex w-full items-center justify-center text-center",
+                          { "pointer-events-none opacity-80": isRedirecting },
+                        )}
+                      >
+                        {isRedirecting ? (
+                          <LoadingDots className="bg-background" />
+                        ) : (
+                          cartCopy.checkoutLabel
+                        )}
+                      </a>
+                    ) : (
+                      <form action={redirectToCheckout} className="mt-6">
+                        <CheckoutButton />
+                      </form>
+                    )}
                   </div>
                 </div>
               )}
