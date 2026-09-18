@@ -33,10 +33,11 @@
   --color-on-media: #fbfaf8; /* ink that sits over imagery */
 
   /* -- Type families ----------------------------------------------------- */
-  /* Loaded via <link> in app/layout.tsx. To self-host later, swap those tags
-     for next/font/google and point these at the generated CSS variables. */
+  /* Display font loaded locally via next/font/local in app/layout.tsx.
+     Sans font loaded via Google Fonts link tag. */
   --font-display:
-    "Cormorant Garamond", "Cormorant", "Times New Roman", ui-serif, serif;
+    var(--font-rudolphin), "Rudolphin Oblique Regular", "Cormorant Garamond",
+    "Cormorant", "Times New Roman", ui-serif, serif;
   --font-sans:
     "Jost", "Futura", "Century Gothic", ui-sans-serif, system-ui, sans-serif;
 

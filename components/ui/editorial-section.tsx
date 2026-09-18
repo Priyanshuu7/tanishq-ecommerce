@@ -1,5 +1,5 @@
-import { AnimatedReveal } from "components/motion/animated-reveal";
 import clsx from "clsx";
+import { AnimatedReveal } from "components/motion/animated-reveal";
 import type { EditorialStatement } from "lib/editorial";
 import Link from "next/link";
 
@@ -33,7 +33,7 @@ export function EditorialSection({
             variant="up"
             delay={160 + index * 90}
             as="p"
-            className="t-body text-muted-foreground"
+            className="t-body text-muted-foreground text-lg"
           >
             {paragraph}
           </AnimatedReveal>

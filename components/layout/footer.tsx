@@ -1,9 +1,9 @@
 import FooterMenu from "components/layout/footer-menu";
-import LogoSquare from "components/logo-square";
 import { AnimatedReveal } from "components/motion/animated-reveal";
 import { Newsletter } from "components/ui/newsletter";
 import { announcements, footer } from "lib/editorial";
 import { getMenu } from "lib/shopify";
+import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
 
@@ -55,11 +55,15 @@ export default async function Footer() {
           <Link
             className="inline-flex items-center gap-3 text-foreground"
             href="/"
+            aria-label={SITE_NAME || "Home"}
           >
-            <LogoSquare size="sm" />
-            <span className="font-display text-xl leading-none tracking-[0.14em] uppercase">
-              {SITE_NAME}
-            </span>
+            <Image
+              src="/logo.png"
+              alt={SITE_NAME || "Solanki Shivranjani"}
+              width={200}
+              height={60}
+              className="h-10 w-auto object-contain"
+            />
           </Link>
 
           <p className="t-body mt-6 max-w-xs text-muted-foreground">

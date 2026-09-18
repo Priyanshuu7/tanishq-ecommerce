@@ -57,9 +57,7 @@ export async function Carousel() {
                 />
 
                 <div className="mt-4 flex flex-col gap-1.5">
-                  <h3 className="t-product-title truncate">
-                    {product.title}
-                  </h3>
+                  <h3 className="t-product-title truncate">{product.title}</h3>
 
                   <Price
                     className="text-muted-foreground"

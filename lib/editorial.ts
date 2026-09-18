@@ -1,17 +1,3 @@
-/**
- * Editorial copy — single source of truth.
- *
- * Shopify supplies products, prices, collections and product photography. It
- * does not supply the narrative voice a couture storefront needs (hero
- * statements, brand positioning, care instructions, footer contact), and it is
- * not where campaign film belongs either. All of that lives here so it can be
- * edited in one place without touching component code.
- *
- * Everything below is placeholder written for this build — replace it with
- * the brand's own words. Nothing here is used as a substitute for product
- * data; no fake products, prices or collections are defined in this file.
- */
-
 export type CtaLink = {
   label: string;
   href: string;
@@ -24,22 +10,6 @@ export type EditorialStatement = {
   cta?: CtaLink;
 };
 
-/**
- * A single piece of campaign film.
- *
- * Video is deliberately *not* sourced from Shopify. Campaign film is art
- * direction rather than catalogue data: it belongs to no product, it is cut for
- * a specific slot on the page, and it changes on its own schedule. Keeping it
- * here leaves the Storefront API to do what it is good at — products, prices,
- * inventory — and makes a new campaign a one-line edit instead of a change to
- * the product catalogue.
- *
- * `src` must be a **direct file link** — an .mp4 (H.264 + AAC travels
- * furthest) or a .webm, served from a CDN, S3, Cloudflare Stream or Shopify
- * Files. A YouTube or Vimeo watch URL will not work here: those require an
- * iframe player, which cannot cover the frame, carries its own branding, and is
- * blocked from autoplaying on mobile.
- */
 export type Film = {
   /** Direct link to a video file. Leave "" to disable this film. */
   src: string;
@@ -171,7 +141,7 @@ export const signatureStatement: EditorialStatement = {
 
 /** The craft statement that sits between the category rail and the banner. */
 export const craftStatement: EditorialStatement = {
-  eyebrow: "The Atelier",
+  eyebrow: "Solanki Shivranjani",
   heading: "Crafted to perfection",
   body: [
     "Every panel is cut on the bias, every seam finished by hand, every surface embroidered in-house. The result is a garment that holds its architecture without ever holding you.",
@@ -186,7 +156,7 @@ export const craftStatement: EditorialStatement = {
 export const pullQuote = {
   quote:
     "Restraint is the hardest luxury. Leave the cloth room to breathe and it will say everything you were tempted to over-explain.",
-  attribution: "The Atelier",
+  attribution: "Solanki Shivranjani",
 };
 
 /**
@@ -266,7 +236,7 @@ export const productAccordions: AccordionEntry[] = [
   {
     title: "Shipping & Delivery",
     body: [
-      "Made-to-order pieces are dispatched within 3–4 weeks. Ready-to-wear orders leave the atelier within 2–3 business days.",
+      "Made-to-order pieces are dispatched within 3–4 weeks. Ready-to-wear orders leave  within 2–3 business days.",
       "Complimentary insured shipping worldwide. Import duties, where applicable, are calculated at checkout.",
     ],
   },
@@ -356,7 +326,7 @@ export const system = {
    */
   welcomeToast: {
     enabled: true,
-    heading: "Welcome to the atelier",
+    heading: "Welcome to Solanki Shivranjani",
     body: "Private previews, atelier notes and invitations to our seasonal showings.",
   },
 };
@@ -416,7 +386,10 @@ export const footer = {
     {
       title: "Keep in Touch",
       links: [
-        { label: "Instagram", href: "https://www.instagram.com/label.shivranjani.solanki" },
+        {
+          label: "Instagram",
+          href: "https://www.instagram.com/label.shivranjani.solanki",
+        },
       ],
     },
   ] satisfies FooterColumn[],

@@ -3,9 +3,16 @@ import { Navbar } from "components/layout/navbar";
 import { WelcomeToast } from "components/welcome-toast";
 import { getCart } from "lib/shopify";
 import { baseUrl } from "lib/utils";
+import localFont from "next/font/local";
 import { ReactNode } from "react";
 import { Toaster } from "sonner";
 import "./globals.css";
+
+const rudolphin = localFont({
+  src: "../fonts/Rudolphin Oblique.woff",
+  variable: "--font-rudolphin",
+  display: "swap",
+});
 
 const { SITE_NAME } = process.env;
 
@@ -22,19 +29,13 @@ export const metadata = {
 };
 
 /**
- * Cormorant Garamond (display) + Jost (sans), mapped to --font-display and
- * --font-sans in app/globals.css.
- *
- * Loaded with plain <link> tags rather than next/font/google because
- * next/font fetches the font files at build time, which needs network access
- * during `next build`. React 19 hoists these into <head> automatically.
- *
- * To self-host later: delete these three links, then
- *   import { Cormorant_Garamond, Jost } from "next/font/google";
- * and point --font-display / --font-sans at the generated CSS variables.
+ * Rudolphin Oblique (display) self-hosted locally via next/font/local,
+ * mapped to --font-display via --font-rudolphin.
+ * Jost (sans) loaded via Google Fonts link tag, mapped to --font-sans in
+ * app/globals.css.
  */
 const GOOGLE_FONTS_HREF =
-  "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap";
+  "https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap";
 
 export default async function RootLayout({
   children,
@@ -45,7 +46,11 @@ export default async function RootLayout({
   const cart = getCart();
 
   return (
-    <html lang="en" data-scroll-behavior="smooth">
+    <html
+      lang="en"
+      className={rudolphin.variable}
+      data-scroll-behavior="smooth"
+    >
       <body className="min-h-dvh bg-background text-foreground antialiased">
         {/* React hoists these into <head> itself. `precedence` is what makes
             that legal for the stylesheet — without it React refuses to move a

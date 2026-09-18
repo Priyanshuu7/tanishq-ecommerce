@@ -82,11 +82,7 @@ export async function ThreeItemGrid() {
           delay={110}
         />
 
-        <ThreeItemGridItem
-          size="half"
-          item={thirdProduct}
-          delay={220}
-        />
+        <ThreeItemGridItem size="half" item={thirdProduct} delay={220} />
       </div>
     </section>
   );

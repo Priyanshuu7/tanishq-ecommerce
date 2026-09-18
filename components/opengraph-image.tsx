@@ -23,11 +23,7 @@ const BORDER = "#dcd5d1";
  * Shared social card, used by app/opengraph-image.tsx and the [page] /
  * [collection] variants.
  *
- * Inter Bold is the only font file in the repo, and Satori needs the bytes
- * locally — it cannot fetch Cormorant Garamond at build time. So rather than
- * fake the display face, the card leans on the treatment the brand uses for
- * navigation: uppercase, widely letterspaced, small against a lot of bone.
- * Drop a Cormorant .ttf into fonts/ and swap the family here to upgrade it.
+ * Uses Rudolphin Oblique web font locally to match the brand identity.
  */
 export default async function OpengraphImage(
   props?: Props,
@@ -39,14 +35,16 @@ export default async function OpengraphImage(
     ...props,
   };
 
-  const file = await readFile(join(process.cwd(), "./fonts/Inter-Bold.ttf"));
+  const file = await readFile(
+    join(process.cwd(), "./fonts/Rudolphin Oblique.woff"),
+  );
   const font = Uint8Array.from(file).buffer;
 
   return new ImageResponse(
     (
       <div
         tw="flex h-full w-full items-center justify-center"
-        style={{ backgroundColor: BONE, fontFamily: "Inter" }}
+        style={{ backgroundColor: BONE, fontFamily: "Rudolphin" }}
       >
         {/* Inset hairline frame — the same rule weight the site uses. */}
         <div
@@ -97,10 +95,10 @@ export default async function OpengraphImage(
       height: 630,
       fonts: [
         {
-          name: "Inter",
+          name: "Rudolphin",
           data: font,
           style: "normal",
-          weight: 700,
+          weight: 400,
         },
       ],
     },

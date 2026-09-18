@@ -50,7 +50,6 @@ export async function CategoryCarousel() {
           >
             <AnimatedReveal variant="up" delay={index * 110}>
               <Link href={collection.path} className="block">
-
                 {/* // will updated this later  */}
                 {/* <Link href={collection.path} prefetch={true} className="block"> */}
                 <div className="relative aspect-[2/3] w-full overflow-hidden bg-surface">
