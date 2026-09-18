@@ -377,7 +377,7 @@ export const footer = {
     },
   ] satisfies FooterColumn[],
   contact: [
-    { label: "Enquiries", value: "atelier@example.com" },
-    { label: "Telephone", value: "+00 0000 000 000" },
+    { label: "Enquiries", value: "Shivranjanisolankii@gmail.com" },
+    { label: "Telephone", value: "+91 6263326569 " },
   ],
 };
