@@ -71,7 +71,7 @@ export type FooterColumn = {
  * Opening full-viewport editorial media (film or image).
  */
 export const heroFilm: FilmSection = {
-  src: "https://drive.google.com/file/d/1LYlCi8_6rD6XvXdXVSXINgXumTlPRNZW",
+  src: "https://drive.google.com/uc?export=view&id=1LYlCi8_6rD6XvXdXVSXINgXumTlPRNZW",
   poster: "",
   sound: false,
   title: "Fall Winter '26",
