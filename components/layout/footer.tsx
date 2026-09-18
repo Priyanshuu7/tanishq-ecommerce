@@ -1,6 +1,5 @@
 import FooterMenu from "components/layout/footer-menu";
 import { AnimatedReveal } from "components/motion/animated-reveal";
-import { Newsletter } from "components/ui/newsletter";
 import { announcements, footer } from "lib/editorial";
 import { getMenu } from "lib/shopify";
 import Image from "next/image";
@@ -44,7 +43,6 @@ export default async function Footer() {
         </div>
       ) : null}
 
-      <Newsletter />
 
       <AnimatedReveal
         as="div"

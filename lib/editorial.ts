@@ -197,23 +197,6 @@ export const featuredProducts = {
   heading: "This season's pieces",
 };
 
-/* -------------------------------------------------------------------------- */
-/* Newsletter — presentation only                                              */
-/* -------------------------------------------------------------------------- */
-
-/**
- * TODO(backend): this form has no destination. Wire `action` to a real email
- * provider (Klaviyo, Mailchimp, Shopify Customer API) via a Server Action
- * before launch. Until then the field is disabled and labelled as such, so
- * nobody believes they subscribed.
- */
-export const newsletter = {
-  heading: "Sign up to our newsletter",
-  body: "Receive private previews, atelier notes and invitations to our seasonal showings.",
-  placeholder: "E-mail",
-  submitLabel: "Subscribe",
-  disabledNote: "Newsletter sign-up is not yet connected.",
-};
 
 /* -------------------------------------------------------------------------- */
 /* Product detail page                                                         */
