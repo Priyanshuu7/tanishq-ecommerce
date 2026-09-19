@@ -44,6 +44,7 @@ export function Hero() {
           poster={heroFilm.poster}
           label={heroFilm.label || heroFilm.title}
           sound={heroFilm.sound}
+          headerScrim={false}
           priority
           className="md:hero-editorial-image object-center"
         />

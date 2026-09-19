@@ -86,7 +86,7 @@ export default function CartModal() {
             leaveTo="opacity-0"
           >
             <div
-              className="fixed inset-0 bg-foreground/25 backdrop-blur-[2px]"
+              className="fixed inset-0 bg-foreground/30"
               aria-hidden="true"
             />
           </Transition.Child>

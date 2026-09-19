@@ -48,109 +48,136 @@ export function HeaderShell({
 }) {
   const headerRef = useRef<HTMLElement>(null);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [hasHero, setHasHero] = useState(true);
+  const [heroType, setHeroType] = useState<string>("film");
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
 
+  const measure = useCallback(() => {
+    const header = headerRef.current;
+    const hero = document.querySelector("[data-hero]");
+
+    if (!hero || !header) {
+      setHasHero(false);
+      setIsScrolled(true);
+      return;
+    }
+
+    setHasHero(true);
+    setHeroType(hero.getAttribute("data-hero") || "film");
+    setIsScrolled(hero.getBoundingClientRect().bottom <= header.offsetHeight);
+  }, []);
+
   useEffect(() => {
-    // Browsers already coalesce scroll events to once per frame, so this reads
-    // one rect per frame at worst. An extra requestAnimationFrame wrapper would
-    // only add a path where a pending frame swallows later scroll events and
-    // leaves the header on a stale colour.
-    const measure = () => {
-      const header = headerRef.current;
-      // Re-queried every time rather than captured once, so this keeps working
-      // when a client-side navigation swaps a hero in or out.
-      const hero = document.querySelector("[data-hero]");
-
-      if (!hero || !header) {
-        setIsScrolled(window.scrollY > 24);
-        return;
-      }
-
-      // The transparent state belongs to the hero, so it lasts exactly as long
-      // as the hero is behind the header — solid the moment the hero's last
-      // pixel passes under it, rather than after an arbitrary scroll distance.
-      setIsScrolled(hero.getBoundingClientRect().bottom <= header.offsetHeight);
-    };
-
     measure();
     window.addEventListener("scroll", measure, { passive: true });
-    // The hero is sized in svh, so its height moves when mobile browser chrome
-    // collapses or the window is resized.
     window.addEventListener("resize", measure);
 
     return () => {
       window.removeEventListener("scroll", measure);
       window.removeEventListener("resize", measure);
     };
-  }, []);
+  }, [measure]);
 
-  // Stable identity so MegaMenu's effects don't re-run on every render.
-  const closeMegaMenu = useCallback(() => setIsMegaMenuOpen(false), []);
+  // Handle route changes instantly from CloseOnNavigate
+  const handleNavigate = useCallback(
+    (pathname?: string) => {
+      setIsMegaMenuOpen(false);
+
+      if (pathname && pathname !== "/") {
+        // Non-home content page: immediately solid, never transparent
+        setHasHero(false);
+        setIsScrolled(true);
+      } else if (pathname === "/") {
+        // Navigating back to homepage: immediately transparent over hero, then measure
+        setHasHero(true);
+        setIsScrolled(false);
+      }
+
+      // Re-verify after DOM updates
+      requestAnimationFrame(measure);
+      setTimeout(measure, 50);
+      setTimeout(measure, 150);
+    },
+    [measure]
+  );
+
+  const isTransparent = hasHero && !isScrolled && !isMegaMenuOpen;
 
   return (
     <header
       ref={headerRef}
       className="site-header fixed inset-x-0 top-0 z-50 border-b"
+      data-transparent={isTransparent ? "true" : "false"}
       data-scrolled={isScrolled ? "true" : "false"}
       data-menu-open={isMegaMenuOpen ? "true" : "false"}
+      data-has-hero={hasHero ? "true" : "false"}
+      data-hero-type={heroType}
     >
-      <div className="layout-wide flex h-(--header-h) items-center justify-between gap-4 md:gap-6 lg:gap-10">
-        <div className="flex shrink-0 items-center gap-2 md:min-w-[180px]">
+      <div className="layout-wide relative flex h-(--header-h) items-center justify-between gap-4">
+        {/* Left Side: Mobile Menu Button (mobile), Brand Title (mobile), and Navigation Links (desktop) */}
+        <div className="flex shrink-0 items-center gap-1.5 min-[360px]:gap-2 sm:gap-3 md:gap-4 lg:gap-8 ml-0 md:ml-0 lg:-ml-6 xl:-ml-16">
           <MobileMenu
             menu={menu}
             collections={collections}
             accountUrl={accountUrl}
           />
 
+          {/* Brand Name on Mobile: Shifted to the left side beside the hamburger menu */}
           <Link
             href="/"
-            aria-label="Solanki Shivranjani"
-            className="flex shrink-0 items-center ml-0 md:-ml-4 lg:-ml-24"
+            aria-label="Shivranjani Solanki"
+            className="site-brand-title inline-block whitespace-nowrap text-[11px] min-[360px]:text-xs min-[390px]:text-sm sm:text-base font-normal tracking-[0.14em] min-[360px]:tracking-[0.16em] sm:tracking-[0.18em] uppercase transition-opacity duration-(--duration-base) hover:opacity-80 md:hidden"
           >
-            <Image
-              src="/logo.png"
-              alt="Solanki Shivranjani"
-              width={540}
-              height={200}
-              priority
-              className="brand-logo h-8 min-[360px]:h-9 min-[390px]:h-10 sm:h-12 md:h-16 lg:h-[68px] w-auto object-contain transition-opacity duration-(--duration-base) hover:opacity-80" />
+            SHIVRANJANI SOLANKI
+          </Link>
+
+          <nav
+            aria-label="Main"
+            className="hidden items-center gap-4 md:flex lg:gap-8"
+          >
+            <MegaMenu
+              collections={collections}
+              isOpen={isMegaMenuOpen}
+              onOpenChange={setIsMegaMenuOpen}
+            />
+
+            {/* The Shopify header menu, kept exactly as the store defines it. */}
+            {menu.map((item: Menu) => (
+              <Link
+                key={item.title}
+                href={item.path}
+                prefetch={true}
+                className="t-nav link-sweep py-2 text-xs lg:text-sm tracking-[0.14em] lg:tracking-[0.16em]"
+              >
+                {item.title}
+              </Link>
+            ))}
+
+            {navigation.editorialLinks.map((link) => (
+              <Link
+                key={link.label}
+                href={link.href}
+                className="t-nav link-sweep py-2 text-xs lg:text-sm tracking-[0.14em] lg:tracking-[0.16em]"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
+
+        {/* Center: Brand Name on Desktop (Centered mathematically regardless of left/right widths) */}
+        <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center hidden md:block md:max-w-md lg:max-w-xl xl:max-w-2xl">
+          <Link
+            href="/"
+            aria-label="Shivranjani Solanki"
+            className="site-brand-title pointer-events-auto inline-block whitespace-nowrap md:text-lg lg:text-2xl xl:text-[26px] font-normal md:tracking-[0.2em] lg:tracking-[0.25em] uppercase transition-opacity duration-(--duration-base) hover:opacity-80"
+          >
+            SHIVRANJANI SOLANKI
           </Link>
         </div>
 
-        <nav
-          aria-label="Main"
-          className="hidden flex-1 items-center justify-center gap-8 md:flex lg:gap-10"
-        >
-          <MegaMenu
-            collections={collections}
-            isOpen={isMegaMenuOpen}
-            onOpenChange={setIsMegaMenuOpen}
-          />
-
-          {/* The Shopify header menu, kept exactly as the store defines it. */}
-          {menu.map((item: Menu) => (
-            <Link
-              key={item.title}
-              href={item.path}
-              prefetch={true}
-              className="t-nav link-sweep py-2 text-sm tracking-[0.16em]"
-            >
-              {item.title}
-            </Link>
-          ))}
-
-          {navigation.editorialLinks.map((link) => (
-            <Link
-              key={link.label}
-              href={link.href}
-              className="t-nav link-sweep hidden py-2 text-sm tracking-[0.16em] lg:inline-block"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
-
-        <div className="flex shrink-0 items-center justify-end gap-0.5 min-[360px]:gap-1 md:min-w-[180px]">
+        {/* Right Side: Search, Account & Cart with clean spacing on both mobile and desktop */}
+        <div className="flex shrink-0 items-center justify-end gap-0.5 min-[360px]:gap-1 sm:gap-1.5 md:gap-2">
           <SearchOverlay />
           {accountUrl ? (
             <a
@@ -166,10 +193,10 @@ export function HeaderShell({
         </div>
       </div>
 
-      {/* Shuts the mega-menu panel after a navigation. Isolated in Suspense
-          because it reads useSearchParams(). */}
+      {/* Shuts the mega-menu panel and coordinates transparency on navigation. Isolated in Suspense
+          because it reads useSearchParams() / usePathname(). */}
       <Suspense fallback={null}>
-        <CloseOnNavigate onNavigate={closeMegaMenu} />
+        <CloseOnNavigate onNavigate={handleNavigate} />
       </Suspense>
     </header>
   );

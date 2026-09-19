@@ -21,16 +21,26 @@
 
 @theme {
   /* -- Colour ------------------------------------------------------------ */
-  --color-background: #f2f0ed; /* bone page ground */
-  --color-surface: #e9e4e0; /* muted panels, image wells, skeletons */
-  --color-surface-deep: #ded7d2; /* pressed / nested panels */
-  --color-foreground: #3b2b2b; /* deep espresso, primary ink */
-  --color-muted-foreground: #8c7b79; /* secondary copy, captions */
-  --color-subtle: #c9bfbd; /* tertiary, washed rose-grey */
-  --color-accent: #b08c8c; /* dusty rose — brand, price, active */
-  --color-accent-deep: #96706f; /* rose, hover / pressed */
-  --color-border: #dcd5d1; /* hairline rules */
-  --color-on-media: #fbfaf8; /* ink that sits over imagery */
+  --color-background: #f2f0ed;
+  /* bone page ground */
+  --color-surface: #e9e4e0;
+  /* muted panels, image wells, skeletons */
+  --color-surface-deep: #ded7d2;
+  /* pressed / nested panels */
+  --color-foreground: #3b2b2b;
+  /* deep espresso, primary ink */
+  --color-muted-foreground: #8c7b79;
+  /* secondary copy, captions */
+  --color-subtle: #c9bfbd;
+  /* tertiary, washed rose-grey */
+  --color-accent: #b08c8c;
+  /* dusty rose — brand, price, active */
+  --color-accent-deep: #96706f;
+  /* rose, hover / pressed */
+  --color-border: #dcd5d1;
+  /* hairline rules */
+  --color-on-media: #fbfaf8;
+  /* ink that sits over imagery */
 
   /* -- Type families ----------------------------------------------------- */
   /* Display font loaded locally via next/font/local in app/layout.tsx.
@@ -56,6 +66,7 @@
     from {
       opacity: 0;
     }
+
     to {
       opacity: 1;
     }
@@ -66,6 +77,7 @@
       opacity: 0;
       transform: translate3d(0, 2rem, 0);
     }
+
     to {
       opacity: 1;
       transform: none;
@@ -78,6 +90,7 @@
     from {
       transform: translateX(0);
     }
+
     to {
       transform: translateX(calc(-100% / 3));
     }
@@ -87,9 +100,11 @@
     0% {
       opacity: 0.2;
     }
+
     20% {
       opacity: 1;
     }
+
     100% {
       opacity: 0.2;
     }
@@ -99,6 +114,7 @@
     from {
       transform: scale(1.02);
     }
+
     to {
       transform: scale(1.14);
     }
@@ -109,6 +125,7 @@
       opacity: 0;
       transform: translate3d(0, -0.75rem, 0);
     }
+
     to {
       opacity: 1;
       transform: none;
@@ -121,14 +138,17 @@
       transform: scaleY(0);
       transform-origin: top center;
     }
+
     45% {
       transform: scaleY(1);
       transform-origin: top center;
     }
+
     55% {
       transform: scaleY(1);
       transform-origin: bottom center;
     }
+
     100% {
       transform: scaleY(0);
       transform-origin: bottom center;
@@ -140,7 +160,7 @@
    values consumed by hand-written CSS, not sources for utility generation. */
 :root {
   /* Horizontal page gutter and vertical section rhythm, both fluid. */
-  --page-gutter: clamp(1.25rem, 4vw, 4rem);
+  --page-gutter: clamp(1rem, 3.5vw, 4rem);
   --page-max: 1680px;
   --section-y: clamp(4rem, 10vw, 9rem);
   --header-h: 5rem;
@@ -161,6 +181,7 @@
    ========================================================================== */
 
 @layer base {
+
   *,
   ::after,
   ::before,
@@ -236,6 +257,7 @@
    ========================================================================== */
 
 @layer components {
+
   /* Hero / campaign headline */
   .t-display {
     font-family: var(--font-display);
@@ -336,6 +358,7 @@
    ========================================================================== */
 
 @layer components {
+
   /* True full bleed — no gutter, no cap. For hero and banner media. */
   .layout-full {
     width: 100%;
@@ -408,7 +431,7 @@
      element: Chromium folds clip-path into the rect IntersectionObserver
      measures, so clipping the observed node pins its ratio at 0 and the reveal
      can never fire. AnimatedReveal emits this wrapper for masks only. */
-  [data-reveal="mask"] > [data-reveal-mask] {
+  [data-reveal="mask"]>[data-reveal-mask] {
     display: block;
     clip-path: inset(0 0 105% 0);
     transition: clip-path var(--duration-slow) var(--ease-luxe);
@@ -416,7 +439,7 @@
     will-change: clip-path;
   }
 
-  [data-reveal="mask"][data-visible="true"] > [data-reveal-mask] {
+  [data-reveal="mask"][data-visible="true"]>[data-reveal-mask] {
     clip-path: inset(0 0 0 0);
   }
 }
@@ -426,6 +449,7 @@
    ========================================================================== */
 
 @layer components {
+
   /* Wipe-fill button. ::before scales up from the baseline on hover. */
   .btn {
     position: relative;
@@ -476,9 +500,11 @@
     color: var(--color-foreground);
     border-color: var(--color-foreground);
   }
+
   .btn-primary::before {
     background-color: var(--color-foreground);
   }
+
   .btn-primary:hover:not(:disabled) {
     color: var(--color-background);
   }
@@ -489,9 +515,11 @@
     background-color: var(--color-foreground);
     border-color: var(--color-foreground);
   }
+
   .btn-filled::before {
     background-color: var(--color-accent-deep);
   }
+
   .btn-filled:hover:not(:disabled) {
     color: var(--color-on-media);
     border-color: var(--color-accent-deep);
@@ -502,9 +530,11 @@
     color: var(--color-on-media);
     border-color: color-mix(in oklab, var(--color-on-media) 70%, transparent);
   }
+
   .btn-light::before {
     background-color: var(--color-on-media);
   }
+
   .btn-light:hover:not(:disabled) {
     color: var(--color-foreground);
     border-color: var(--color-on-media);
@@ -540,6 +570,7 @@
   .link-retract::after {
     transform: scaleX(1);
   }
+
   .link-retract:hover::after {
     transform-origin: right center;
     transform: scaleX(0);
@@ -561,18 +592,26 @@
 
 @layer components {
   .site-header {
-    background-color: color-mix(
-      in oklab,
-      var(--color-background) 95%,
-      transparent
-    );
+    background-color: var(--color-background);
     border-bottom-color: var(--color-border);
     color: var(--color-foreground);
-    backdrop-filter: blur(12px);
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
     transition:
       background-color var(--duration-base) var(--ease-luxe),
       border-color var(--duration-base) var(--ease-luxe),
       color var(--duration-base) var(--ease-luxe);
+  }
+
+  .site-brand-title {
+    color: #cbb1b1;
+    font-family: var(--font-sans);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    text-shadow: none !important;
+    filter: none !important;
+    transition: color var(--duration-base) var(--ease-luxe), opacity var(--duration-base) var(--ease-luxe);
   }
 
   .site-header nav .t-nav {
@@ -580,29 +619,41 @@
     letter-spacing: 0.16em;
   }
 
-  /* Transparent for exactly as long as the hero is behind the header, and only
-     while nothing is open over it. `data-scrolled` flips when the hero's bottom
-     edge passes under the header, not at a fixed scroll distance — so the
-     transparent state is scoped to the hero section and nothing else. */
-  body:has([data-hero])
-    .site-header[data-scrolled="false"][data-menu-open="false"] {
-    background-color: transparent;
-    border-bottom-color: transparent;
-    backdrop-filter: none;
+  /* 100% transparent ONLY over hero section when data-transparent="true" */
+  body:has([data-hero]) .site-header[data-transparent="true"] {
+    background-color: transparent !important;
+    border-bottom-color: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
   }
 
-  /* Over film the nav has to read as near-white. Over the typographic hero on
-     the bone ground it keeps the espresso ink `.site-header` already sets,
-     which is why `data-hero="light"` needs no rule of its own. */
-  body:has([data-hero="film"])
-    .site-header[data-scrolled="false"][data-menu-open="false"] {
-    color: var(--color-on-media);
+  /* Over film the nav has to read as near-white */
+  body:has([data-hero="film"]) .site-header[data-transparent="true"] {
+    color: var(--color-on-media) !important;
   }
 
-  body:has([data-hero="film"])
-    .site-header[data-scrolled="false"][data-menu-open="false"]
-    .brand-logo {
-    filter: brightness(0) invert(1);
+  /* Over film when unscrolled, brand title is near-white with no blur or text-shadow */
+  body:has([data-hero="film"]) .site-header[data-transparent="true"] .site-brand-title {
+    color: var(--color-on-media) !important;
+    text-shadow: none !important;
+    filter: none !important;
+  }
+
+  /* When NOT transparent (scrolled, or on non-hero pages), strictly enforce solid background & dark nav */
+  .site-header[data-transparent="false"] {
+    background-color: var(--color-background) !important;
+    border-bottom-color: var(--color-border) !important;
+    color: var(--color-foreground) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
+  }
+
+  .site-header[data-transparent="false"] .site-brand-title {
+    color: #cbb1b1 !important;
+    text-shadow: none !important;
+    filter: none !important;
   }
 }
 
@@ -613,6 +664,7 @@
 @utility no-scrollbar {
   scrollbar-width: none;
   -ms-overflow-style: none;
+
   &::-webkit-scrollbar {
     display: none;
   }
@@ -620,12 +672,10 @@
 
 /* Legibility scrim under text laid over photography. */
 @utility media-scrim {
-  background-image: linear-gradient(
-    to top,
-    color-mix(in oklab, #2a1e1e 62%, transparent) 0%,
-    color-mix(in oklab, #2a1e1e 28%, transparent) 42%,
-    transparent 78%
-  );
+  background-image: linear-gradient(to top,
+      color-mix(in oklab, #2a1e1e 62%, transparent) 0%,
+      color-mix(in oklab, #2a1e1e 28%, transparent) 42%,
+      transparent 78%);
 }
 
 /* Focal alignment for editorial hero media:
@@ -633,15 +683,19 @@
    Frames model symmetrically on mobile and elegantly on wide screens. */
 @utility hero-editorial-image {
   object-position: 16% 18%;
+
   @variant sm {
     object-position: 16% 20%;
   }
+
   @variant md {
     object-position: left center;
   }
+
   @variant lg {
     object-position: left center;
   }
+
   @variant xl {
     object-position: left center;
   }

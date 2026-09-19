@@ -121,7 +121,7 @@ export function FilmPlayer({
   label,
   sound = false,
   scrim = true,
-  headerScrim = true,
+  headerScrim = false,
   priority = false,
   className,
   mediaType = "auto",

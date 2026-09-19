@@ -16,12 +16,16 @@ import { useEffect } from "react";
  *
  * `onNavigate` must be referentially stable — wrap it in `useCallback`.
  */
-export function CloseOnNavigate({ onNavigate }: { onNavigate: () => void }) {
+export function CloseOnNavigate({
+  onNavigate,
+}: {
+  onNavigate: (pathname: string) => void;
+}) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    onNavigate();
+    onNavigate(pathname);
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
   }, [pathname, onNavigate]);
 
