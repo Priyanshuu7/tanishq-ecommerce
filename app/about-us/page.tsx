@@ -20,9 +20,9 @@ export default function AboutUsPage() {
     <>
       <main className="layout-wide max-w-5xl mx-auto section-y">
         <header className="text-center mb-14 md:mb-20">
-          <AnimatedReveal variant="fade">
+          {/* <AnimatedReveal variant="fade">
             <p className="t-eyebrow mb-4 text-lg sm:text-xl text-accent">About Us</p>
-          </AnimatedReveal>
+          </AnimatedReveal> */}
 
           <AnimatedReveal variant="up" delay={80}>
             <h1 className="t-section">
@@ -47,7 +47,7 @@ export default function AboutUsPage() {
           </AnimatedReveal>
 
           <AnimatedReveal variant="up" delay={180}>
-            <p>
+            <p className="t-editorial text-xl sm:text-2xl font-light text-foreground leading-relaxed">
               The label was born from the values I grew up with. My father, a
               businessman with no background in fashion, shaped my understanding
               of dedication, discipline, patience, and excellence. He built
@@ -59,11 +59,11 @@ export default function AboutUsPage() {
 
           <AnimatedReveal variant="up" delay={240}>
             <div className="my-10 border-l-2 border-accent/70 pl-6 sm:pl-8 py-3 bg-surface/50">
-              <blockquote className="font-display text-lg sm:text-xl text-foreground italic leading-relaxed">
+              <blockquote className="font-display text-lg sm:text-xl text-foreground  leading-relaxed">
                 &ldquo;As a child, I would wander through luxury stores, running
                 my fingers over beautiful fabrics, quietly observing their
                 textures, construction, and craftsmanship. I didn&apos;t simply
-                see garments —{" "}
+                see garments{" "}
                 <span className="font-normal not-italic text-accent-deep">
                   I saw the hands, patience, and artistry behind them.
                 </span>{" "}
@@ -84,7 +84,7 @@ export default function AboutUsPage() {
           </AnimatedReveal>
 
           <AnimatedReveal variant="up" delay={320}>
-            <p>
+            <p className="t-editorial text-xl sm:text-2xl font-light text-foreground leading-relaxed">
               Every piece is more than a garment; it is a narrative of skilled
               hands, patient craftsmanship, and a vision brought to life through
               fabric and form. Inspired by the richness of Indian textiles and
@@ -95,12 +95,12 @@ export default function AboutUsPage() {
           </AnimatedReveal>
 
           <AnimatedReveal variant="up" delay={360}>
-            <p>
+            <p className="t-editorial text-xl sm:text-2xl font-light text-foreground leading-relaxed">
               Designed for the woman who values individuality and effortless
               grace,{" "}
               <strong className="font-medium text-foreground">
                 Label Shivranjani Solanki celebrates confidence in its purest form
-                — subtle, strong, and unapologetically authentic.
+                subtle, strong, and unapologetically authentic.
               </strong>{" "}
               Each collection is an exploration of mood, texture, and emotion,
               where every detail is intentional and every piece is meant to be
@@ -111,15 +111,14 @@ export default function AboutUsPage() {
           <AnimatedReveal variant="fade" delay={400}>
             <div className="mt-16 p-8 sm:p-12 text-center bg-surface border border-border">
               <p className="t-eyebrow text-accent mb-4">A Legacy</p>
-              <p className="font-display text-xl sm:text-2xl text-foreground leading-relaxed italic">
-                &ldquo;This journey is not just mine.
-                <br />
-                It is a reflection of his values,
+              <p className="font-display text-xl sm:text-2xl text-foreground leading-relaxed ">
+                &ldquo;It is a reflection of my father's values,
                 <br />
                 and my way of making him proud.&rdquo;
               </p>
+
               <p className="t-caption text-muted-foreground mt-4 tracking-[0.2em] uppercase">
-                &mdash;&nbsp;&nbsp;Shivranjani Solanki
+                &mdash;&nbsp;Shivranjani Solanki
               </p>
             </div>
           </AnimatedReveal>

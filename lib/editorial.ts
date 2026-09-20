@@ -337,8 +337,7 @@ export const navigation = {
 
 /** Slow marquee under the header. Set to an empty array to remove the band. */
 export const announcements: string[] = [
-  "Complimentary worldwide shipping",
-  "Private atelier appointments available",
+  "Private appointments available",
   "Hand-finished, made to order",
 ];
 
