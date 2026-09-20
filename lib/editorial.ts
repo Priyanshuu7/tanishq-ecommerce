@@ -128,13 +128,12 @@ export const filmGrid = {
 
 /** The positioning statement that follows the hero. */
 export const signatureStatement: EditorialStatement = {
-  eyebrow: "The House",
   heading: "Signature Realms Of Style",
   body: [
     "Four decades of drape, distilled. Each garment begins as a length of untouched cloth and ends as something worn once and remembered for years.",
     "We work in ateliers rather than factories, in weeks rather than hours, and in fabrics chosen for how they move rather than how quickly they cut.",
   ],
-  cta: { label: "Explore the house", href: "/search" },
+  cta: { label: "Explore ", href: "/search" },
 };
 
 /** The craft statement that sits between the category rail and the banner. */
