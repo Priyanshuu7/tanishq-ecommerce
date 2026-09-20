@@ -74,20 +74,31 @@ export async function addItem(
   }
 }
 
-export async function removeItem(prevState: any, merchandiseId: string) {
+export async function removeItem(
+  prevState: any,
+  payload: string | { merchandiseId: string; lineId?: string },
+) {
   try {
-    const cart = await getCart();
+    let lineId: string | undefined;
+    if (typeof payload === "object" && payload.lineId) {
+      lineId = payload.lineId;
+    } else {
+      const merchandiseId =
+        typeof payload === "string" ? payload : payload.merchandiseId;
+      const cart = await getCart();
 
-    if (!cart) {
-      return "Error fetching cart";
+      if (!cart) {
+        return "Error fetching cart";
+      }
+
+      const lineItem = cart.lines.find(
+        (line) => line.merchandise.id === merchandiseId,
+      );
+      lineId = lineItem?.id;
     }
 
-    const lineItem = cart.lines.find(
-      (line) => line.merchandise.id === merchandiseId,
-    );
-
-    if (lineItem && lineItem.id) {
-      await removeFromCart([lineItem.id]);
+    if (lineId) {
+      await removeFromCart([lineId]);
       updateTag(TAGS.cart);
     } else {
       return "Item not found in cart";
@@ -102,30 +113,36 @@ export async function updateItemQuantity(
   payload: {
     merchandiseId: string;
     quantity: number;
+    lineId?: string;
   },
 ): Promise<CartActionResult> {
-  const { merchandiseId, quantity } = payload;
+  const { merchandiseId, quantity, lineId } = payload;
 
   try {
-    const cart = await getCart();
+    let effectiveLineId = lineId;
 
-    if (!cart) {
-      return { status: "error", message: "Error fetching cart" };
+    if (!effectiveLineId) {
+      const cart = await getCart();
+
+      if (!cart) {
+        return { status: "error", message: "Error fetching cart" };
+      }
+
+      const lineItem = cart.lines.find(
+        (line) => line.merchandise.id === merchandiseId,
+      );
+      effectiveLineId = lineItem?.id;
     }
 
-    const lineItem = cart.lines.find(
-      (line) => line.merchandise.id === merchandiseId,
-    );
-
-    if (lineItem && lineItem.id) {
+    if (effectiveLineId) {
       if (quantity === 0) {
-        await removeFromCart([lineItem.id]);
+        await removeFromCart([effectiveLineId]);
         updateTag(TAGS.cart);
         return { status: "success" };
       } else {
         const result = await updateCart([
           {
-            id: lineItem.id,
+            id: effectiveLineId,
             merchandiseId,
             quantity,
           },

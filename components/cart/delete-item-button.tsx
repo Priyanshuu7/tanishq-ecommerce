@@ -19,7 +19,10 @@ export function DeleteItemButton({
 }) {
   const [message, formAction] = useActionState(removeItem, null);
   const merchandiseId = item.merchandise.id;
-  const removeItemAction = formAction.bind(null, merchandiseId);
+  const removeItemAction = formAction.bind(null, {
+    merchandiseId,
+    lineId: item.id,
+  });
 
   return (
     <form

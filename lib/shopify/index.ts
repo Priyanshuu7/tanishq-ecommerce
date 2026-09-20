@@ -278,12 +278,18 @@ const reshapeProducts = (products: ShopifyProduct[]) => {
   return reshapedProducts;
 };
 
+const cartCache = new Map<string, { cart: Cart; timestamp: number }>();
+
 export async function createCart(): Promise<Cart> {
   const res = await shopifyFetch<ShopifyCreateCartOperation>({
     query: createCartMutation,
   });
 
-  return reshapeCart(res.body.data.cartCreate.cart);
+  const cart = reshapeCart(res.body.data.cartCreate.cart);
+  if (cart?.id) {
+    cartCache.set(cart.id, { cart, timestamp: Date.now() });
+  }
+  return cart;
 }
 
 export async function addToCart(
@@ -297,8 +303,12 @@ export async function addToCart(
       lines,
     },
   });
+  const cart = reshapeCart(res.body.data.cartLinesAdd.cart);
+  if (cartId && cart) {
+    cartCache.set(cartId, { cart, timestamp: Date.now() });
+  }
   return {
-    cart: reshapeCart(res.body.data.cartLinesAdd.cart),
+    cart,
     warnings: res.body.data.cartLinesAdd.warnings,
     userErrors: res.body.data.cartLinesAdd.userErrors,
   };
@@ -314,7 +324,11 @@ export async function removeFromCart(lineIds: string[]): Promise<Cart> {
     },
   });
 
-  return reshapeCart(res.body.data.cartLinesRemove.cart);
+  const cart = reshapeCart(res.body.data.cartLinesRemove.cart);
+  if (cartId && cart) {
+    cartCache.set(cartId, { cart, timestamp: Date.now() });
+  }
+  return cart;
 }
 
 export async function updateCart(
@@ -329,8 +343,13 @@ export async function updateCart(
     },
   });
 
+  const cart = reshapeCart(res.body.data.cartLinesUpdate.cart);
+  if (cartId && cart) {
+    cartCache.set(cartId, { cart, timestamp: Date.now() });
+  }
+
   return {
-    cart: reshapeCart(res.body.data.cartLinesUpdate.cart),
+    cart,
     warnings: res.body.data.cartLinesUpdate.warnings,
     userErrors: res.body.data.cartLinesUpdate.userErrors,
   };
@@ -348,7 +367,11 @@ export async function getFreshCart(): Promise<Cart | undefined> {
   if (!res.body.data.cart) {
     return undefined;
   }
-  return reshapeCart(res.body.data.cart);
+  const cart = reshapeCart(res.body.data.cart);
+  if (cartId && cart) {
+    cartCache.set(cartId, { cart, timestamp: Date.now() });
+  }
+  return cart;
 }
 
 
@@ -363,6 +386,12 @@ export async function getCart(): Promise<Cart | undefined> {
     return undefined;
   }
 
+  // Fast path: if cart was mutated within the last 3s, return cached cart in 0ms
+  const cached = cartCache.get(cartId);
+  if (cached && Date.now() - cached.timestamp < 3000) {
+    return cached.cart;
+  }
+
   const res = await shopifyFetch<ShopifyCartOperation>({
     query: getCartQuery,
     variables: { cartId },
@@ -370,10 +399,13 @@ export async function getCart(): Promise<Cart | undefined> {
 
   // Old carts becomes `null` when you checkout.
   if (!res.body.data.cart) {
+    cartCache.delete(cartId);
     return undefined;
   }
 
-  return reshapeCart(res.body.data.cart);
+  const cart = reshapeCart(res.body.data.cart);
+  cartCache.set(cartId, { cart, timestamp: Date.now() });
+  return cart;
 }
 
 export async function getCollection(
