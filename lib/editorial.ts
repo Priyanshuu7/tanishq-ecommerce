@@ -129,7 +129,7 @@ export const filmGrid = {
 /** The positioning statement that follows the hero. */
 export const signatureStatement: EditorialStatement = {
   eyebrow: "The House",
-  heading: "Signature realms of style",
+  heading: "Signature Realms Of Style",
   body: [
     "Four decades of drape, distilled. Each garment begins as a length of untouched cloth and ends as something worn once and remembered for years.",
     "We work in ateliers rather than factories, in weeks rather than hours, and in fabrics chosen for how they move rather than how quickly they cut.",
@@ -140,7 +140,7 @@ export const signatureStatement: EditorialStatement = {
 /** The craft statement that sits between the category rail and the banner. */
 export const craftStatement: EditorialStatement = {
   eyebrow: "Solanki Shivranjani",
-  heading: "Crafted to perfection",
+  heading: "Crafted To Perfection",
   body: [
     "Every panel is cut on the bias, every seam finished by hand, every surface embroidered in-house. The result is a garment that holds its architecture without ever holding you.",
   ],
@@ -173,7 +173,7 @@ export const featureFilm: FilmSection = {
 /** Stands in for the feature film until `featureFilm.src` is filled in. */
 export const featureFallback = {
   eyebrow: "By Appointment",
-  heading: "Luxury, tailored to you",
+  heading: "Luxury, Tailored To You",
   body: "Our flagship ateliers offer private fittings, bespoke commissions and one-to-one styling with the design team.",
   primaryCta: { label: "Visit us", href: "/search" } satisfies CtaLink,
   secondaryCta: {
@@ -329,9 +329,9 @@ export const navigation = {
    * pages (`app/[page]/page.tsx`) once those pages exist in the store.
    */
   editorialLinks: [
-    { label: "The House", href: "/search" },
+    { label: "About us", href: "/about-us" },
     // { label: "Bespoke", href: "/search" },
-    { label: "Stores", href: "/search" },
+    // { label: "Stores", href: "/search" },
   ] satisfies CtaLink[],
 };
 

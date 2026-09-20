@@ -11,7 +11,7 @@ const { COMPANY_NAME, SITE_NAME } = process.env;
 export default async function Footer() {
   "use cache";
   const currentYear = new Date().getFullYear();
-  const copyrightDate = 2023 + (currentYear > 2023 ? `-${currentYear}` : "");
+  const copyrightDate = new Date().getFullYear();
   const skeleton = "h-4 w-28 animate-pulse bg-surface-deep";
   const menu = await getMenu("next-js-frontend-footer-menu");
   const copyrightName = COMPANY_NAME || SITE_NAME || "";
@@ -121,7 +121,7 @@ export default async function Footer() {
             All rights reserved.
           </p>
           <p className="t-caption">
-            Hand-finished in limited quantities. Made to order.
+            Turning Traditions Into Confidence
           </p>
         </div>
       </div>
