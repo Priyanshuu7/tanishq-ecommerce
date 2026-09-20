@@ -143,6 +143,24 @@ export type ShopifyProduct = {
   metafields?: any[];
 };
 
+export type ShopifyCartWarning = {
+  code: string;
+  message: string;
+  target?: string;
+};
+
+export type ShopifyUserError = {
+  field?: string[];
+  message: string;
+  code?: string;
+};
+
+export type CartMutationResult = {
+  cart: Cart;
+  warnings?: ShopifyCartWarning[];
+  userErrors?: ShopifyUserError[];
+};
+
 export type ShopifyCartOperation = {
   data: {
     cart: ShopifyCart;
@@ -153,13 +171,21 @@ export type ShopifyCartOperation = {
 };
 
 export type ShopifyCreateCartOperation = {
-  data: { cartCreate: { cart: ShopifyCart } };
+  data: {
+    cartCreate: {
+      cart: ShopifyCart;
+      warnings?: ShopifyCartWarning[];
+      userErrors?: ShopifyUserError[];
+    };
+  };
 };
 
 export type ShopifyAddToCartOperation = {
   data: {
     cartLinesAdd: {
       cart: ShopifyCart;
+      warnings?: ShopifyCartWarning[];
+      userErrors?: ShopifyUserError[];
     };
   };
   variables: {
@@ -175,6 +201,7 @@ export type ShopifyRemoveFromCartOperation = {
   data: {
     cartLinesRemove: {
       cart: ShopifyCart;
+      userErrors?: ShopifyUserError[];
     };
   };
   variables: {
@@ -187,6 +214,8 @@ export type ShopifyUpdateCartOperation = {
   data: {
     cartLinesUpdate: {
       cart: ShopifyCart;
+      warnings?: ShopifyCartWarning[];
+      userErrors?: ShopifyUserError[];
     };
   };
   variables: {
@@ -198,6 +227,7 @@ export type ShopifyUpdateCartOperation = {
     }[];
   };
 };
+
 
 export type ShopifyCollectionOperation = {
   data: {

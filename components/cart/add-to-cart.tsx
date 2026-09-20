@@ -6,8 +6,9 @@ import LoadingDots from "components/loading-dots";
 import { cart as cartCopy } from "lib/editorial";
 import { Product, ProductVariant } from "lib/shopify/types";
 import { useSearchParams } from "next/navigation";
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import { useFormStatus } from "react-dom";
+import { toast } from "sonner";
 import { useCart } from "./cart-context";
 
 function SubmitButton({
@@ -68,7 +69,7 @@ export function AddToCart({ product }: { product: Product }) {
   const { variants, availableForSale } = product;
   const { addCartItem } = useCart();
   const searchParams = useSearchParams();
-  const [message, formAction] = useActionState(addItem, null);
+  const [result, formAction] = useActionState(addItem, null);
 
   const variant = variants.find((variant: ProductVariant) =>
     variant.selectedOptions.every(
@@ -82,6 +83,14 @@ export function AddToCart({ product }: { product: Product }) {
     (variant) => variant.id === selectedVariantId,
   )!;
 
+  useEffect(() => {
+    if (result?.status === "warning" && result?.message) {
+      toast.warning(result.message, { id: `add-cart-${selectedVariantId}` });
+    } else if (result?.status === "error" && result?.message) {
+      toast.error(result.message, { id: `add-cart-error-${selectedVariantId}` });
+    }
+  }, [result, selectedVariantId]);
+
   return (
     <form
       action={async () => {
@@ -94,8 +103,9 @@ export function AddToCart({ product }: { product: Product }) {
         selectedVariantId={selectedVariantId}
       />
       <p aria-live="polite" className="sr-only" role="status">
-        {message}
+        {result?.message}
       </p>
     </form>
   );
 }
+

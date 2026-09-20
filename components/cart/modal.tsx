@@ -10,9 +10,14 @@ import { cart as cartCopy } from "lib/editorial";
 import { createUrl } from "lib/utils";
 import Image from "next/image";
 import Link from "next/link";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
-import { createCartAndSetCookie, redirectToCheckout } from "./actions";
+import { toast } from "sonner";
+import {
+  createCartAndSetCookie,
+  redirectToCheckout,
+  validateCheckoutAction,
+} from "./actions";
 import { useCart } from "./cart-context";
 import { DeleteItemButton } from "./delete-item-button";
 import { EditItemQuantityButton } from "./edit-item-quantity-button";
@@ -23,20 +28,36 @@ type MerchandiseSearchParams = {
 };
 
 /**
- * Cart drawer.
- *
- * Everything below the presentation layer is the template's, untouched: the
- * `createCartAndSetCookie` bootstrap, the quantity-watching effect that pops the
- * drawer open after an add, the optimistic `updateCartItem` handed to the row
- * buttons, and the `redirectToCheckout` Server Action form.
+ * Cart drawer with real-time inventory validation, stock capping,
+ * and pre-checkout verification.
  */
 export default function CartModal() {
   const { cart, updateCartItem } = useCart();
   const [isOpen, setIsOpen] = useState(false);
   const [isRedirecting, setIsRedirecting] = useState(false);
+  const [maxStockMap, setMaxStockMap] = useState<Record<string, number>>({});
+  const [stockAlert, setStockAlert] = useState<string | null>(null);
   const quantityRef = useRef(cart?.totalQuantity);
+  const wasOpenRef = useRef(false);
+  const cartRef = useRef(cart);
+
+  useEffect(() => {
+    cartRef.current = cart;
+  }, [cart]);
+
   const openCart = () => setIsOpen(true);
   const closeCart = () => setIsOpen(false);
+
+  const handleStockWarning = useCallback(
+    (merchandiseId: string, maxQty: number, msg: string) => {
+      setMaxStockMap((prev) => {
+        if (prev[merchandiseId] === maxQty) return prev;
+        return { ...prev, [merchandiseId]: maxQty };
+      });
+      setStockAlert((prev) => (prev === msg ? prev : msg));
+    },
+    [],
+  );
 
   useEffect(() => {
     if (!cart) {
@@ -45,23 +66,136 @@ export default function CartModal() {
   }, [cart]);
 
   useEffect(() => {
-    if (
-      cart?.totalQuantity &&
-      cart?.totalQuantity !== quantityRef.current &&
-      cart?.totalQuantity > 0
-    ) {
-      if (!isOpen) {
-        setIsOpen(true);
-      }
-      quantityRef.current = cart?.totalQuantity;
+    const currentQty = cart?.totalQuantity ?? 0;
+    const prevQty = quantityRef.current ?? 0;
+    quantityRef.current = currentQty;
+
+    // Only auto-open if quantity increased (e.g. user added an item from product page)
+    if (currentQty > prevQty && !isOpen) {
+      setIsOpen(true);
     }
-  }, [isOpen, cart?.totalQuantity, quantityRef]);
+  }, [isOpen, cart?.totalQuantity]);
+
+  // Handle browser back button (popstate, BFCache pageshow, focus, tab visibility)
+  useEffect(() => {
+    const resetRedirecting = () => {
+      setIsRedirecting(false);
+    };
+    window.addEventListener("pageshow", resetRedirecting);
+    window.addEventListener("popstate", resetRedirecting);
+    window.addEventListener("focus", resetRedirecting);
+    document.addEventListener("visibilitychange", resetRedirecting);
+    return () => {
+      window.removeEventListener("pageshow", resetRedirecting);
+      window.removeEventListener("popstate", resetRedirecting);
+      window.removeEventListener("focus", resetRedirecting);
+      document.removeEventListener("visibilitychange", resetRedirecting);
+    };
+  }, []);
 
   useEffect(() => {
     if (!isOpen) {
       setIsRedirecting(false);
     }
   }, [isOpen]);
+
+  // Check inventory with Shopify once when cart drawer opens
+  useEffect(() => {
+    const justOpened = isOpen && !wasOpenRef.current;
+    wasOpenRef.current = isOpen;
+
+    const currentCart = cartRef.current;
+    if (justOpened && currentCart && currentCart.lines.length > 0) {
+      const clientLines = currentCart.lines.map((line) => ({
+        merchandiseId: line.merchandise.id,
+        title: line.merchandise.product.title,
+        quantity: line.quantity,
+      }));
+
+      validateCheckoutAction(clientLines)
+        .then((result) => {
+          if (result.status === "inventory_changed") {
+            const alertMsg =
+              result.message ||
+              "Some items in your cart had limited stock and were updated.";
+            setStockAlert(alertMsg);
+            toast.warning(alertMsg, { duration: 6000 });
+            if (result.freshCart) {
+              const updatedStockMap: Record<string, number> = {};
+              result.freshCart.lines.forEach((l) => {
+                updatedStockMap[l.merchandise.id] = l.quantity;
+              });
+              setMaxStockMap((prev) => ({ ...prev, ...updatedStockMap }));
+            }
+          }
+        })
+        .catch(() => {});
+    }
+  }, [isOpen]);
+
+  const handleCheckout = async (e?: React.MouseEvent) => {
+    if (e) e.preventDefault();
+    if (isRedirecting) return;
+    setIsRedirecting(true);
+
+    if (!cart || cart.lines.length === 0) {
+      setIsRedirecting(false);
+      return;
+    }
+
+    const clientLines = cart.lines.map((line) => ({
+      merchandiseId: line.merchandise.id,
+      title: line.merchandise.product.title,
+      quantity: line.quantity,
+    }));
+
+    try {
+      const result = await validateCheckoutAction(clientLines);
+
+      if (result.status === "inventory_changed") {
+        setIsRedirecting(false);
+        const alertMsg =
+          result.message ||
+          "Some items in your cart had limited stock and were updated.";
+        setStockAlert(alertMsg);
+        toast.warning(alertMsg, { duration: 6000 });
+        if (result.freshCart) {
+          const updatedStockMap: Record<string, number> = {};
+          result.freshCart.lines.forEach((l) => {
+            updatedStockMap[l.merchandise.id] = l.quantity;
+          });
+          setMaxStockMap((prev) => ({ ...prev, ...updatedStockMap }));
+        }
+        return;
+      }
+
+      if (result.status === "error") {
+        setIsRedirecting(false);
+        toast.error(result.message || "Error validating cart");
+        return;
+      }
+
+      const targetUrl = result.checkoutUrl || cart.checkoutUrl;
+      if (targetUrl) {
+        setTimeout(() => {
+          setIsRedirecting(false);
+        }, 2500);
+        window.location.href = targetUrl;
+      } else {
+        setIsRedirecting(false);
+      }
+    } catch (err) {
+      console.error("Checkout validation error:", err);
+      if (cart.checkoutUrl) {
+        setTimeout(() => {
+          setIsRedirecting(false);
+        }, 2500);
+        window.location.href = cart.checkoutUrl;
+      } else {
+        setIsRedirecting(false);
+      }
+    }
+  };
 
   return (
     <>
@@ -100,7 +234,12 @@ export default function CartModal() {
             leaveFrom="translate-x-0"
             leaveTo="translate-x-full"
           >
-            <Dialog.Panel className="fixed inset-y-0 right-0 flex w-full flex-col border-l border-border bg-background md:w-[26rem]">
+            <Dialog.Panel
+              onClick={() => {
+                if (isRedirecting) setIsRedirecting(false);
+              }}
+              className="fixed inset-y-0 right-0 flex w-full flex-col border-l border-border bg-background md:w-[26rem]"
+            >
               <div className="flex items-center justify-between border-b border-border px-7 py-5">
                 <Dialog.Title className="t-eyebrow text-muted-foreground">
                   {cartCopy.title}
@@ -114,6 +253,19 @@ export default function CartModal() {
                 </button>
               </div>
 
+              {stockAlert ? (
+                <div className="flex items-center justify-between border-b border-accent/40 bg-accent/10 px-7 py-3 text-xs text-foreground">
+                  <p className="font-sans leading-relaxed">{stockAlert}</p>
+                  <button
+                    onClick={() => setStockAlert(null)}
+                    className="ml-3 flex-none text-xs uppercase tracking-wider text-muted-foreground hover:text-foreground"
+                    aria-label="Dismiss alert"
+                  >
+                    Dismiss
+                  </button>
+                </div>
+              ) : null}
+
               {!cart || cart.lines.length === 0 ? (
                 <div className="flex flex-1 flex-col items-center justify-center px-7 text-center">
                   <p className="t-editorial text-foreground">
@@ -126,7 +278,7 @@ export default function CartModal() {
               ) : (
                 <div className="flex min-h-0 flex-1 flex-col">
                   <ul className="grow overflow-y-auto px-7">
-                    {cart.lines
+                    {[...cart.lines]
                       .sort((a, b) =>
                         a.merchandise.product.title.localeCompare(
                           b.merchandise.product.title,
@@ -149,6 +301,10 @@ export default function CartModal() {
                           `/product/${item.merchandise.product.handle}`,
                           new URLSearchParams(merchandiseSearchParams),
                         );
+
+                        const maxQty = maxStockMap[item.merchandise.id];
+                        const isMaxStock =
+                          maxQty !== undefined && item.quantity >= maxQty;
 
                         return (
                           <li
@@ -196,20 +352,31 @@ export default function CartModal() {
                               />
 
                               <div className="mt-auto flex items-center justify-between pt-4">
-                                <div className="flex h-9 items-center border border-border">
-                                  <EditItemQuantityButton
-                                    item={item}
-                                    type="minus"
-                                    optimisticUpdate={updateCartItem}
-                                  />
-                                  <p className="w-8 text-center font-sans text-xs tabular-nums">
-                                    {item.quantity}
-                                  </p>
-                                  <EditItemQuantityButton
-                                    item={item}
-                                    type="plus"
-                                    optimisticUpdate={updateCartItem}
-                                  />
+                                <div className="flex flex-col gap-1">
+                                  <div className="flex h-9 items-center border border-border">
+                                    <EditItemQuantityButton
+                                      item={item}
+                                      type="minus"
+                                      optimisticUpdate={updateCartItem}
+                                    />
+                                    <p className="w-8 text-center font-sans text-xs tabular-nums">
+                                      {item.quantity}
+                                    </p>
+                                    <EditItemQuantityButton
+                                      item={item}
+                                      type="plus"
+                                      optimisticUpdate={updateCartItem}
+                                      maxAvailable={
+                                        maxStockMap[item.merchandise.id]
+                                      }
+                                      onStockWarning={handleStockWarning}
+                                    />
+                                  </div>
+                                  {isMaxStock ? (
+                                    <span className="text-[10px] uppercase tracking-wider text-accent-deep">
+                                      Max stock in cart
+                                    </span>
+                                  ) : null}
                                 </div>
 
                                 <DeleteItemButton
@@ -249,26 +416,21 @@ export default function CartModal() {
                       </div>
                     </dl>
 
-                    {cart.checkoutUrl ? (
-                      <a
-                        href={cart.checkoutUrl}
-                        onClick={() => setIsRedirecting(true)}
-                        className={clsx(
-                          "btn btn-filled mt-6 flex w-full items-center justify-center text-center",
-                          { "pointer-events-none opacity-80": isRedirecting },
-                        )}
-                      >
-                        {isRedirecting ? (
-                          <LoadingDots className="bg-background" />
-                        ) : (
-                          cartCopy.checkoutLabel
-                        )}
-                      </a>
-                    ) : (
-                      <form action={redirectToCheckout} className="mt-6">
-                        <CheckoutButton />
-                      </form>
-                    )}
+                    <button
+                      type="button"
+                      onClick={handleCheckout}
+                      disabled={isRedirecting}
+                      className={clsx(
+                        "btn btn-filled mt-6 flex w-full items-center justify-center text-center",
+                        { "pointer-events-none opacity-80": isRedirecting },
+                      )}
+                    >
+                      {isRedirecting ? (
+                        <LoadingDots className="bg-background" />
+                      ) : (
+                        cartCopy.checkoutLabel
+                      )}
+                    </button>
                   </div>
                 </div>
               )}
@@ -277,19 +439,5 @@ export default function CartModal() {
         </Dialog>
       </Transition>
     </>
-  );
-}
-
-function CheckoutButton() {
-  const { pending } = useFormStatus();
-
-  return (
-    <button className="btn btn-filled w-full" type="submit" disabled={pending}>
-      {pending ? (
-        <LoadingDots className="bg-background" />
-      ) : (
-        cartCopy.checkoutLabel
-      )}
-    </button>
   );
 }

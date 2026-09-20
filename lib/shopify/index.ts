@@ -29,6 +29,7 @@ import {
 } from "./queries/product";
 import {
   Cart,
+  CartMutationResult,
   Collection,
   Connection,
   Image,
@@ -287,7 +288,7 @@ export async function createCart(): Promise<Cart> {
 
 export async function addToCart(
   lines: { merchandiseId: string; quantity: number }[],
-): Promise<Cart> {
+): Promise<CartMutationResult> {
   const cartId = (await cookies()).get("cartId")?.value!;
   const res = await shopifyFetch<ShopifyAddToCartOperation>({
     query: addToCartMutation,
@@ -296,7 +297,11 @@ export async function addToCart(
       lines,
     },
   });
-  return reshapeCart(res.body.data.cartLinesAdd.cart);
+  return {
+    cart: reshapeCart(res.body.data.cartLinesAdd.cart),
+    warnings: res.body.data.cartLinesAdd.warnings,
+    userErrors: res.body.data.cartLinesAdd.userErrors,
+  };
 }
 
 export async function removeFromCart(lineIds: string[]): Promise<Cart> {
@@ -314,7 +319,7 @@ export async function removeFromCart(lineIds: string[]): Promise<Cart> {
 
 export async function updateCart(
   lines: { id: string; merchandiseId: string; quantity: number }[],
-): Promise<Cart> {
+): Promise<CartMutationResult> {
   const cartId = (await cookies()).get("cartId")?.value!;
   const res = await shopifyFetch<ShopifyUpdateCartOperation>({
     query: editCartItemsMutation,
@@ -324,8 +329,28 @@ export async function updateCart(
     },
   });
 
-  return reshapeCart(res.body.data.cartLinesUpdate.cart);
+  return {
+    cart: reshapeCart(res.body.data.cartLinesUpdate.cart),
+    warnings: res.body.data.cartLinesUpdate.warnings,
+    userErrors: res.body.data.cartLinesUpdate.userErrors,
+  };
 }
+
+export async function getFreshCart(): Promise<Cart | undefined> {
+  const cartId = (await cookies()).get("cartId")?.value;
+  if (!cartId) {
+    return undefined;
+  }
+  const res = await shopifyFetch<ShopifyCartOperation>({
+    query: getCartQuery,
+    variables: { cartId },
+  });
+  if (!res.body.data.cart) {
+    return undefined;
+  }
+  return reshapeCart(res.body.data.cart);
+}
+
 
 export async function getCart(): Promise<Cart | undefined> {
   "use cache: private";
