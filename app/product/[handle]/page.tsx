@@ -1,4 +1,4 @@
-import { GridTileImage } from "components/grid/tile";
+import { ProductCardImage } from "components/product/product-card-image";
 import Footer from "components/layout/footer";
 import { AnimatedReveal } from "components/motion/animated-reveal";
 import { Gallery } from "components/product/gallery";
@@ -164,7 +164,7 @@ async function RelatedProducts({ id }: { id: string }) {
                 href={`/product/${product.handle}`}
                 prefetch={true}
               >
-                <GridTileImage
+                <ProductCardImage
                   alt={product.title}
                   src={product.featuredImage?.url}
                   hoverSrc={product.images?.[1]?.url}

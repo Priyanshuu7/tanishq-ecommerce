@@ -202,7 +202,7 @@ export const productPage = {
   /** Fallback eyebrow when a product carries no tags. */
   eyebrowFallback: "The Collection",
   taxNote: "Taxes and duties calculated at checkout.",
-  zoomLabel: "Zoom picture",
+  // zoomLabel: "Zoom picture",
   detailsTitle: "Product Details",
   relatedHeading: "You may also like",
 };

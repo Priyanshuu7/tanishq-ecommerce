@@ -1,4 +1,4 @@
-import { GridTileImage } from "components/grid/tile";
+import { ProductCardImage } from "components/product/product-card-image";
 import Price from "components/price";
 import { SectionHeading } from "components/ui/section-heading";
 import { featuredProducts } from "lib/editorial";
@@ -48,7 +48,7 @@ export async function Carousel() {
                 className="block"
                 tabIndex={i >= products.length ? -1 : undefined}
               >
-                <GridTileImage
+                <ProductCardImage
                   alt={product.title}
                   src={product.featuredImage?.url}
                   hoverSrc={product.images?.[1]?.url}

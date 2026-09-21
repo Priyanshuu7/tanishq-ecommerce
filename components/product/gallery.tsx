@@ -1,5 +1,4 @@
 import { AnimatedReveal } from "components/motion/animated-reveal";
-import { productPage } from "lib/editorial";
 import Image from "next/image";
 
 /**
@@ -60,12 +59,12 @@ export function Gallery({
           </li>
         ))}
       </ul>
-
+      {/* 
       {images.length > 1 ? (
         <p className="t-caption mt-4 hidden lg:block">
           {productPage.zoomLabel}
         </p>
-      ) : null}
+      ) : null} */}
     </div>
   );
 }

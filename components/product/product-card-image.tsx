@@ -1,21 +1,17 @@
 import clsx from "clsx";
 import Image from "next/image";
-import Label from "../label";
 
 /**
- * The image well every product card, gallery thumbnail and carousel slide
- * shares.
+ * Product card image component with hover cross-fade.
  *
- * Two behaviours worth knowing about:
+ * Two behaviours:
  * - `hoverSrc` cross-fades to a second Shopify image on hover, the standard
- *   fashion-retail card interaction. It is pure CSS opacity, no JS.
- * - the image is `object-cover` inside a 3:4 portrait frame. Couture
- *   photography is shot vertically; `object-contain` letterboxes it.
+ *   fashion-retail card interaction using pure CSS opacity.
+ * - the image is `object-cover` inside a portrait frame (default 2:3 aspect ratio).
  */
-export function GridTileImage({
+export function ProductCardImage({
   isInteractive = true,
   active,
-  label,
   hoverSrc,
   ratioClassName = "aspect-[2/3]",
   ...props
@@ -26,12 +22,6 @@ export function GridTileImage({
   hoverSrc?: string;
   /** Override the frame ratio, e.g. "aspect-square" for gallery thumbnails. */
   ratioClassName?: string;
-  label?: {
-    title: string;
-    amount: string;
-    currencyCode: string;
-    position?: "bottom" | "center";
-  };
 } & React.ComponentProps<typeof Image>) {
   return (
     <div
@@ -68,15 +58,10 @@ export function GridTileImage({
           className="absolute inset-0 h-full w-full scale-[1.02] object-cover opacity-0 transition-[opacity,transform] duration-(--duration-slow) ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/card:scale-100 group-hover/card:opacity-100"
         />
       ) : null}
-
-      {label ? (
-        <Label
-          title={label.title}
-          amount={label.amount}
-          currencyCode={label.currencyCode}
-          position={label.position}
-        />
-      ) : null}
     </div>
   );
 }
+
+// Named alias for convenience
+export const GridTileImage = ProductCardImage;
+export default ProductCardImage;

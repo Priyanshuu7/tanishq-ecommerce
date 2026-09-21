@@ -1,4 +1,3 @@
-import { ThreeItemGrid } from "components/grid/three-items";
 import { CategoryCarousel } from "components/home/category-carousel";
 import { FilmGrid } from "components/home/film-grid";
 import { FullBleedBanner } from "components/home/full-bleed-banner";
@@ -35,7 +34,6 @@ export default function HomePage() {
       <EditorialSection statement={signatureStatement} />
       <FilmGrid />
       <CategoryCarousel />
-      <ThreeItemGrid />
       <EditorialSection statement={craftStatement} />
       {/* <Carousel /> */}
       <PullQuote />

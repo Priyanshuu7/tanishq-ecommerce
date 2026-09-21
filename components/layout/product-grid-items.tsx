@@ -1,19 +1,26 @@
-import Grid from "components/grid";
-import { GridTileImage } from "components/grid/tile";
+import clsx from "clsx";
 import { AnimatedReveal } from "components/motion/animated-reveal";
 import Price from "components/price";
+import { ProductCardImage } from "components/product/product-card-image";
 import { Product } from "lib/shopify/types";
 import Link from "next/link";
 
 export default function ProductGridItems({
   products,
+  className = "grid-cols-2 lg:grid-cols-3 xl:grid-cols-4",
 }: {
   products: Product[];
+  className?: string;
 }) {
   return (
-    <>
+    <ul
+      className={clsx(
+        "grid grid-flow-row gap-x-4 gap-y-12 md:gap-x-6 md:gap-y-16",
+        className,
+      )}
+    >
       {products.map((product, index) => (
-        <Grid.Item key={product.handle}>
+        <li key={product.handle} className="group/card">
           <AnimatedReveal
             variant="fade"
             // Stagger across a row, then reset, so a long grid does not end up
@@ -25,7 +32,7 @@ export default function ProductGridItems({
               href={`/product/${product.handle}`}
               prefetch={false}
             >
-              <GridTileImage
+              <ProductCardImage
                 alt={product.title}
                 src={product.featuredImage?.url}
                 // The second Shopify image, cross-faded in on hover.
@@ -54,8 +61,8 @@ export default function ProductGridItems({
               </div>
             </Link>
           </AnimatedReveal>
-        </Grid.Item>
+        </li>
       ))}
-    </>
+    </ul>
   );
 }

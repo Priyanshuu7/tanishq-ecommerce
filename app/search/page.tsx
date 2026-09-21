@@ -1,4 +1,3 @@
-import Grid from "components/grid";
 import ProductGridItems from "components/layout/product-grid-items";
 import { EmptyState } from "components/layout/search/empty-state";
 import { ListingHeader } from "components/layout/search/listing-header";
@@ -41,9 +40,7 @@ export default async function SearchPage(props: {
       />
 
       {products.length > 0 ? (
-        <Grid className="grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          <ProductGridItems products={products} />
-        </Grid>
+        <ProductGridItems products={products} />
       ) : (
         <EmptyState
           heading={
