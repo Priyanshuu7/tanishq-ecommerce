@@ -181,7 +181,6 @@
    ========================================================================== */
 
 @layer base {
-
   *,
   ::after,
   ::before,
@@ -257,7 +256,6 @@
    ========================================================================== */
 
 @layer components {
-
   /* Hero / campaign headline */
   .t-display {
     font-family: var(--font-display);
@@ -358,7 +356,6 @@
    ========================================================================== */
 
 @layer components {
-
   /* True full bleed — no gutter, no cap. For hero and banner media. */
   .layout-full {
     width: 100%;
@@ -431,7 +428,7 @@
      element: Chromium folds clip-path into the rect IntersectionObserver
      measures, so clipping the observed node pins its ratio at 0 and the reveal
      can never fire. AnimatedReveal emits this wrapper for masks only. */
-  [data-reveal="mask"]>[data-reveal-mask] {
+  [data-reveal="mask"] > [data-reveal-mask] {
     display: block;
     clip-path: inset(0 0 105% 0);
     transition: clip-path var(--duration-slow) var(--ease-luxe);
@@ -439,7 +436,7 @@
     will-change: clip-path;
   }
 
-  [data-reveal="mask"][data-visible="true"]>[data-reveal-mask] {
+  [data-reveal="mask"][data-visible="true"] > [data-reveal-mask] {
     clip-path: inset(0 0 0 0);
   }
 }
@@ -449,7 +446,6 @@
    ========================================================================== */
 
 @layer components {
-
   /* Wipe-fill button. ::before scales up from the baseline on hover. */
   .btn {
     position: relative;
@@ -611,7 +607,9 @@
     text-transform: uppercase;
     text-shadow: none !important;
     filter: none !important;
-    transition: color var(--duration-base) var(--ease-luxe), opacity var(--duration-base) var(--ease-luxe);
+    transition:
+      color var(--duration-base) var(--ease-luxe),
+      opacity var(--duration-base) var(--ease-luxe);
   }
 
   .site-header nav .t-nav {
@@ -634,7 +632,9 @@
   }
 
   /* Over film when unscrolled, brand title is near-white with no blur or text-shadow */
-  body:has([data-hero="film"]) .site-header[data-transparent="true"] .site-brand-title {
+  body:has([data-hero="film"])
+    .site-header[data-transparent="true"]
+    .site-brand-title {
     color: var(--color-on-media) !important;
     text-shadow: none !important;
     filter: none !important;
@@ -672,10 +672,12 @@
 
 /* Legibility scrim under text laid over photography. */
 @utility media-scrim {
-  background-image: linear-gradient(to top,
-      color-mix(in oklab, #2a1e1e 62%, transparent) 0%,
-      color-mix(in oklab, #2a1e1e 28%, transparent) 42%,
-      transparent 78%);
+  background-image: linear-gradient(
+    to top,
+    color-mix(in oklab, #2a1e1e 62%, transparent) 0%,
+    color-mix(in oklab, #2a1e1e 28%, transparent) 42%,
+    transparent 78%
+  );
 }
 
 /* Focal alignment for editorial hero media:

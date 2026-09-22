@@ -78,4 +78,3 @@ export const removeFromCartMutation = /* GraphQL */ `
   }
   ${cartFragment}
 `;
-

@@ -228,7 +228,6 @@ export type ShopifyUpdateCartOperation = {
   };
 };
 
-
 export type ShopifyCollectionOperation = {
   data: {
     collection: ShopifyCollection;

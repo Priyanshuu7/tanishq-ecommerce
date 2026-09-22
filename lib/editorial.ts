@@ -215,8 +215,7 @@ export const productAccordions: AccordionEntry[] = [
   {
     title: "Shipping & Delivery",
     body: [
-      "Made-to-order pieces are dispatched within 3–4 weeks. Ready-to-wear orders leave  within 2–3 business days.",
-      "Complimentary insured shipping worldwide. Import duties, where applicable, are calculated at checkout.",
+      "Each piece is thoughtfully made to order with careful attention to detail and will be delivered within 21 days. Once your order is ready and dispatched, the tracking details will be shared with you.",
     ],
   },
   {

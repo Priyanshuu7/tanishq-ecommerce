@@ -23,7 +23,7 @@ export default {
         hostname: "lh3.googleusercontent.com",
       },
     ],
-  },  
+  },
 
   async redirects() {
     return [

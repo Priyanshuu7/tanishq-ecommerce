@@ -37,7 +37,9 @@ export async function addItem(
       cartId = cart.id!;
       (await cookies()).set("cartId", cartId);
     }
-    const result = await addToCart([{ merchandiseId: selectedVariantId, quantity: 1 }]);
+    const result = await addToCart([
+      { merchandiseId: selectedVariantId, quantity: 1 },
+    ]);
     updateTag(TAGS.cart);
 
     if (result.warnings && result.warnings.length > 0) {
@@ -320,13 +322,10 @@ export async function getVariantStockAction(
     });
 
     const data = await res.json();
-    const qty =
-      data.data?.cartCreate?.cart?.lines?.edges?.[0]?.node?.quantity;
+    const qty = data.data?.cartCreate?.cart?.lines?.edges?.[0]?.node?.quantity;
     return typeof qty === "number" ? qty : null;
   } catch (e) {
     console.error("Error checking variant stock:", e);
     return null;
   }
 }
-
-

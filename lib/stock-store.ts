@@ -41,12 +41,16 @@ export function setKnownStock(variantId: string, quantity: number) {
   notify();
 }
 
-export function getKnownStock(variantId: string | undefined): number | undefined {
+export function getKnownStock(
+  variantId: string | undefined,
+): number | undefined {
   if (!variantId) return undefined;
   return memoryStockMap[variantId];
 }
 
-export function useKnownStock(variantId: string | undefined): number | undefined {
+export function useKnownStock(
+  variantId: string | undefined,
+): number | undefined {
   return useSyncExternalStore(
     (onStoreChange) => {
       listeners.add(onStoreChange);

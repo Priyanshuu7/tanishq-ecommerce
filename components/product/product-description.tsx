@@ -18,10 +18,9 @@ export function ProductDescription({ product }: { product: Product }) {
 
   return (
     <>
-      <p className="t-eyebrow text-muted-foreground">{eyebrow}</p>
-
       <h1 className="t-section mt-4">{product.title}</h1>
-
+      <br />
+      <p className="t-eyebrow text-muted-foreground">{eyebrow}</p>
       <div className="mt-6 flex items-baseline gap-3">
         <Price
           className="text-base tracking-[0.1em] text-foreground"

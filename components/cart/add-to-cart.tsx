@@ -87,7 +87,9 @@ export function AddToCart({ product }: { product: Product }) {
     if (result?.status === "warning" && result?.message) {
       toast.warning(result.message, { id: `add-cart-${selectedVariantId}` });
     } else if (result?.status === "error" && result?.message) {
-      toast.error(result.message, { id: `add-cart-error-${selectedVariantId}` });
+      toast.error(result.message, {
+        id: `add-cart-error-${selectedVariantId}`,
+      });
     }
   }, [result, selectedVariantId]);
 
@@ -108,4 +110,3 @@ export function AddToCart({ product }: { product: Product }) {
     </form>
   );
 }
-

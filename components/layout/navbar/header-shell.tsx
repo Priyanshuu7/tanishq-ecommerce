@@ -98,7 +98,7 @@ export function HeaderShell({
       setTimeout(measure, 50);
       setTimeout(measure, 150);
     },
-    [measure]
+    [measure],
   );
 
   const isTransparent = hasHero && !isScrolled && !isMegaMenuOpen;

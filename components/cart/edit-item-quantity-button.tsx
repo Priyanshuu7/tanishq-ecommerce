@@ -27,9 +27,7 @@ function SubmitButton({
       }
       className={clsx(
         "flex h-full w-9 flex-none items-center justify-center text-muted-foreground transition-colors duration-(--duration-base)",
-        disabled
-          ? "cursor-not-allowed opacity-25"
-          : "hover:text-foreground",
+        disabled ? "cursor-not-allowed opacity-25" : "hover:text-foreground",
         pending && "cursor-wait opacity-60",
         // Hairline divider between the control and the quantity readout.
         type === "plus" ? "border-l border-border" : "border-r border-border",
@@ -153,11 +151,7 @@ export function EditItemQuantityButton({
         updateItemQuantityAction();
       }}
     >
-      <SubmitButton
-        type={type}
-        disabled={isDisabled}
-        pending={isPending}
-      />
+      <SubmitButton type={type} disabled={isDisabled} pending={isPending} />
       <p aria-live="polite" className="sr-only" role="status">
         {result?.message}
       </p>

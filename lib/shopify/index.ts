@@ -374,7 +374,6 @@ export async function getFreshCart(): Promise<Cart | undefined> {
   return cart;
 }
 
-
 export async function getCart(): Promise<Cart | undefined> {
   "use cache: private";
   cacheTag(TAGS.cart);

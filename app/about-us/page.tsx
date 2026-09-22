@@ -25,9 +25,7 @@ export default function AboutUsPage() {
           </AnimatedReveal> */}
 
           <AnimatedReveal variant="up" delay={80}>
-            <h1 className="t-section">
-              Turning Traditions Into Confidence
-            </h1>
+            <h1 className="t-section">Turning Traditions Into Confidence</h1>
           </AnimatedReveal>
 
           <AnimatedReveal variant="fade" delay={160}>
@@ -38,11 +36,14 @@ export default function AboutUsPage() {
         <article className="space-y-8 text-foreground/90 leading-relaxed font-sans text-base sm:text-lg">
           <AnimatedReveal variant="up" delay={120}>
             <p className="t-editorial text-xl sm:text-2xl font-light text-foreground leading-relaxed">
-              <strong className="font-normal text-foreground">Label Shivranjani Solanki</strong> is a
-              luxury fashion house where heritage craftsmanship meets modern
-              elegance. Rooted in a deep appreciation for tradition, every
-              creation is thoughtfully designed with intricate hand embroidery,
-              refined detailing, and a commitment to timeless artistry.
+              <strong className="font-normal text-foreground">
+                Label Shivranjani Solanki
+              </strong>{" "}
+              is a luxury fashion house where heritage craftsmanship meets
+              modern elegance. Rooted in a deep appreciation for tradition,
+              every creation is thoughtfully designed with intricate hand
+              embroidery, refined detailing, and a commitment to timeless
+              artistry.
             </p>
           </AnimatedReveal>
 
@@ -99,8 +100,8 @@ export default function AboutUsPage() {
               Designed for the woman who values individuality and effortless
               grace,{" "}
               <strong className="font-medium text-foreground">
-                Label Shivranjani Solanki celebrates confidence in its purest form
-                subtle, strong, and unapologetically authentic.
+                Label Shivranjani Solanki celebrates confidence in its purest
+                form subtle, strong, and unapologetically authentic.
               </strong>{" "}
               Each collection is an exploration of mood, texture, and emotion,
               where every detail is intentional and every piece is meant to be

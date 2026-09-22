@@ -43,7 +43,6 @@ export default async function Footer() {
         </div>
       ) : null}
 
-
       <AnimatedReveal
         as="div"
         variant="fade"
@@ -120,9 +119,7 @@ export default async function Footer() {
               : ""}{" "}
             All rights reserved.
           </p>
-          <p className="t-caption">
-            Turning Traditions Into Confidence
-          </p>
+          <p className="t-caption">Turning Traditions Into Confidence</p>
         </div>
       </div>
     </footer>
