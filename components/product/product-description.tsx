@@ -5,7 +5,6 @@ import { Accordion, AccordionItem } from "components/ui/accordion";
 import { HIDDEN_PRODUCT_TAG } from "lib/constants";
 import { productAccordions, productPage } from "lib/editorial";
 import { Product } from "lib/shopify/types";
-import { StockStatus } from "./stock-status";
 import { VariantSelector } from "./variant-selector";
 
 export function ProductDescription({ product }: { product: Product }) {
@@ -41,7 +40,6 @@ export function ProductDescription({ product }: { product: Product }) {
           options={product.options}
           variants={product.variants}
         />
-        <StockStatus variants={product.variants} />
         <AddToCart product={product} />
       </div>
 

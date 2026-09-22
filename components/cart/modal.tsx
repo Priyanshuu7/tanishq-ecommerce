@@ -10,14 +10,10 @@ import { cart as cartCopy } from "lib/editorial";
 import { createUrl } from "lib/utils";
 import Image from "next/image";
 import Link from "next/link";
-import { Fragment, useCallback, useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { toast } from "sonner";
-import {
-  createCartAndSetCookie,
-  redirectToCheckout,
-  validateCheckoutAction,
-} from "./actions";
+import { createCartAndSetCookie, redirectToCheckout } from "./actions";
 import { useCart } from "./cart-context";
 import { DeleteItemButton } from "./delete-item-button";
 import { EditItemQuantityButton } from "./edit-item-quantity-button";
@@ -28,17 +24,13 @@ type MerchandiseSearchParams = {
 };
 
 /**
- * Cart drawer with real-time inventory validation, stock capping,
- * and pre-checkout verification.
+ * Cart drawer with instant checkout and smooth quantity adjustment.
  */
 export default function CartModal() {
   const { cart, updateCartItem } = useCart();
   const [isOpen, setIsOpen] = useState(false);
   const [isRedirecting, setIsRedirecting] = useState(false);
-  const [maxStockMap, setMaxStockMap] = useState<Record<string, number>>({});
-  const [stockAlert, setStockAlert] = useState<string | null>(null);
   const quantityRef = useRef(cart?.totalQuantity);
-  const wasOpenRef = useRef(false);
   const cartRef = useRef(cart);
 
   useEffect(() => {
@@ -47,17 +39,6 @@ export default function CartModal() {
 
   const openCart = () => setIsOpen(true);
   const closeCart = () => setIsOpen(false);
-
-  const handleStockWarning = useCallback(
-    (merchandiseId: string, maxQty: number, msg: string) => {
-      setMaxStockMap((prev) => {
-        if (prev[merchandiseId] === maxQty) return prev;
-        return { ...prev, [merchandiseId]: maxQty };
-      });
-      setStockAlert((prev) => (prev === msg ? prev : msg));
-    },
-    [],
-  );
 
   useEffect(() => {
     if (!cart) {
@@ -99,41 +80,7 @@ export default function CartModal() {
     }
   }, [isOpen]);
 
-  // Check inventory with Shopify once when cart drawer opens
-  useEffect(() => {
-    const justOpened = isOpen && !wasOpenRef.current;
-    wasOpenRef.current = isOpen;
-
-    const currentCart = cartRef.current;
-    if (justOpened && currentCart && currentCart.lines.length > 0) {
-      const clientLines = currentCart.lines.map((line) => ({
-        merchandiseId: line.merchandise.id,
-        title: line.merchandise.product.title,
-        quantity: line.quantity,
-      }));
-
-      validateCheckoutAction(clientLines)
-        .then((result) => {
-          if (result.status === "inventory_changed") {
-            const alertMsg =
-              result.message ||
-              "Some items in your cart had limited stock and were updated.";
-            setStockAlert(alertMsg);
-            toast.warning(alertMsg, { duration: 6000 });
-            if (result.freshCart) {
-              const updatedStockMap: Record<string, number> = {};
-              result.freshCart.lines.forEach((l) => {
-                updatedStockMap[l.merchandise.id] = l.quantity;
-              });
-              setMaxStockMap((prev) => ({ ...prev, ...updatedStockMap }));
-            }
-          }
-        })
-        .catch(() => {});
-    }
-  }, [isOpen]);
-
-  const handleCheckout = async (e?: React.MouseEvent) => {
+  const handleCheckout = (e?: React.MouseEvent) => {
     if (e) e.preventDefault();
     if (isRedirecting) return;
     setIsRedirecting(true);
@@ -143,57 +90,10 @@ export default function CartModal() {
       return;
     }
 
-    const clientLines = cart.lines.map((line) => ({
-      merchandiseId: line.merchandise.id,
-      title: line.merchandise.product.title,
-      quantity: line.quantity,
-    }));
-
-    try {
-      const result = await validateCheckoutAction(clientLines);
-
-      if (result.status === "inventory_changed") {
-        setIsRedirecting(false);
-        const alertMsg =
-          result.message ||
-          "Some items in your cart had limited stock and were updated.";
-        setStockAlert(alertMsg);
-        toast.warning(alertMsg, { duration: 6000 });
-        if (result.freshCart) {
-          const updatedStockMap: Record<string, number> = {};
-          result.freshCart.lines.forEach((l) => {
-            updatedStockMap[l.merchandise.id] = l.quantity;
-          });
-          setMaxStockMap((prev) => ({ ...prev, ...updatedStockMap }));
-        }
-        return;
-      }
-
-      if (result.status === "error") {
-        setIsRedirecting(false);
-        toast.error(result.message || "Error validating cart");
-        return;
-      }
-
-      const targetUrl = result.checkoutUrl || cart.checkoutUrl;
-      if (targetUrl) {
-        setTimeout(() => {
-          setIsRedirecting(false);
-        }, 2500);
-        window.location.href = targetUrl;
-      } else {
-        setIsRedirecting(false);
-      }
-    } catch (err) {
-      console.error("Checkout validation error:", err);
-      if (cart.checkoutUrl) {
-        setTimeout(() => {
-          setIsRedirecting(false);
-        }, 2500);
-        window.location.href = cart.checkoutUrl;
-      } else {
-        setIsRedirecting(false);
-      }
+    if (cart.checkoutUrl) {
+      window.location.href = cart.checkoutUrl;
+    } else {
+      setIsRedirecting(false);
     }
   };
 
@@ -253,19 +153,6 @@ export default function CartModal() {
                 </button>
               </div>
 
-              {stockAlert ? (
-                <div className="flex items-center justify-between border-b border-accent/40 bg-accent/10 px-7 py-3 text-xs text-foreground">
-                  <p className="font-sans leading-relaxed">{stockAlert}</p>
-                  <button
-                    onClick={() => setStockAlert(null)}
-                    className="ml-3 flex-none text-xs uppercase tracking-wider text-muted-foreground hover:text-foreground"
-                    aria-label="Dismiss alert"
-                  >
-                    Dismiss
-                  </button>
-                </div>
-              ) : null}
-
               {!cart || cart.lines.length === 0 ? (
                 <div className="flex flex-1 flex-col items-center justify-center px-7 text-center">
                   <p className="t-editorial text-foreground">
@@ -301,10 +188,6 @@ export default function CartModal() {
                           `/product/${item.merchandise.product.handle}`,
                           new URLSearchParams(merchandiseSearchParams),
                         );
-
-                        const maxQty = maxStockMap[item.merchandise.id];
-                        const isMaxStock =
-                          maxQty !== undefined && item.quantity >= maxQty;
 
                         return (
                           <li
@@ -366,17 +249,8 @@ export default function CartModal() {
                                       item={item}
                                       type="plus"
                                       optimisticUpdate={updateCartItem}
-                                      maxAvailable={
-                                        maxStockMap[item.merchandise.id]
-                                      }
-                                      onStockWarning={handleStockWarning}
                                     />
                                   </div>
-                                  {isMaxStock ? (
-                                    <span className="text-[10px] uppercase tracking-wider text-accent-deep">
-                                      Max stock in cart
-                                    </span>
-                                  ) : null}
                                 </div>
 
                                 <DeleteItemButton
