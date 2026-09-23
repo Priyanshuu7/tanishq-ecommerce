@@ -167,6 +167,7 @@ async function RelatedProducts({ id }: { id: string }) {
                 <ProductCardImage
                   alt={product.title}
                   src={product.featuredImage?.url}
+                  images={product.images}
                   hoverSrc={product.images?.[1]?.url}
                   fill
                   sizes="(min-width: 768px) 25vw, 62vw"

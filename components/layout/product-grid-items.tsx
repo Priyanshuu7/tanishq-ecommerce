@@ -35,6 +35,7 @@ export default function ProductGridItems({
               <ProductCardImage
                 alt={product.title}
                 src={product.featuredImage?.url}
+                images={product.images}
                 // The second Shopify image, cross-faded in on hover.
                 hoverSrc={product.images?.[1]?.url}
                 fill
