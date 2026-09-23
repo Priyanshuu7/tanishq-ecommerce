@@ -1,11 +1,11 @@
-import { ProductCardImage } from "components/product/product-card-image";
 import Footer from "components/layout/footer";
 import { AnimatedReveal } from "components/motion/animated-reveal";
+import Price from "components/price";
 import { Gallery } from "components/product/gallery";
+import { ProductCardImage } from "components/product/product-card-image";
 import { ProductDescription } from "components/product/product-description";
 import { HIDDEN_PRODUCT_TAG } from "lib/constants";
 import { productPage } from "lib/editorial";
-import Price from "components/price";
 import { getProduct, getProductRecommendations } from "lib/shopify";
 import type { Image } from "lib/shopify/types";
 import type { Metadata } from "next";
@@ -37,15 +37,15 @@ export async function generateMetadata(props: {
     },
     openGraph: url
       ? {
-          images: [
-            {
-              url,
-              width,
-              height,
-              alt,
-            },
-          ],
-        }
+        images: [
+          {
+            url,
+            width,
+            height,
+            alt,
+          },
+        ],
+      }
       : null,
   };
 }
@@ -106,7 +106,7 @@ async function ProductView({
       <div className="layout-wide section-y-sm">
         <div className="grid gap-12 lg:grid-cols-[1.35fr_1fr] lg:gap-16 xl:gap-24">
           <Gallery
-            images={product.images.slice(0, 5).map((image: Image) => ({
+            images={product.images.slice(0, 20).map((image: Image) => ({
               src: image.url,
               altText: image.altText,
               width: image.width,
