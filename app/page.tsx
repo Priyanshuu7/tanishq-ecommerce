@@ -2,6 +2,7 @@ import { CategoryCarousel } from "components/home/category-carousel";
 import { FilmGrid } from "components/home/film-grid";
 import { FullBleedBanner } from "components/home/full-bleed-banner";
 import { Hero } from "components/home/hero";
+import { ShoppableVideos } from "components/home/shoppable-videos";
 import Footer from "components/layout/footer";
 import { EditorialSection } from "components/ui/editorial-section";
 import { craftStatement, signatureStatement } from "lib/editorial";
@@ -33,6 +34,7 @@ export default function HomePage() {
       <EditorialSection statement={signatureStatement} />
       <FilmGrid />
       <CategoryCarousel />
+      <ShoppableVideos />
       <EditorialSection statement={craftStatement} />
       {/* <Carousel /> */}
       <FullBleedBanner />

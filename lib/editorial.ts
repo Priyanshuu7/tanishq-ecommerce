@@ -55,6 +55,15 @@ export type GridFilm = Film & {
   href?: string;
 };
 
+export type CustomerReel = {
+  id: string;
+  videoSrc: string;
+  poster?: string;
+  productHandle: string;
+  customerName?: string;
+  tagline?: string;
+};
+
 export type AccordionEntry = {
   title: string;
   body: string[];
@@ -144,6 +153,80 @@ export const craftStatement: EditorialStatement = {
     "Every panel is cut on the bias, every seam finished by hand, every surface embroidered in-house. The result is a garment that holds its architecture without ever holding you.",
   ],
   cta: { label: "Our craft", href: "/search" },
+};
+
+/**
+ * Shoppable Customer Reels — Worn In Real Life.
+ * Displayed in a responsive 4-up carousel right after the collections section.
+ * Each video showcases a patron wearing the dress, linked to the matching product.
+ */
+export const customerReels = {
+  eyebrow: "Customer Spotlight",
+  heading: "Worn In Real Life",
+  description:
+    "See our silhouettes in motion, styled by our patrons across celebrations.",
+  videos: [
+    {
+      id: "reel-1",
+      videoSrc:
+        "https://res.cloudinary.com/demo/video/upload/c_fill,ar_9:16,g_auto,w_720/samples/cld-sample-video.mp4",
+      poster:
+        "https://res.cloudinary.com/demo/video/upload/c_fill,ar_9:16,g_auto,w_720/samples/cld-sample-video.jpg",
+      productHandle: "purple-kurta", // Sitara
+      customerName: "Radhika M.",
+      tagline: "Wearing Sitara",
+    },
+    {
+      id: "reel-2",
+      videoSrc:
+        "https://res.cloudinary.com/demo/video/upload/c_fill,ar_9:16,g_auto,w_720/wave.mp4",
+      poster:
+        "https://res.cloudinary.com/demo/video/upload/c_fill,ar_9:16,g_auto,w_720/wave.jpg",
+      productHandle: "gulab", // Gulab
+      customerName: "Meera K.",
+      tagline: "Wearing Gulab",
+    },
+    {
+      id: "reel-3",
+      videoSrc:
+        "https://res.cloudinary.com/demo/video/upload/c_fill,ar_9:16,g_auto,w_720/elephants.mp4",
+      poster:
+        "https://res.cloudinary.com/demo/video/upload/c_fill,ar_9:16,g_auto,w_720/elephants.jpg",
+      productHandle: "ruhani", // Ruhani
+      customerName: "Tanvi R.",
+      tagline: "Wearing Ruhani",
+    },
+    {
+      id: "reel-4",
+      videoSrc:
+        "https://res.cloudinary.com/demo/video/upload/c_fill,ar_9:16,g_auto,w_720/sea_turtle.mp4",
+      poster:
+        "https://res.cloudinary.com/demo/video/upload/c_fill,ar_9:16,g_auto,w_720/sea_turtle.jpg",
+      productHandle: "ranisiya", // RaniSiya
+      customerName: "Aanya S.",
+      tagline: "Wearing RaniSiya",
+    },
+    {
+      id: "reel-5",
+      videoSrc:
+        "https://res.cloudinary.com/demo/video/upload/c_fill,ar_9:16,g_auto,w_720/samples/cld-sample-video.mp4",
+      poster:
+        "https://res.cloudinary.com/demo/video/upload/c_fill,ar_9:16,g_auto,w_720/samples/cld-sample-video.jpg",
+      productHandle: "sahiba", // Sahiba
+      customerName: "Isha P.",
+      tagline: "Wearing Sahiba",
+    },
+    {
+      id: "reel-6",
+      videoSrc:
+        "https://res.cloudinary.com/demo/video/upload/c_fill,ar_9:16,g_auto,w_720/wave.mp4",
+      poster:
+        "https://res.cloudinary.com/demo/video/upload/c_fill,ar_9:16,g_auto,w_720/wave.jpg",
+      productHandle: "diwani", // Diwani
+      customerName: "Sanya B.",
+      tagline: "Wearing Diwani",
+    },
+  ] satisfies CustomerReel[],
 };
 
 
