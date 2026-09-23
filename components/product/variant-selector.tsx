@@ -45,6 +45,17 @@ export function VariantSelector({
     setSelectedOptions(current);
   }, [searchParams]);
 
+  useEffect(() => {
+    const handlePopState = () => {
+      const current: Record<string, string> = {};
+      const params = new URLSearchParams(window.location.search);
+      params.forEach((v, k) => (current[k] = v));
+      setSelectedOptions(current);
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+
   if (hasNoOptionsOrJustOneOption) {
     const singleSizeOption = options.find((opt) =>
       opt.name.toLowerCase().includes("size"),
@@ -91,10 +102,26 @@ export function VariantSelector({
   }));
 
   const updateOption = (name: string, value: string) => {
-    setSelectedOptions((prev) => ({ ...prev, [name]: value }));
-    const params = new URLSearchParams(searchParams.toString());
-    params.set(name, value);
-    window.history.replaceState(null, "", `?${params.toString()}`);
+    const isCurrentlyActive = selectedOptions[name] === value;
+    const params = new URLSearchParams(window.location.search);
+
+    if (isCurrentlyActive) {
+      setSelectedOptions((prev) => {
+        const next = { ...prev };
+        delete next[name];
+        return next;
+      });
+      params.delete(name);
+    } else {
+      setSelectedOptions((prev) => ({ ...prev, [name]: value }));
+      params.set(name, value);
+    }
+
+    const newUrl = params.toString()
+      ? `?${params.toString()}`
+      : window.location.pathname;
+    window.history.replaceState(null, "", newUrl);
+    window.dispatchEvent(new Event("popstate"));
   };
 
   return (

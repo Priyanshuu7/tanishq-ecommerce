@@ -304,7 +304,7 @@ export const system = {
    */
   welcomeToast: {
     enabled: true,
-    heading: "Welcome to Solanki Shivranjani",
+    heading: "Welcome to Shivranjani Solanki ",
     body: "Private previews, atelier notes and invitations to our seasonal showings.",
   },
 };

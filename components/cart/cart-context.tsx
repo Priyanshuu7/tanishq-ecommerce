@@ -23,7 +23,11 @@ type CartAction =
     }
   | {
       type: "ADD_ITEM";
-      payload: { variant: ProductVariant; product: Product };
+      payload: {
+        variant: ProductVariant;
+        product: Product;
+        customSize?: string;
+      };
     };
 
 type CartContextType = {
@@ -69,9 +73,13 @@ function createOrUpdateCartItem(
   existingItem: CartItem | undefined,
   variant: ProductVariant,
   product: Product,
+  customSize?: string,
 ): CartItem {
   const quantity = existingItem ? existingItem.quantity + 1 : 1;
   const totalAmount = calculateItemCost(quantity, variant.price.amount);
+  const attributes = customSize?.trim()
+    ? [{ key: "Custom Size", value: customSize.trim() }]
+    : existingItem?.attributes;
 
   return {
     id: existingItem?.id,
@@ -93,6 +101,7 @@ function createOrUpdateCartItem(
         featuredImage: product.featuredImage,
       },
     },
+    attributes,
   };
 }
 
@@ -163,19 +172,26 @@ function cartReducer(state: Cart | undefined, action: CartAction): Cart {
       };
     }
     case "ADD_ITEM": {
-      const { variant, product } = action.payload;
+      const { variant, product, customSize } = action.payload;
+      const trimmedCustomSize = customSize?.trim();
       const existingItem = currentCart.lines.find(
-        (item) => item.merchandise.id === variant.id,
+        (item) =>
+          item.merchandise.id === variant.id &&
+          (trimmedCustomSize
+            ? item.attributes?.find((a) => a.key === "Custom Size")?.value ===
+              trimmedCustomSize
+            : !item.attributes?.some((a) => a.key === "Custom Size")),
       );
       const updatedItem = createOrUpdateCartItem(
         existingItem,
         variant,
         product,
+        trimmedCustomSize,
       );
 
       const updatedLines = existingItem
         ? currentCart.lines.map((item) =>
-            item.merchandise.id === variant.id ? updatedItem : item,
+            item === existingItem ? updatedItem : item,
           )
         : [...currentCart.lines, updatedItem];
 
@@ -223,8 +239,15 @@ export function useCart() {
     });
   };
 
-  const addCartItem = (variant: ProductVariant, product: Product) => {
-    updateOptimisticCart({ type: "ADD_ITEM", payload: { variant, product } });
+  const addCartItem = (
+    variant: ProductVariant,
+    product: Product,
+    customSize?: string,
+  ) => {
+    updateOptimisticCart({
+      type: "ADD_ITEM",
+      payload: { variant, product, customSize },
+    });
   };
 
   return useMemo(

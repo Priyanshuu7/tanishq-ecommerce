@@ -19,6 +19,11 @@ export type CartProduct = {
   featuredImage: Image;
 };
 
+export type Attribute = {
+  key: string;
+  value: string;
+};
+
 export type CartItem = {
   id: string | undefined;
   quantity: number;
@@ -34,6 +39,7 @@ export type CartItem = {
     }[];
     product: CartProduct;
   };
+  attributes?: Attribute[];
 };
 
 export type Collection = ShopifyCollection & {
@@ -193,6 +199,7 @@ export type ShopifyAddToCartOperation = {
     lines: {
       merchandiseId: string;
       quantity: number;
+      attributes?: Attribute[];
     }[];
   };
 };

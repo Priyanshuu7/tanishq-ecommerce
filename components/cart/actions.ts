@@ -22,10 +22,22 @@ export type CartActionResult = {
   merchandiseId?: string;
 };
 
+export type AddItemPayload =
+  | string
+  | {
+      selectedVariantId: string | undefined;
+      customSize?: string;
+    };
+
 export async function addItem(
   prevState: any,
-  selectedVariantId: string | undefined,
+  payload: AddItemPayload,
 ): Promise<CartActionResult> {
+  const selectedVariantId =
+    typeof payload === "string" ? payload : payload?.selectedVariantId;
+  const customSize =
+    typeof payload === "object" ? payload?.customSize : undefined;
+
   if (!selectedVariantId) {
     return { status: "error", message: "Error adding item to cart" };
   }
@@ -37,8 +49,17 @@ export async function addItem(
       cartId = cart.id!;
       (await cookies()).set("cartId", cartId);
     }
+
+    const attributes = customSize?.trim()
+      ? [{ key: "Custom Size", value: customSize.trim() }]
+      : undefined;
+
     const result = await addToCart([
-      { merchandiseId: selectedVariantId, quantity: 1 },
+      {
+        merchandiseId: selectedVariantId,
+        quantity: 1,
+        ...(attributes ? { attributes } : {}),
+      },
     ]);
     updateTag(TAGS.cart);
 

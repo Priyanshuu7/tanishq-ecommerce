@@ -220,11 +220,26 @@ export default function CartModal() {
                                 {item.merchandise.product.title}
                               </Link>
 
-                              {item.merchandise.title !== DEFAULT_OPTION ? (
+                              {item.merchandise.title !== DEFAULT_OPTION &&
+                              !item.attributes?.some(
+                                (a) => a.key === "Custom Size",
+                              ) ? (
                                 <p className="t-caption mt-1">
                                   {item.merchandise.title}
                                 </p>
                               ) : null}
+
+                              {item.attributes?.map((attr) => (
+                                <p
+                                  key={attr.key}
+                                  className="t-caption mt-1 text-muted-foreground"
+                                >
+                                  <span className="text-foreground">
+                                    {attr.key}:
+                                  </span>{" "}
+                                  {attr.value}
+                                </p>
+                              ))}
 
                               <Price
                                 className="mt-2 text-muted-foreground"

@@ -28,6 +28,7 @@ import {
   getProductsQuery,
 } from "./queries/product";
 import {
+  Attribute,
   Cart,
   CartMutationResult,
   Collection,
@@ -293,7 +294,11 @@ export async function createCart(): Promise<Cart> {
 }
 
 export async function addToCart(
-  lines: { merchandiseId: string; quantity: number }[],
+  lines: {
+    merchandiseId: string;
+    quantity: number;
+    attributes?: Attribute[];
+  }[],
 ): Promise<CartMutationResult> {
   const cartId = (await cookies()).get("cartId")?.value!;
   const res = await shopifyFetch<ShopifyAddToCartOperation>({
