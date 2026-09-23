@@ -165,14 +165,7 @@ function VideoCard({ item }: { item: ShoppableVideoItem }) {
           />
 
           {/* Top Bar: Patron Badge & Mute Toggle */}
-          <div className="absolute top-2.5 inset-x-2.5 z-10 flex items-center justify-between pointer-events-auto">
-            <div className="flex items-center gap-1.5 rounded-full bg-black/50 px-2 py-0.5 text-[10px] font-sans text-white/90 backdrop-blur-xs border border-white/10">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="truncate max-w-[100px]">
-                {item.customerName || "Patron"}
-              </span>
-            </div>
-
+          <div className="absolute top-2.5 right-2.5 z-10 flex items-center justify-end pointer-events-auto">
             <button
               type="button"
               onClick={toggleMute}

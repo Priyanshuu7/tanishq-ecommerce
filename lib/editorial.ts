@@ -60,7 +60,6 @@ export type CustomerReel = {
   videoSrc: string;
   poster?: string;
   productHandle: string;
-  customerName?: string;
   tagline?: string;
 };
 
@@ -173,7 +172,6 @@ export const customerReels = {
       poster:
         "https://res.cloudinary.com/demo/video/upload/c_fill,ar_9:16,g_auto,w_720/samples/cld-sample-video.jpg",
       productHandle: "purple-kurta", // Sitara
-      customerName: "Radhika M.",
       tagline: "Wearing Sitara",
     },
     {
@@ -183,7 +181,6 @@ export const customerReels = {
       poster:
         "https://res.cloudinary.com/demo/video/upload/c_fill,ar_9:16,g_auto,w_720/wave.jpg",
       productHandle: "gulab", // Gulab
-      customerName: "Meera K.",
       tagline: "Wearing Gulab",
     },
     {
@@ -193,7 +190,6 @@ export const customerReels = {
       poster:
         "https://res.cloudinary.com/demo/video/upload/c_fill,ar_9:16,g_auto,w_720/elephants.jpg",
       productHandle: "ruhani", // Ruhani
-      customerName: "Tanvi R.",
       tagline: "Wearing Ruhani",
     },
     {
@@ -203,7 +199,6 @@ export const customerReels = {
       poster:
         "https://res.cloudinary.com/demo/video/upload/c_fill,ar_9:16,g_auto,w_720/sea_turtle.jpg",
       productHandle: "ranisiya", // RaniSiya
-      customerName: "Aanya S.",
       tagline: "Wearing RaniSiya",
     },
     {
@@ -213,7 +208,6 @@ export const customerReels = {
       poster:
         "https://res.cloudinary.com/demo/video/upload/c_fill,ar_9:16,g_auto,w_720/samples/cld-sample-video.jpg",
       productHandle: "sahiba", // Sahiba
-      customerName: "Isha P.",
       tagline: "Wearing Sahiba",
     },
     {
@@ -223,7 +217,6 @@ export const customerReels = {
       poster:
         "https://res.cloudinary.com/demo/video/upload/c_fill,ar_9:16,g_auto,w_720/wave.jpg",
       productHandle: "diwani", // Diwani
-      customerName: "Sanya B.",
       tagline: "Wearing Diwani",
     },
   ] satisfies CustomerReel[],
@@ -257,7 +250,7 @@ export const featureFallback = {
 
 /** Heading for the collection rail built from real Shopify collections. */
 export const categoryRail = {
-  eyebrow: "Collections",
+  // eyebrow: "Collections",
   heading: "Explore the Collections",
   exploreLabel: "Explore",
 };

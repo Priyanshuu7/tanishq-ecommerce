@@ -36,7 +36,6 @@ export async function CategoryCarousel() {
     <section className="section-y">
       <div className="layout-wide">
         <SectionHeading
-          eyebrow={categoryRail.eyebrow}
           heading={categoryRail.heading}
         />
       </div>
@@ -67,11 +66,7 @@ export async function CategoryCarousel() {
                     className="media-scrim absolute inset-0"
                     aria-hidden="true"
                   />
-
                   <div className="absolute inset-x-0 bottom-0 flex flex-col items-start gap-4 p-6 text-on-media md:p-7">
-                    <h3 className="font-display text-2xl font-light leading-tight md:text-[1.75rem]">
-                      {collection.title}
-                    </h3>
                     <span className="t-nav link-sweep">
                       {categoryRail.exploreLabel}
                     </span>
