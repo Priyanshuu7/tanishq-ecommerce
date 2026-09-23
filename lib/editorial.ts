@@ -184,7 +184,7 @@ export const featureFallback = {
 /** Heading for the collection rail built from real Shopify collections. */
 export const categoryRail = {
   eyebrow: "Collections",
-  heading: "Explore the realms",
+  heading: "Explore the Collections",
   exploreLabel: "Explore",
 };
 
