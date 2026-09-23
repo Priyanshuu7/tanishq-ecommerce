@@ -146,15 +146,6 @@ export const craftStatement: EditorialStatement = {
   cta: { label: "Our craft", href: "/search" },
 };
 
-/**
- * Designer pull quote. Written for this build — replace with a real,
- * attributable quote before launch.
- */
-export const pullQuote = {
-  quote:
-    "Restraint is the hardest luxury. Leave the cloth room to breathe and it will say everything you were tempted to over-explain.",
-  attribution: "Solanki Shivranjani",
-};
 
 /**
  * Full-bleed feature film, lower down the page. `sound` is on because this is
