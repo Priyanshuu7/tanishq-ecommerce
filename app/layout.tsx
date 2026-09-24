@@ -3,16 +3,9 @@ import { Navbar } from "components/layout/navbar";
 import { WelcomeToast } from "components/welcome-toast";
 import { getCart } from "lib/shopify";
 import { baseUrl } from "lib/utils";
-import localFont from "next/font/local";
 import { ReactNode } from "react";
 import { Toaster } from "sonner";
 import "./globals.css";
-
-const rudolphin = localFont({
-  src: "../fonts/Rudolphin Oblique.woff",
-  variable: "--font-rudolphin",
-  display: "swap",
-});
 
 const { SITE_NAME } = process.env;
 
@@ -29,13 +22,10 @@ export const metadata = {
 };
 
 /**
- * Rudolphin Oblique (display) self-hosted locally via next/font/local,
- * mapped to --font-display via --font-rudolphin.
- * Jost (sans) loaded via Google Fonts link tag, mapped to --font-sans in
- * app/globals.css.
+ * Junge (display/serif) + Ubuntu & Jost (sans) loaded via Google Fonts link tag.
  */
 const GOOGLE_FONTS_HREF =
-  "https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&display=swap";
+  "https://fonts.googleapis.com/css2?family=Junge&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&family=Jost:wght@300;400;500&display=swap";
 
 export default async function RootLayout({
   children,
@@ -46,7 +36,7 @@ export default async function RootLayout({
   const cart = getCart();
 
   return (
-    <html lang="en" className={rudolphin.variable}>
+    <html lang="en">
       <body className="min-h-dvh bg-background text-foreground antialiased">
         {/* React hoists these into <head> itself. `precedence` is what makes
             that legal for the stylesheet — without it React refuses to move a

@@ -117,8 +117,8 @@ export const filmGrid = {
       poster:
         "https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/grid/grid-reel-01-poster.jpg",
       label: "Lal Pari in Motion",
-      caption: "Lal Pari",
-      href: "/product/lal-pari",
+      caption: "Sahiba",
+      href: "/product/sahiba",
     },
     {
       src: "https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/grid/grid-reel-03.mp4",
