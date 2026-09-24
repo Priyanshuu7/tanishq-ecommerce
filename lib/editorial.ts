@@ -162,7 +162,7 @@ export const customerReels = {
     {
       id: "reel-3",
       videoSrc:
-        "https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/reels/reel-3-sdr.mp4",
+        "https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/reels/reel-3-v2.mp4",
       productHandle: "90-sedit",
       tagline: "Wearing 90-sedit",
     },
@@ -176,7 +176,7 @@ export const customerReels = {
     {
       id: "reel-5",
       videoSrc:
-        "https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/reels/reel-5-sdr.mp4",
+        "https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/reels/reel-5-v2.mp4",
       productHandle: "ranisiya",
       tagline: "Wearing ranisiya",
     },
