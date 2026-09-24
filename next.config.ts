@@ -2,6 +2,7 @@ export default {
   cacheComponents: true,
 
   images: {
+    dangerouslyAllowLocalIP: true,
     formats: ["image/avif", "image/webp"],
     qualities: [75, 90, 92],
     remotePatterns: [
