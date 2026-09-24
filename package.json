@@ -6,11 +6,13 @@
     "start": "next start",
     "prettier": "prettier --write --ignore-unknown .",
     "prettier:check": "prettier --check --ignore-unknown .",
-    "test": "pnpm prettier:check"
+    "test": "pnpm prettier:check",
+    "upload:blob": "node scripts/upload-to-blob.mjs"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.2.0",
+    "@vercel/blob": "^2.8.0",
     "clsx": "^2.1.1",
     "geist": "^1.3.1",
     "next": "^16.3.2",

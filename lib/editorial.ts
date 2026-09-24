@@ -81,8 +81,12 @@ export type FooterColumn = {
  * Opening full-viewport editorial media (film or image).
  */
 export const heroFilm: FilmSection = {
-  src: "/Hero-Banner.PNG",
-  mobileSrc: "/Moblie-banner.png",
+  src:
+    process.env.NEXT_PUBLIC_HERO_BANNER_URL ||
+    "https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/media/hero-banner.png",
+  mobileSrc:
+    process.env.NEXT_PUBLIC_MOBILE_BANNER_URL ||
+    "https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/media/mobile-banner.png",
   poster: "",
   sound: false,
   title: "Spring Summer, 2026",
@@ -107,31 +111,7 @@ export const heroFallback = {
 export const filmGrid = {
   eyebrow: "In Motion",
   heading: "The season on Film",
-  films: [
-    {
-      src: "https://res.cloudinary.com/demo/video/upload/q_auto,w_720/samples/cld-sample-video.mp4",
-      poster:
-        "https://res.cloudinary.com/demo/video/upload/q_auto,w_720/samples/cld-sample-video.jpg",
-      label: "Bridal couture, autumn winter 2026",
-    },
-    {
-      src: "https://res.cloudinary.com/demo/video/upload/q_auto,w_720/wave.mp4",
-      poster:
-        "https://res.cloudinary.com/demo/video/upload/q_auto,w_720/wave.jpg",
-      label: "Menswear, autumn winter 2026",
-    },
-    {
-      src: "https://media.w3.org/2010/05/sintel/trailer.mp4",
-      poster: "https://media.w3.org/2010/05/sintel/poster.png",
-      label: "Hand embroidery in the atelier",
-    },
-    {
-      src: "https://res.cloudinary.com/demo/video/upload/q_auto,w_720/test_video_r2tk5n.mp4",
-      poster:
-        "https://res.cloudinary.com/demo/video/upload/q_auto,w_720/test_video_r2tk5n.jpg",
-      label: "Draping a bias-cut sari",
-    },
-  ] satisfies GridFilm[],
+  films: [] as GridFilm[],
 };
 
 /** The positioning statement that follows the hero. */
@@ -168,58 +148,39 @@ export const customerReels = {
     {
       id: "reel-1",
       videoSrc:
-        "https://res.cloudinary.com/demo/video/upload/c_fill,ar_9:16,g_auto,w_720/samples/cld-sample-video.mp4",
-      poster:
-        "https://res.cloudinary.com/demo/video/upload/c_fill,ar_9:16,g_auto,w_720/samples/cld-sample-video.jpg",
-      productHandle: "purple-kurta", // Sitara
-      tagline: "Wearing Sitara",
+        "https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/reels/reel-1-fast.mp4",
+      productHandle: "ranisiya",
+      tagline: "Wearing RaniSiya",
     },
     {
       id: "reel-2",
       videoSrc:
-        "https://res.cloudinary.com/demo/video/upload/c_fill,ar_9:16,g_auto,w_720/wave.mp4",
-      poster:
-        "https://res.cloudinary.com/demo/video/upload/c_fill,ar_9:16,g_auto,w_720/wave.jpg",
-      productHandle: "gulab", // Gulab
-      tagline: "Wearing Gulab",
+        "https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/reels/reel-2-fast.mp4",
+      productHandle: "Maheera",
+      tagline: "Wearing Maheera",
     },
     {
       id: "reel-3",
       videoSrc:
-        "https://res.cloudinary.com/demo/video/upload/c_fill,ar_9:16,g_auto,w_720/elephants.mp4",
-      poster:
-        "https://res.cloudinary.com/demo/video/upload/c_fill,ar_9:16,g_auto,w_720/elephants.jpg",
-      productHandle: "ruhani", // Ruhani
-      tagline: "Wearing Ruhani",
+        "https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/reels/reel-3-fast.mp4",
+      productHandle: "90-sedit",
+      tagline: "Wearing 90-sedit",
     },
     {
       id: "reel-4",
       videoSrc:
-        "https://res.cloudinary.com/demo/video/upload/c_fill,ar_9:16,g_auto,w_720/sea_turtle.mp4",
-      poster:
-        "https://res.cloudinary.com/demo/video/upload/c_fill,ar_9:16,g_auto,w_720/sea_turtle.jpg",
-      productHandle: "ranisiya", // RaniSiya
-      tagline: "Wearing RaniSiya",
+        "https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/reels/reel-4-fast.mp4",
+      productHandle: "lal-pari",
+      tagline: "Wearing lal-pari",
     },
     {
       id: "reel-5",
       videoSrc:
-        "https://res.cloudinary.com/demo/video/upload/c_fill,ar_9:16,g_auto,w_720/samples/cld-sample-video.mp4",
-      poster:
-        "https://res.cloudinary.com/demo/video/upload/c_fill,ar_9:16,g_auto,w_720/samples/cld-sample-video.jpg",
-      productHandle: "sahiba", // Sahiba
-      tagline: "Wearing Sahiba",
+        "https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/reels/reel-5-fast.mp4",
+      productHandle: "ranisiya",
+      tagline: "Wearing ranisiya",
     },
-    {
-      id: "reel-6",
-      videoSrc:
-        "https://res.cloudinary.com/demo/video/upload/c_fill,ar_9:16,g_auto,w_720/wave.mp4",
-      poster:
-        "https://res.cloudinary.com/demo/video/upload/c_fill,ar_9:16,g_auto,w_720/wave.jpg",
-      productHandle: "diwani", // Diwani
-      tagline: "Wearing Diwani",
-    },
-  ] satisfies CustomerReel[],
+  ] as CustomerReel[],
 };
 
 

@@ -13,7 +13,7 @@ import type { CustomerReel } from "lib/editorial";
 import type { Product } from "lib/shopify/types";
 import Image from "next/image";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export type ShoppableVideoItem = CustomerReel & {
   product?: Product | null;
@@ -125,8 +125,52 @@ export function ShoppableVideosCarousel({
 }
 
 function VideoCard({ item }: { item: ShoppableVideoItem }) {
+  const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isMuted, setIsMuted] = useState(true);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    // Ensure muted state is recognized by all browsers' autoplay policies
+    video.defaultMuted = true;
+    video.muted = true;
+
+    // Failsafe for infinite loop: if loop attribute stalls on mobile, rewind & play
+    const handleEnded = () => {
+      video.currentTime = 0;
+      video.play().catch(() => {});
+    };
+    video.addEventListener("ended", handleEnded);
+
+    // Immediate play attempt
+    video.play().catch(() => {});
+
+    // Pause when scrolled off-screen, play when back in view
+    if (typeof IntersectionObserver !== "undefined" && containerRef.current) {
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry?.isIntersecting) {
+            video.play().catch(() => {});
+          } else {
+            video.pause();
+          }
+        },
+        { threshold: 0.2 },
+      );
+
+      observer.observe(containerRef.current);
+      return () => {
+        video.removeEventListener("ended", handleEnded);
+        observer.disconnect();
+      };
+    }
+
+    return () => {
+      video.removeEventListener("ended", handleEnded);
+    };
+  }, []);
 
   const toggleMute = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -144,17 +188,19 @@ function VideoCard({ item }: { item: ShoppableVideoItem }) {
     <li className="group/video shrink-0 basis-[78%] snap-start sm:basis-[48%] md:basis-[calc((100%-48px)/3)] lg:basis-[calc((100%-72px)/4)]">
       <Link href={productUrl} className="block group/link">
         {/* Video Frame — Aspect 2:3 matching collection page product cards with subtle rounded edges */}
-        <div className="relative aspect-[2/3] w-full overflow-hidden rounded-md bg-surface border border-border/40 transition-transform duration-(--duration-slower) ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/link:shadow-md">
-          {/* Non-stop Looping Video */}
+        <div
+          ref={containerRef}
+          className="relative aspect-[2/3] w-full overflow-hidden rounded-md bg-surface border border-border/40 transition-transform duration-(--duration-slower) ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/link:shadow-md"
+        >
+          {/* Continuous Infinite Looping Video (No Poster Overlay) */}
           <video
             ref={videoRef}
             src={item.videoSrc}
-            poster={item.poster}
             autoPlay
             loop
             muted
             playsInline
-            preload="metadata"
+            preload="auto"
             className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/video:scale-[1.03]"
           />
 
