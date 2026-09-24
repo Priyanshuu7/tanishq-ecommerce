@@ -106,7 +106,7 @@ export const heroFallback = {
 
 export const filmGrid = {
   eyebrow: "In Motion",
-  heading: "The season on Priyanshu",
+  heading: "The season on Film",
   films: [
     {
       src: "https://res.cloudinary.com/demo/video/upload/q_auto,w_720/samples/cld-sample-video.mp4",
