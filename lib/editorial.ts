@@ -45,6 +45,8 @@ export type FilmSection = Film & {
   sound?: boolean;
   title: string;
   cta?: CtaLink;
+  desktopDescription?: string[];
+  mobileTagline?: string;
 };
 
 /** A film in the square 2×2 grid. */
@@ -89,7 +91,12 @@ export const heroFilm: FilmSection = {
     "https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/media/mobile-banner.png",
   poster: "",
   sound: false,
-  title: "Spring Summer, 2026",
+  title: "ISHVA",
+  desktopDescription: [
+    "ISHVA is a tribute to my father the man who shaped my values, my strength, and unknowingly, my journey into fashion. Inspired by memories of beautiful fabrics, his eye for quality, and the discipline he lived by. This collection carries a part of him into my world.",
+    "Through rich fabrics, delicate details and timeless silhouettes, ISHVA turns memory into something that can be worn, cherished and carried forward.",
+  ],
+  mobileTagline: "Turning Traditions into Confidence",
   cta: { label: "Discover", href: "/search" },
 };
 

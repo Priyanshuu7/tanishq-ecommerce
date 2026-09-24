@@ -64,32 +64,67 @@ export function Hero() {
  */
 function FilmCaption() {
   return (
-    <div className="layout-wide relative z-10 pb-20 text-center text-on-media md:pb-28">
-      <div className="overflow-hidden">
-        <AnimatedReveal
-          variant="mask"
-          as="h1"
-          className="t-film-title drop-shadow-[0_2px_16px_rgba(0,0,0,0.5)]"
-        >
-          {heroFilm.title}
-        </AnimatedReveal>
+    <>
+      {/* Desktop View: positioned on the right side of the model in the bottom-right quadrant */}
+      <div className="layout-wide relative z-10 hidden w-full pb-16 md:flex md:justify-end md:pb-20 lg:pb-28 text-on-media pointer-events-auto">
+        <div className="flex flex-col items-start max-w-lg lg:max-w-xl text-left">
+          <AnimatedReveal variant="fade" delay={80}>
+            <h1 className="font-display text-4xl lg:text-5xl xl:text-6xl font-normal tracking-[0.08em] leading-tight text-on-media drop-shadow-[0_2px_16px_rgba(0,0,0,0.5)]">
+              {heroFilm.title}
+            </h1>
+          </AnimatedReveal>
+
+          {heroFilm.desktopDescription ? (
+            <div className="mt-4 lg:mt-6 space-y-3 font-sans font-light text-xs md:text-sm lg:text-[0.9375rem] text-on-media/90 leading-relaxed md:leading-[1.75] tracking-wide drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)]">
+              {heroFilm.desktopDescription.map((para, i) => (
+                <AnimatedReveal key={i} variant="up" delay={160 + i * 80}>
+                  <p>{para}</p>
+                </AnimatedReveal>
+              ))}
+            </div>
+          ) : null}
+
+          {heroFilm.cta ? (
+            <AnimatedReveal variant="fade" delay={340} className="mt-6 lg:mt-8">
+              <Link
+                href={heroFilm.cta.href}
+                className="t-nav link-sweep link-retract pb-1 drop-shadow-[0_2px_10px_rgba(0,0,0,0.45)] text-on-media"
+              >
+                {heroFilm.cta.label}
+              </Link>
+            </AnimatedReveal>
+          ) : null}
+        </div>
       </div>
 
-      {heroFilm.cta ? (
-        <AnimatedReveal
-          variant="fade"
-          delay={260}
-          className="mt-7 flex justify-center"
-        >
-          <Link
-            href={heroFilm.cta.href}
-            className="t-nav link-sweep link-retract pb-2 drop-shadow-[0_2px_10px_rgba(0,0,0,0.45)]"
-          >
-            {heroFilm.cta.label}
-          </Link>
+      {/* Mobile View: positioned in the open sunlit space to the right of the model */}
+      <div className="absolute right-5 xs:right-7 sm:right-10 top-[40%] -translate-y-1/2 z-10 flex md:hidden flex-col items-start max-w-[190px] xs:max-w-[210px] sm:max-w-[240px] text-left text-on-media pointer-events-auto">
+        <AnimatedReveal variant="fade" delay={80}>
+          <h1 className="font-display text-3xl font-normal tracking-[0.08em] leading-tight text-on-media drop-shadow-[0_2px_16px_rgba(0,0,0,0.5)]">
+            {heroFilm.title}
+          </h1>
         </AnimatedReveal>
-      ) : null}
-    </div>
+
+        {heroFilm.mobileTagline ? (
+          <AnimatedReveal variant="up" delay={160}>
+            <p className="mt-2.5 font-sans font-light text-xs sm:text-sm text-on-media/90 leading-snug tracking-wide drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
+              {heroFilm.mobileTagline}
+            </p>
+          </AnimatedReveal>
+        ) : null}
+
+        {heroFilm.cta ? (
+          <AnimatedReveal variant="fade" delay={260} className="mt-2.5">
+            <Link
+              href={heroFilm.cta.href}
+              className="t-nav link-sweep link-retract pb-1 drop-shadow-[0_2px_10px_rgba(0,0,0,0.45)] text-on-media"
+            >
+              {heroFilm.cta.label}
+            </Link>
+          </AnimatedReveal>
+        ) : null}
+      </div>
+    </>
   );
 }
 
