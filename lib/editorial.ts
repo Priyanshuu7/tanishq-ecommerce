@@ -111,7 +111,40 @@ export const heroFallback = {
 export const filmGrid = {
   eyebrow: "In Motion",
   heading: "The season on Film",
-  films: [] as GridFilm[],
+  films: [
+    {
+      src: "https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/grid/grid-reel-01.mp4",
+      poster:
+        "https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/grid/grid-reel-01-poster.jpg",
+      label: "Lal Pari in Motion",
+      caption: "Lal Pari",
+      href: "/product/lal-pari",
+    },
+    {
+      src: "https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/grid/grid-reel-03.mp4",
+      poster:
+        "https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/grid/grid-reel-03-poster.jpg",
+      label: "Sitara in Motion",
+      caption: "Sitara",
+      href: "/search",
+    },
+    {
+      src: "https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/grid/grid-reel-05.mp4",
+      poster:
+        "https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/grid/grid-reel-05-poster.jpg",
+      label: "Ruhani in Motion",
+      caption: "Ruhani",
+      href: "/search",
+    },
+    {
+      src: "https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/grid/grid-reel-07.mp4",
+      poster:
+        "https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/grid/grid-reel-07-poster.jpg",
+      label: "RaniSiya in Motion",
+      caption: "RaniSiya",
+      href: "/product/ranisiya",
+    },
+  ] satisfies GridFilm[],
 };
 
 /** The positioning statement that follows the hero. */

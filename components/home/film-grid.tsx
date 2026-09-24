@@ -37,7 +37,7 @@ export function FilmGrid() {
         />
       </div>
 
-      <div className="mt-14 grid grid-cols-1 sm:grid-cols-2">
+      <div className="mt-10 md:mt-14 grid grid-cols-2">
         {films.map((film, index) => (
           // Keyed by position, not by `src` — nothing stops the same file being
           // used in two tiles, and duplicate keys would drop one of them.
@@ -68,7 +68,7 @@ function FilmTile({ film, delay }: { film: GridFilm; delay: number }) {
       </AnimatedReveal>
 
       {film.caption ? (
-        <div className="media-scrim absolute inset-x-0 bottom-0 z-10 p-6">
+        <div className="media-scrim absolute inset-x-0 bottom-0 z-10 p-3.5 sm:p-6">
           <p className="t-nav text-on-media">{film.caption}</p>
         </div>
       ) : null}
