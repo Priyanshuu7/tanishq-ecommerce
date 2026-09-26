@@ -1,18 +1,25 @@
 "use server";
 
-import { SHOPIFY_GRAPHQL_API_ENDPOINT, TAGS } from "lib/constants";
+import { MAX_VARIANT_QUANTITY, getVariantQuantity } from "lib/cart-quantity";
+import { TAGS } from "lib/constants";
 import {
-  addToCart,
-  createCart,
-  getCart,
-  getFreshCart,
-  removeFromCart,
-  updateCart,
+    addToCart,
+    createCart,
+    getCart,
+    removeFromCart,
+    updateCart,
 } from "lib/shopify";
-import type { Cart } from "lib/shopify/types";
 import { updateTag } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+
+function safeUpdateCartTag() {
+  try {
+    updateTag(TAGS.cart);
+  } catch {
+    // updateTag is only allowed in Server Action context; safe to ignore in route handlers or tests
+  }
+}
 
 export type CartActionResult = {
   status: "success" | "warning" | "error";
@@ -27,6 +34,7 @@ export type AddItemPayload =
   | {
       selectedVariantId: string | undefined;
       customSize?: string;
+      quantity?: number;
     };
 
 export async function addItem(
@@ -37,6 +45,8 @@ export async function addItem(
     typeof payload === "string" ? payload : payload?.selectedVariantId;
   const customSize =
     typeof payload === "object" ? payload?.customSize : undefined;
+  const requestedQuantity =
+    typeof payload === "object" ? Math.max(1, payload.quantity ?? 1) : 1;
 
   if (!selectedVariantId) {
     return { status: "error", message: "Error adding item to cart" };
@@ -50,6 +60,35 @@ export async function addItem(
       (await cookies()).set("cartId", cartId);
     }
 
+    const existingCart = await getCart();
+    const currentVariantQty = getVariantQuantity(
+      existingCart,
+      selectedVariantId,
+    );
+
+    if (currentVariantQty >= MAX_VARIANT_QUANTITY) {
+      return {
+        status: "error",
+        message: "Maximum 3 units allowed per customer.",
+        merchandiseId: selectedVariantId,
+        clampedQuantity: currentVariantQty,
+      };
+    }
+
+    const quantityToAdd = Math.min(
+      requestedQuantity,
+      MAX_VARIANT_QUANTITY - currentVariantQty,
+    );
+
+    if (quantityToAdd <= 0) {
+      return {
+        status: "error",
+        message: "Maximum 3 units allowed per customer.",
+        merchandiseId: selectedVariantId,
+        clampedQuantity: currentVariantQty,
+      };
+    }
+
     const attributes = customSize?.trim()
       ? [{ key: "Custom Size", value: customSize.trim() }]
       : undefined;
@@ -57,37 +96,50 @@ export async function addItem(
     const result = await addToCart([
       {
         merchandiseId: selectedVariantId,
-        quantity: 1,
+        quantity: quantityToAdd,
         ...(attributes ? { attributes } : {}),
       },
     ]);
-    updateTag(TAGS.cart);
-
-    if (result.warnings && result.warnings.length > 0) {
-      const w = result.warnings[0];
-      const updatedLine = result.cart.lines.find(
-        (l) => l.merchandise.id === selectedVariantId,
-      );
-      const availableQty = updatedLine?.quantity;
-      const msg =
-        availableQty !== undefined
-          ? `Only ${availableQty} available in stock. Your cart has been updated.`
-          : (w?.message ?? "Item quantity adjusted due to availability.");
-
-      return {
-        status: "warning",
-        message: msg,
-        warningCode: w?.code,
-        clampedQuantity: availableQty,
-        merchandiseId: selectedVariantId,
-      };
-    }
+    safeUpdateCartTag();
 
     if (result.userErrors && result.userErrors.length > 0) {
       const err = result.userErrors[0];
       return {
         status: "error",
         message: err?.message ?? "Error adding item to cart",
+      };
+    }
+
+    const warning = result.warnings?.[0];
+    const updatedLine = result.cart.lines.find(
+      (line) => line.merchandise.id === selectedVariantId,
+    );
+    const updatedQuantity = updatedLine?.quantity ?? 0;
+
+    if (
+      warning?.code === "MERCHANDISE_OUT_OF_STOCK" ||
+      (updatedLine?.id && updatedQuantity <= 0)
+    ) {
+      if (updatedLine?.id && updatedQuantity <= 0) {
+        await removeFromCart([updatedLine.id]);
+        safeUpdateCartTag();
+      }
+
+      return {
+        status: "error",
+        message: warning?.message ?? "The product is already sold out.",
+        warningCode: warning?.code,
+        clampedQuantity: currentVariantQty,
+        merchandiseId: selectedVariantId,
+      };
+    }
+
+    if (quantityToAdd < requestedQuantity) {
+      return {
+        status: "warning",
+        message: `Maximum 3 units allowed per customer. Added ${quantityToAdd} to reach the limit of 3.`,
+        clampedQuantity: currentVariantQty + quantityToAdd,
+        merchandiseId: selectedVariantId,
       };
     }
 
@@ -142,40 +194,151 @@ export async function updateItemQuantity(
   const { merchandiseId, quantity, lineId } = payload;
 
   try {
-    let effectiveLineId = lineId;
+    const cart = await getCart();
 
-    if (!effectiveLineId) {
-      const cart = await getCart();
-
-      if (!cart) {
-        return { status: "error", message: "Error fetching cart" };
-      }
-
-      const lineItem = cart.lines.find(
-        (line) => line.merchandise.id === merchandiseId,
-      );
-      effectiveLineId = lineItem?.id;
+    if (!cart) {
+      return { status: "error", message: "Error fetching cart" };
     }
 
-    if (effectiveLineId) {
-      if (quantity === 0) {
-        await removeFromCart([effectiveLineId]);
-        updateTag(TAGS.cart);
-        return { status: "success" };
-      } else {
-        await updateCart([
-          {
-            id: effectiveLineId,
-            merchandiseId,
-            quantity,
-          },
-        ]);
-        updateTag(TAGS.cart);
+    const currentVariantLines = cart.lines.filter(
+      (line) => line.merchandise.id === merchandiseId,
+    );
+    const effectiveLine =
+      lineId !== undefined
+        ? currentVariantLines.find((line) => line.id === lineId)
+        : currentVariantLines[0];
+
+    const currentLineQuantity = effectiveLine?.quantity ?? 0;
+    const otherVariantQuantity = getVariantQuantity(
+      cart,
+      merchandiseId,
+      effectiveLine?.id,
+    );
+    const maxAllowedForLine = Math.max(
+      0,
+      MAX_VARIANT_QUANTITY - otherVariantQuantity,
+    );
+    const finalQuantity = Math.min(Math.max(0, quantity), maxAllowedForLine);
+
+    if (
+      quantity > currentLineQuantity &&
+      finalQuantity === currentLineQuantity
+    ) {
+      return {
+        status: "error",
+        message: "Maximum 3 units allowed per customer.",
+        merchandiseId,
+        clampedQuantity: currentLineQuantity + otherVariantQuantity,
+      };
+    }
+
+    if (effectiveLine?.id) {
+      if (finalQuantity === 0) {
+        await removeFromCart([effectiveLine.id]);
+        safeUpdateCartTag();
         return { status: "success" };
       }
-    } else if (quantity > 0) {
-      await addToCart([{ merchandiseId, quantity }]);
-      updateTag(TAGS.cart);
+
+      const result = await updateCart([
+        {
+          id: effectiveLine.id,
+          merchandiseId,
+          quantity: finalQuantity,
+        },
+      ]);
+      safeUpdateCartTag();
+
+      if (result.userErrors && result.userErrors.length > 0) {
+        const err = result.userErrors[0];
+        return {
+          status: "error",
+          message: err?.message ?? "Error updating item quantity",
+        };
+      }
+
+      const warning = result.warnings?.[0];
+      const updatedLine = result.cart.lines.find(
+        (line) => line.merchandise.id === merchandiseId,
+      );
+      const updatedQuantity = updatedLine?.quantity ?? 0;
+
+      if (
+        warning?.code === "MERCHANDISE_OUT_OF_STOCK" ||
+        (updatedLine?.id && updatedQuantity <= 0)
+      ) {
+        if (updatedLine?.id && updatedQuantity <= 0) {
+          await removeFromCart([updatedLine.id]);
+          safeUpdateCartTag();
+        }
+
+        return {
+          status: "error",
+          message: warning?.message ?? "The product is already sold out.",
+          warningCode: warning?.code,
+          clampedQuantity: currentLineQuantity,
+          merchandiseId,
+        };
+      }
+
+      if (finalQuantity < quantity) {
+        return {
+          status: "warning",
+          message: `Maximum 3 units allowed per customer. Updated to ${finalQuantity}.`,
+          clampedQuantity: finalQuantity,
+          merchandiseId,
+        };
+      }
+
+      return { status: "success" };
+    }
+
+    if (finalQuantity > 0) {
+      const result = await addToCart([
+        { merchandiseId, quantity: finalQuantity },
+      ]);
+      safeUpdateCartTag();
+
+      if (result.userErrors && result.userErrors.length > 0) {
+        const err = result.userErrors[0];
+        return {
+          status: "error",
+          message: err?.message ?? "Error updating item quantity",
+        };
+      }
+
+      const warning = result.warnings?.[0];
+      const updatedLine = result.cart.lines.find(
+        (line) => line.merchandise.id === merchandiseId,
+      );
+      const updatedQuantity = updatedLine?.quantity ?? 0;
+
+      if (
+        warning?.code === "MERCHANDISE_OUT_OF_STOCK" ||
+        (updatedLine?.id && updatedQuantity <= 0)
+      ) {
+        if (updatedLine?.id && updatedQuantity <= 0) {
+          await removeFromCart([updatedLine.id]);
+          safeUpdateCartTag();
+        }
+
+        return {
+          status: "error",
+          message: warning?.message ?? "The product is already sold out.",
+          warningCode: warning?.code,
+          clampedQuantity: 0,
+          merchandiseId,
+        };
+      }
+
+      if (finalQuantity < quantity) {
+        return {
+          status: "warning",
+          message: `Maximum 3 units allowed per customer. Updated to ${finalQuantity}.`,
+          clampedQuantity: finalQuantity,
+          merchandiseId,
+        };
+      }
+
       return { status: "success" };
     }
 

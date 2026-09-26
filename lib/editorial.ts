@@ -223,7 +223,6 @@ export const customerReels = {
   ] as CustomerReel[],
 };
 
-
 /**
  * Full-bleed feature film, lower down the page. `sound` is on because this is
  * the slot where an atelier film with room ambience earns a mute toggle — turn
@@ -339,6 +338,7 @@ export const cart = {
   emptyBody: "Pieces you add will appear here.",
   checkoutLabel: "Proceed to checkout",
   addToCartLabel: "Add to cart",
+  maxQuantityLabel: "Maximum 3 units allowed",
   soldOutLabel: "Out of stock",
   selectVariantLabel: "Select a size",
   taxesLabel: "Taxes",

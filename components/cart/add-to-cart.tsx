@@ -14,9 +14,11 @@ import { useCart } from "./cart-context";
 function SubmitButton({
   availableForSale,
   hasSelection,
+  limitReached,
 }: {
   availableForSale: boolean;
   hasSelection: boolean;
+  limitReached: boolean;
 }) {
   const { pending } = useFormStatus();
   const buttonClasses = "btn btn-filled w-full";
@@ -37,6 +39,14 @@ function SubmitButton({
         className={clsx(buttonClasses)}
       >
         {cartCopy.selectVariantLabel}
+      </button>
+    );
+  }
+
+  if (limitReached) {
+    return (
+      <button disabled className={clsx(buttonClasses)}>
+        {cartCopy.maxQuantityLabel}
       </button>
     );
   }
@@ -67,15 +77,17 @@ function SubmitButton({
  */
 export function AddToCart({ product }: { product: Product }) {
   const { variants, availableForSale, options } = product;
-  const { addCartItem } = useCart();
+  const { cart, addCartItem } = useCart();
   const searchParams = useSearchParams();
   const [result, formAction] = useActionState(addItem, null);
   const [customSize, setCustomSize] = useState("");
-  const [activeParams, setActiveParams] = useState<Record<string, string>>(() => {
-    const initial: Record<string, string> = {};
-    searchParams.forEach((v, k) => (initial[k] = v));
-    return initial;
-  });
+  const [activeParams, setActiveParams] = useState<Record<string, string>>(
+    () => {
+      const initial: Record<string, string> = {};
+      searchParams.forEach((v, k) => (initial[k] = v));
+      return initial;
+    },
+  );
 
   useEffect(() => {
     const current: Record<string, string> = {};
@@ -120,11 +132,20 @@ export function AddToCart({ product }: { product: Product }) {
         ? variants[0]
         : undefined);
   const effectiveVariantId = finalVariant?.id;
+  const currentVariantQuantity =
+    cart?.lines.reduce((sum, line) => {
+      if (line.merchandise.id !== effectiveVariantId) {
+        return sum;
+      }
+
+      return sum + line.quantity;
+    }, 0) ?? 0;
   const hasSelection = Boolean(
     variant ||
       (variants.length === 1 && variants[0]?.availableForSale) ||
       hasCustomSize,
   );
+  const limitReached = currentVariantQuantity >= 3;
 
   const addItemAction = formAction.bind(null, {
     selectedVariantId: effectiveVariantId,
@@ -210,6 +231,7 @@ export function AddToCart({ product }: { product: Product }) {
       <SubmitButton
         availableForSale={availableForSale}
         hasSelection={hasSelection}
+        limitReached={limitReached}
       />
       <p aria-live="polite" className="sr-only" role="status">
         {result?.message}

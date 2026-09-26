@@ -1,10 +1,10 @@
 import { AddToCart } from "components/cart/add-to-cart";
-import Price from "components/price";
 import Prose from "components/prose";
 import { Accordion, AccordionItem } from "components/ui/accordion";
 import { HIDDEN_PRODUCT_TAG } from "lib/constants";
 import { productAccordions, productPage } from "lib/editorial";
 import { Product } from "lib/shopify/types";
+import { SelectedVariantPrice } from "./selected-variant-price";
 import { VariantSelector } from "./variant-selector";
 
 export function ProductDescription({ product }: { product: Product }) {
@@ -21,11 +21,7 @@ export function ProductDescription({ product }: { product: Product }) {
       <br />
       <p className="t-eyebrow text-muted-foreground">{eyebrow}</p>
       <div className="mt-6 flex items-baseline gap-3">
-        <Price
-          className="text-base tracking-[0.1em] text-foreground"
-          amount={product.priceRange.maxVariantPrice.amount}
-          currencyCode={product.priceRange.maxVariantPrice.currencyCode}
-        />
+        <SelectedVariantPrice product={product} />
         {!product.availableForSale ? (
           <span className="t-eyebrow text-accent-deep">Sold out</span>
         ) : null}

@@ -9,21 +9,23 @@ import { useActionState } from "react";
 function SubmitButton({
   type,
   pending,
+  disabled,
 }: {
   type: "plus" | "minus";
   pending?: boolean;
+  disabled?: boolean;
 }) {
   return (
     <button
       type="submit"
-      disabled={pending}
-      aria-disabled={pending}
+      disabled={pending || disabled}
+      aria-disabled={pending || disabled}
       aria-label={
         type === "plus" ? "Increase item quantity" : "Reduce item quantity"
       }
       className={clsx(
         "flex h-full w-9 flex-none items-center justify-center text-muted-foreground transition-colors duration-(--duration-base) hover:text-foreground cursor-pointer",
-        pending && "cursor-wait opacity-60",
+        (pending || disabled) && "cursor-wait opacity-60",
         type === "plus" ? "border-l border-border" : "border-r border-border",
       )}
     >
@@ -87,17 +89,28 @@ export function EditItemQuantityButton({
     quantity: type === "plus" ? item.quantity + 1 : item.quantity - 1,
     lineId: item.id,
   };
+  const incrementBlocked =
+    type === "plus" &&
+    typeof maxAvailable === "number" &&
+    item.quantity >= maxAvailable;
   const updateItemQuantityAction = formAction.bind(null, payload);
 
   return (
     <form
       className="h-full"
       action={async () => {
+        if (incrementBlocked) {
+          return;
+        }
         optimisticUpdate?.(item.merchandise.id, type);
         updateItemQuantityAction();
       }}
     >
-      <SubmitButton type={type} pending={isPending} />
+      <SubmitButton
+        type={type}
+        pending={isPending}
+        disabled={incrementBlocked}
+      />
       <p aria-live="polite" className="sr-only" role="status">
         {result?.message}
       </p>

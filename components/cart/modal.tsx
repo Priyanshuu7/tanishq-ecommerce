@@ -5,15 +5,14 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import clsx from "clsx";
 import LoadingDots from "components/loading-dots";
 import Price from "components/price";
+import { MAX_VARIANT_QUANTITY } from "lib/cart-quantity";
 import { DEFAULT_OPTION } from "lib/constants";
 import { cart as cartCopy } from "lib/editorial";
 import { createUrl } from "lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { Fragment, useEffect, useRef, useState } from "react";
-import { useFormStatus } from "react-dom";
-import { toast } from "sonner";
-import { createCartAndSetCookie, redirectToCheckout } from "./actions";
+import { createCartAndSetCookie } from "./actions";
 import { useCart } from "./cart-context";
 import { DeleteItemButton } from "./delete-item-button";
 import { EditItemQuantityButton } from "./edit-item-quantity-button";
@@ -45,6 +44,15 @@ export default function CartModal() {
       createCartAndSetCookie();
     }
   }, [cart]);
+
+  const variantTotals = cart?.lines.reduce<Record<string, number>>(
+    (totals, line) => {
+      totals[line.merchandise.id] =
+        (totals[line.merchandise.id] ?? 0) + line.quantity;
+      return totals;
+    },
+    {},
+  );
 
   useEffect(() => {
     const currentQty = cart?.totalQuantity ?? 0;
@@ -264,6 +272,14 @@ export default function CartModal() {
                                       item={item}
                                       type="plus"
                                       optimisticUpdate={updateCartItem}
+                                      maxAvailable={Math.max(
+                                        0,
+                                        MAX_VARIANT_QUANTITY -
+                                          ((variantTotals?.[
+                                            item.merchandise.id
+                                          ] ?? 0) -
+                                            item.quantity),
+                                      )}
                                     />
                                   </div>
                                 </div>
