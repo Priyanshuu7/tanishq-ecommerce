@@ -1,6 +1,10 @@
 export default {
   cacheComponents: true,
 
+  experimental: {
+    optimizePackageImports: ["@headlessui/react", "@heroicons/react"],
+  },
+
   images: {
     dangerouslyAllowLocalIP: true,
     formats: ["image/avif", "image/webp"],
