@@ -440,6 +440,6 @@ export const footer = {
   ] satisfies FooterColumn[],
   contact: [
     { label: "Enquiries", value: "Shivranjanisolankii@gmail.com" },
-    { label: "Telephone", value: "+91 6263326569 " },
+    // { label: "Telephone", value: "+91 6263326569 " },
   ],
 };

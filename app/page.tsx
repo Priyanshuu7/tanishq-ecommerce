@@ -31,7 +31,10 @@ export default function HomePage() {
   return (
     <>
       <Hero />
-      <EditorialSection statement={signatureStatement} />
+      <EditorialSection
+        statement={signatureStatement}
+        image="https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/media/Screenshot%20From%202026-09-27%2012-36-54-Photoroom.png"
+      />
       <FilmGrid />
       <CategoryCarousel />
       <ShoppableVideos />
