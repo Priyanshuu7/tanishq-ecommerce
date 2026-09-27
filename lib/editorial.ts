@@ -422,10 +422,10 @@ export const footer = {
     {
       title: "Support",
       links: [
-        { label: "Shipping & Returns", href: "/search" },
-        { label: "Size Guide", href: "/search" },
-        { label: "Care Instructions", href: "/search" },
-        { label: "Contact", href: "/search" },
+        { label: "Shipping & Returns", href: "/shipping-returns" },
+        { label: "Size Guide", href: "/size-guide" },
+        { label: "Care Instructions", href: "/care-instructions" },
+        { label: "Contact", href: "mailto:Shivranjanisolankii@gmail.com" },
       ],
     },
     {
