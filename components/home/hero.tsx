@@ -117,7 +117,7 @@ function FilmCaption() {
           <AnimatedReveal variant="fade" delay={260} className="mt-2.5">
             <Link
               href={heroFilm.cta.href}
-              className="t-nav link-sweep link-retract pb-1 drop-shadow-[0_2px_10px_rgba(0,0,0,0.45)] text-on-media"
+              className="text-xs link-sweep link-retract pb-1 drop-shadow-[0_2px_10px_rgba(0,0,0,0.45)] text-on-media"
             >
               {heroFilm.cta.label}
             </Link>
