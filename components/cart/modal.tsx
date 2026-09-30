@@ -67,15 +67,29 @@ export default function CartModal() {
 
   // Handle browser back button (popstate, BFCache pageshow, focus, tab visibility)
   useEffect(() => {
+    // When the user returns from an external page (e.g. Shopify checkout) via the
+    // browser back button, the page may be restored from the BFCache with React
+    // state frozen mid-redirect (isRedirecting=true, isOpen=true). Detecting
+    // event.persisted=true lets us force-close the cart so the X button and
+    // overlay work correctly again.
+    const handlePageShow = (e: PageTransitionEvent) => {
+      if (e.persisted) {
+        // BFCache restore — fully reset cart modal state
+        setIsRedirecting(false);
+        setIsOpen(false);
+      } else {
+        setIsRedirecting(false);
+      }
+    };
     const resetRedirecting = () => {
       setIsRedirecting(false);
     };
-    window.addEventListener("pageshow", resetRedirecting);
+    window.addEventListener("pageshow", handlePageShow);
     window.addEventListener("popstate", resetRedirecting);
     window.addEventListener("focus", resetRedirecting);
     document.addEventListener("visibilitychange", resetRedirecting);
     return () => {
-      window.removeEventListener("pageshow", resetRedirecting);
+      window.removeEventListener("pageshow", handlePageShow);
       window.removeEventListener("popstate", resetRedirecting);
       window.removeEventListener("focus", resetRedirecting);
       document.removeEventListener("visibilitychange", resetRedirecting);
@@ -313,10 +327,13 @@ export default function CartModal() {
                         <dt className="t-nav text-foreground">
                           {cartCopy.totalLabel}
                         </dt>
+                        {/* Use subtotalAmount (items only) so that shipping charges
+                            Shopify calculates during checkout are never reflected
+                            back in the cart drawer when the user navigates back. */}
                         <Price
                           className="text-sm tracking-[0.1em] text-foreground"
-                          amount={cart.cost.totalAmount.amount}
-                          currencyCode={cart.cost.totalAmount.currencyCode}
+                          amount={cart.cost.subtotalAmount.amount}
+                          currencyCode={cart.cost.subtotalAmount.currencyCode}
                         />
                       </div>
                     </dl>
