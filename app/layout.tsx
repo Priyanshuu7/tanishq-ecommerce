@@ -3,22 +3,131 @@ import { Navbar } from "components/layout/navbar";
 import { WelcomeToast } from "components/welcome-toast";
 import { getCart } from "lib/shopify";
 import { baseUrl } from "lib/utils";
+import { Metadata } from "next";
 import { ReactNode } from "react";
 import { Toaster } from "sonner";
 import "./globals.css";
 
 const { SITE_NAME } = process.env;
 
-export const metadata = {
+export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: SITE_NAME!,
+    default: `${SITE_NAME} | Official Designer Website`,
     template: `%s | ${SITE_NAME}`,
+  },
+  description:
+    "Shivranjani Solanki — official website. Discover hand-finished occasion wear, drape, embroidery and made-to-order couture by designer Shivranjani Solanki.",
+  keywords: [
+    "Shivranjani Solanki",
+    "shivranjanisolanki",
+    "Shivranjani Solanki designer",
+    "Shivranjani Solanki fashion",
+    "Shivranjani Solanki couture",
+    "Indian fashion designer",
+    "occasion wear",
+    "made to order couture",
+    "drape embroidery fashion",
+  ],
+  authors: [{ name: "Shivranjani Solanki", url: baseUrl }],
+  creator: "Shivranjani Solanki",
+  publisher: "Shivranjani Solanki",
+  alternates: {
+    canonical: baseUrl,
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_IN",
+    url: baseUrl,
+    siteName: SITE_NAME,
+    title: `${SITE_NAME} | Official Designer Website`,
+    description:
+      "Shivranjani Solanki — official website. Discover hand-finished occasion wear, drape, embroidery and made-to-order couture by designer Shivranjani Solanki.",
+    images: [
+      {
+        url: `${baseUrl}/opengraph-image`,
+        width: 1200,
+        height: 630,
+        alt: "Shivranjani Solanki — Official Designer Website",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${SITE_NAME} | Official Designer Website`,
+    description:
+      "Shivranjani Solanki — official website. Discover hand-finished occasion wear, drape, embroidery and made-to-order couture.",
+    images: [`${baseUrl}/opengraph-image`],
   },
   robots: {
     follow: true,
     index: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
+  verification: {
+    // Add your Google Search Console verification token here once you have it
+    // google: "your-verification-token",
+  },
+};
+
+// JSON-LD structured data — this is the main reason Instagram/LinkedIn
+// outrank brand websites: social platforms inject Person/Organization schema
+// automatically. Adding it here gives Google the same signal.
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": `${baseUrl}/#person`,
+      name: "Shivranjani Solanki",
+      alternateName: "shivranjanisolanki",
+      description:
+        "Indian fashion designer specialising in hand-finished occasion wear, drape, embroidery and made-to-order couture.",
+      url: baseUrl,
+      sameAs: [
+        "https://www.instagram.com/shivranjanisolanki",
+        "https://www.linkedin.com/in/shivranjanisolanki",
+      ],
+    },
+    {
+      "@type": "ClothingStore",
+      "@id": `${baseUrl}/#organization`,
+      name: "Shivranjani Solanki",
+      alternateName: "shivranjanisolanki",
+      url: baseUrl,
+      founder: { "@id": `${baseUrl}/#person` },
+      description:
+        "Official online store of Shivranjani Solanki — hand-finished occasion wear, drape, embroidery and made-to-order couture.",
+      logo: {
+        "@type": "ImageObject",
+        url: `${baseUrl}/logo.png`,
+      },
+      sameAs: [
+        "https://www.instagram.com/shivranjanisolanki",
+        "https://www.linkedin.com/in/shivranjanisolanki",
+      ],
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${baseUrl}/#website`,
+      url: baseUrl,
+      name: "Shivranjani Solanki",
+      publisher: { "@id": `${baseUrl}/#organization` },
+      potentialAction: {
+        "@type": "SearchAction",
+        target: {
+          "@type": "EntryPoint",
+          urlTemplate: `${baseUrl}/search?q={search_term_string}`,
+        },
+        "query-input": "required name=search_term_string",
+      },
+    },
+  ],
 };
 
 /**
@@ -37,6 +146,12 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body className="min-h-dvh bg-background text-foreground antialiased">
         {/* React hoists these into <head> itself. `precedence` is what makes
             that legal for the stylesheet — without it React refuses to move a
