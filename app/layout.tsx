@@ -90,8 +90,8 @@ const jsonLd = {
         "Indian fashion designer specialising in hand-finished occasion wear, drape, embroidery and made-to-order couture.",
       url: baseUrl,
       sameAs: [
-        "https://www.instagram.com/shivranjanisolanki",
-        "https://www.linkedin.com/in/shivranjanisolanki",
+        "https://www.instagram.com/label.shivranjani.solanki/",
+        "https://www.linkedin.com/in/shivranjani-solanki",
       ],
     },
     {
@@ -108,8 +108,8 @@ const jsonLd = {
         url: `${baseUrl}/logo.png`,
       },
       sameAs: [
-        "https://www.instagram.com/shivranjanisolanki",
-        "https://www.linkedin.com/in/shivranjanisolanki",
+        "https://www.instagram.com/label.shivranjani.solanki/",
+        "https://www.linkedin.com/in/shivranjani-solanki",
       ],
     },
     {
