@@ -133,7 +133,7 @@ export const filmGrid = {
         "https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/grid/grid-reel-03-poster.jpg",
       label: "Sitara in Motion",
       caption: "Sitara",
-      href: "/search",
+      href: "/product/sitara",
     },
     {
       src: "https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/grid/grid-reel-05.mp4",
@@ -141,7 +141,7 @@ export const filmGrid = {
         "https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/grid/grid-reel-05-poster.jpg",
       label: "Ruhani in Motion",
       caption: "Ruhani",
-      href: "/search",
+      href: "/product/ruhani",
     },
     {
       src: "https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/grid/grid-reel-07.mp4",
@@ -158,7 +158,7 @@ export const filmGrid = {
 export const signatureStatement: EditorialStatement = {
   heading: "Signature Realms Of Style",
   body: [
-    "Four decades of drape, distilled. Each garment begins as a length of untouched cloth and ends as something worn once and remembered for years.",
+    "Each garment begins as a length of untouched cloth and ends as something worn once and remembered for years.",
     "We work in ateliers rather than factories, in weeks rather than hours, and in fabrics chosen for how they move rather than how quickly they cut.",
   ],
   cta: { label: "Explore ", href: "/search" },

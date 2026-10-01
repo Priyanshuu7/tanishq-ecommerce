@@ -150,14 +150,9 @@ export default function ShippingReturnsPage() {
 
           <AnimatedReveal variant="up" delay={480}>
             <p className="t-editorial text-xl sm:text-2xl font-light text-foreground leading-relaxed">
-              Please note, we do not accept returns. Exchanges are permitted
-              only for{" "}
-              <strong className="font-medium text-foreground">
-                one size up or down
-              </strong>
-              . If you wish to exchange, please reach out to us, and we&apos;ll
-              arrange a complimentary pick-up only in case of damaged or wrong
-              products.
+              Please note, we do not accept returns or exchanges. If you wish to
+              exchange, please reach out to us, and we&apos;ll arrange a pick-up
+              only in case of damaged or wrong products.
             </p>
           </AnimatedReveal>
 
@@ -165,10 +160,15 @@ export default function ShippingReturnsPage() {
             <p className="t-editorial text-xl sm:text-2xl font-light text-foreground leading-relaxed">
               If there&apos;s damage, please notify us within{" "}
               <strong className="font-medium text-foreground">
-                7 days of receiving your product
+                5 days of receiving your product
               </strong>
-              . We recommend documenting or photographing the item while
-              unpacking.
+              . Our pieces are carefully prepared and packed — we request you to
+              please{" "}
+              <strong className="font-medium text-foreground">
+                record a proper unpacking video
+              </strong>{" "}
+              while opening your parcel, as we also maintain a packing video for
+              every order to ensure your outfit reaches you safely.
             </p>
           </AnimatedReveal>
 
@@ -179,7 +179,7 @@ export default function ShippingReturnsPage() {
                 return. Once approved by our QC team, your new product will be
                 delivered within{" "}
                 <span className="font-normal not-italic text-accent-deep">
-                  20 days
+                  21 days
                 </span>
                 . All exchanged items must be in their original condition.
               </blockquote>
@@ -188,11 +188,11 @@ export default function ShippingReturnsPage() {
 
           <AnimatedReveal variant="up" delay={560}>
             <p className="t-editorial text-xl sm:text-2xl font-light text-foreground leading-relaxed">
-              If an order is cancelled, Label Shivranjani Solanki is not responsible for
-              shipping or insurance charges. Returned items for exchange must
+              If an order is cancelled, Label Shivranjani Solanki is not
+              responsible for shipping or insurance charges. Exchange must
               include all original labels, tags, and packaging. If any packaging
-              is missing, Label Shivranjani Solanki reserves the right to deny the return
-              or exchange.
+              is missing, Label Shivranjani Solanki reserves the right to deny
+              the return or exchange.
             </p>
           </AnimatedReveal>
 

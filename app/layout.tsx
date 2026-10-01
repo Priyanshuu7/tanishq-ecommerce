@@ -13,11 +13,11 @@ const { SITE_NAME } = process.env;
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: `${SITE_NAME} | Official Designer Website`,
+    default: `${SITE_NAME} | Official `,
     template: `%s | ${SITE_NAME}`,
   },
   description:
-    "Shivranjani Solanki — official website. Discover hand-finished occasion wear, drape, embroidery and made-to-order couture by designer Shivranjani Solanki.",
+    "Label Shivranjani Solanki is a contemporary Indian fashion label where timeless craftsmanship meets modern silhouettes, expressed through sumptuous textures, evocative colours, and the quiet artistry of meticulous handwork.",
   keywords: [
     "Shivranjani Solanki",
     "shivranjanisolanki",
@@ -40,9 +40,9 @@ export const metadata: Metadata = {
     locale: "en_IN",
     url: baseUrl,
     siteName: SITE_NAME,
-    title: `${SITE_NAME} | Official Designer Website`,
+    title: `${SITE_NAME} | Official`,
     description:
-      "Shivranjani Solanki — official website. Discover hand-finished occasion wear, drape, embroidery and made-to-order couture by designer Shivranjani Solanki.",
+      "Label Shivranjani Solanki is a contemporary Indian fashion label where timeless craftsmanship meets modern silhouettes, expressed through sumptuous textures, evocative colours, and the quiet artistry of meticulous handwork.",
     images: [
       {
         url: `${baseUrl}/opengraph-image`,
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: `${SITE_NAME} | Official Designer Website`,
     description:
-      "Shivranjani Solanki — official website. Discover hand-finished occasion wear, drape, embroidery and made-to-order couture.",
+      "Label Shivranjani Solanki is a contemporary Indian fashion label where timeless craftsmanship meets modern silhouettes, expressed through sumptuous textures, evocative colours, and the quiet artistry of meticulous handwork.",
     images: [`${baseUrl}/opengraph-image`],
   },
   robots: {
@@ -87,7 +87,7 @@ const jsonLd = {
       name: "Shivranjani Solanki",
       alternateName: "shivranjanisolanki",
       description:
-        "Indian fashion designer specialising in hand-finished occasion wear, drape, embroidery and made-to-order couture.",
+        "Label Shivranjani Solanki is a contemporary Indian fashion label where timeless craftsmanship meets modern silhouettes, expressed through sumptuous textures, evocative colours, and the quiet artistry of meticulous handwork.",
       url: baseUrl,
       sameAs: [
         "https://www.instagram.com/label.shivranjani.solanki/",
@@ -102,7 +102,7 @@ const jsonLd = {
       url: baseUrl,
       founder: { "@id": `${baseUrl}/#person` },
       description:
-        "Official online store of Shivranjani Solanki — hand-finished occasion wear, drape, embroidery and made-to-order couture.",
+        "Label Shivranjani Solanki is a contemporary Indian fashion label where timeless craftsmanship meets modern silhouettes, expressed through sumptuous textures, evocative colours, and the quiet artistry of meticulous handwork.",
       logo: {
         "@type": "ImageObject",
         url: `${baseUrl}/logo.png`,
