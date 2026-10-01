@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     template: `%s | ${SITE_NAME}`,
   },
   description:
-    "Label Shivranjani Solanki is a contemporary Indian fashion label where timeless craftsmanship meets modern silhouettes, expressed through sumptuous textures, evocative colours, and the quiet artistry of meticulous handwork.",
+    "Label Shivranjani Solanki is a contemporary Indian fashion label where timeless craftsmanship meets modern silhouettes, expressed through sumptuous textures and the quiet artistry of meticulous handwork.",
   keywords: [
     "Shivranjani Solanki",
     "shivranjanisolanki",
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     siteName: SITE_NAME,
     title: `${SITE_NAME} | Official`,
     description:
-      "Label Shivranjani Solanki is a contemporary Indian fashion label where timeless craftsmanship meets modern silhouettes, expressed through sumptuous textures, evocative colours, and the quiet artistry of meticulous handwork.",
+      "Label Shivranjani Solanki is a contemporary Indian fashion label where timeless craftsmanship meets modern silhouettes, expressed through sumptuous textures and the quiet artistry of meticulous handwork.",
     images: [
       {
         url: `${baseUrl}/opengraph-image`,
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: `${SITE_NAME} | Official Designer Website`,
     description:
-      "Label Shivranjani Solanki is a contemporary Indian fashion label where timeless craftsmanship meets modern silhouettes, expressed through sumptuous textures, evocative colours, and the quiet artistry of meticulous handwork.",
+      "Label Shivranjani Solanki is a contemporary Indian fashion label where timeless craftsmanship meets modern silhouettes, expressed through sumptuous textures and the quiet artistry of meticulous handwork.",
     images: [`${baseUrl}/opengraph-image`],
   },
   robots: {
