@@ -179,36 +179,31 @@ export const customerReels = {
   videos: [
     {
       id: "reel-1",
-      videoSrc:
-        "https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/reels/reel-1-fast.mp4",
+      videoSrc: "https://cdn.shivranjanisolanki.com/reels/reel-1.mp4",
       productHandle: "ranisiya",
       tagline: "Wearing RaniSiya",
     },
     {
       id: "reel-2",
-      videoSrc:
-        "https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/reels/reel-2-fast.mp4",
+      videoSrc: "https://cdn.shivranjanisolanki.com/reels/reel-2.mp4",
       productHandle: "Maheera",
       tagline: "Wearing Maheera",
     },
     {
       id: "reel-3",
-      videoSrc:
-        "https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/reels/reel-3-v2.mp4",
+      videoSrc: "https://cdn.shivranjanisolanki.com/reels/reel-3.mp4",
       productHandle: "90-sedit",
       tagline: "Wearing 90-sedit",
     },
     {
       id: "reel-4",
-      videoSrc:
-        "https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/reels/reel-4-fast.mp4",
+      videoSrc: "https://cdn.shivranjanisolanki.com/reels/reel-4.mp4",
       productHandle: "lal-pari",
       tagline: "Wearing lal-pari",
     },
     {
       id: "reel-5",
-      videoSrc:
-        "https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/reels/reel-5-v2.mp4",
+      videoSrc: "https://cdn.shivranjanisolanki.com/reels/reel-5.mp4",
       productHandle: "ranisiya",
       tagline: "Wearing ranisiya",
     },
