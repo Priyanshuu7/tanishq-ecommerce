@@ -120,33 +120,25 @@ export const filmGrid = {
   heading: "The season on Film",
   films: [
     {
-      src: "https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/grid/grid-reel-01.mp4",
-      poster:
-        "https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/grid/grid-reel-01-poster.jpg",
+      src: "https://cdn.shivranjanisolanki.com/grid/grid1.webm",
       label: "Lal Pari in Motion",
       caption: "Sahiba",
       href: "/product/sahiba",
     },
     {
       src: "https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/grid/grid-reel-03.mp4",
-      poster:
-        "https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/grid/grid-reel-03-poster.jpg",
       label: "Sitara in Motion",
       caption: "Sitara",
       href: "/product/sitara",
     },
     {
       src: "https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/grid/grid-reel-05.mp4",
-      poster:
-        "https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/grid/grid-reel-05-poster.jpg",
       label: "Ruhani in Motion",
       caption: "Ruhani",
       href: "/product/ruhani",
     },
     {
       src: "https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/grid/grid-reel-07.mp4",
-      poster:
-        "https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/grid/grid-reel-07-poster.jpg",
       label: "RaniSiya in Motion",
       caption: "RaniSiya",
       href: "/product/ranisiya",

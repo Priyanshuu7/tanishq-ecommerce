@@ -150,7 +150,7 @@ export function FilmPlayer({
       return;
     }
 
-    const play = () => void video.play().catch(() => {});
+    const play = () => void video.play().catch(() => { });
 
     if (typeof IntersectionObserver === "undefined") {
       play();
