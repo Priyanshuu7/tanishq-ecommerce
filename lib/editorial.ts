@@ -120,25 +120,25 @@ export const filmGrid = {
   heading: "The season on Film",
   films: [
     {
-      src: "https://cdn.shivranjanisolanki.com/grid/grid1.webm",
+      src: "https://cdn.shivranjanisolanki.com/grid/grid1.mp4",
       label: "Lal Pari in Motion",
       caption: "Sahiba",
       href: "/product/sahiba",
     },
     {
-      src: "https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/grid/grid-reel-03.mp4",
+      src: "https://cdn.shivranjanisolanki.com/grid/grid2.mp4",
       label: "Sitara in Motion",
       caption: "Sitara",
       href: "/product/sitara",
     },
     {
-      src: "https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/grid/grid-reel-05.mp4",
+      src: "https://cdn.shivranjanisolanki.com/grid/grid3.mp4",
       label: "Ruhani in Motion",
       caption: "Ruhani",
       href: "/product/ruhani",
     },
     {
-      src: "https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/grid/grid-reel-07.mp4",
+      src: "https://cdn.shivranjanisolanki.com/grid/grid4.mp4",
       label: "RaniSiya in Motion",
       caption: "RaniSiya",
       href: "/product/ranisiya",
