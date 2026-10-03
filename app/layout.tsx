@@ -1,6 +1,7 @@
 import { CartProvider } from "components/cart/cart-context";
 import { Navbar } from "components/layout/navbar";
 import { WelcomeToast } from "components/welcome-toast";
+import { MetaPixel } from "components/meta-pixel";
 import { getCart } from "lib/shopify";
 import { baseUrl } from "lib/utils";
 import { Metadata } from "next";
@@ -153,6 +154,7 @@ export default async function RootLayout({
         />
       </head>
       <body className="min-h-dvh bg-background text-foreground antialiased">
+        <MetaPixel />
         {/* React hoists these into <head> itself. `precedence` is what makes
             that legal for the stylesheet — without it React refuses to move a
             stylesheet rendered outside the document head, and a <link> as a
