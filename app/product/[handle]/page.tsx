@@ -4,6 +4,7 @@ import Price from "components/price";
 import { Gallery } from "components/product/gallery";
 import { ProductCardImage } from "components/product/product-card-image";
 import { ProductDescription } from "components/product/product-description";
+import { PixelViewContent } from "components/product/pixel-view-content";
 import { HIDDEN_PRODUCT_TAG } from "lib/constants";
 import { productPage } from "lib/editorial";
 import { getProduct, getProductRecommendations } from "lib/shopify";
@@ -101,6 +102,12 @@ async function ProductView({
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(productJsonLd),
         }}
+      />
+      <PixelViewContent
+        productTitle={product.title}
+        productId={product.id}
+        price={product.priceRange.minVariantPrice.amount}
+        currency={product.priceRange.minVariantPrice.currencyCode}
       />
 
       <div className="layout-wide section-y-sm">
