@@ -83,13 +83,8 @@ export type FooterColumn = {
  * Opening full-viewport editorial media (film or image).
  */
 export const heroFilm: FilmSection = {
-  src:
-    process.env.NEXT_PUBLIC_HERO_BANNER_URL ||
-    "https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/media/hero-banner.png",
-  mobileSrc:
-    process.env.NEXT_PUBLIC_MOBILE_BANNER_URL ||
-    "https://l0uuhvrkhs7aqiyz.public.blob.vercel-storage.com/media/mobile-banner.png",
-  poster: "",
+  src: "https://cdn.shivranjanisolanki.com/banners/hero-banner.png",
+  mobileSrc: "https://cdn.shivranjanisolanki.com/banners/mobile-banner.png",
   sound: false,
   title: "ISHVA",
   desktopDescription: [

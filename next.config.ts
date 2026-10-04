@@ -39,6 +39,13 @@ export default {
         protocol: "https",
         hostname: "media.w3.org",
       },
+
+      // ADD THIS
+      {
+        protocol: "https",
+        hostname: "cdn.shivranjanisolanki.com",
+        pathname: "/**",
+      },
     ],
   },
 
