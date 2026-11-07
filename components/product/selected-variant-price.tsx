@@ -1,6 +1,7 @@
 "use client";
 
-import Price from "components/price";
+import { ProductPrice } from "components/product/product-price";
+import { festiveSale, isFestiveSaleActive } from "lib/editorial";
 import { Product } from "lib/shopify/types";
 import { useSearchParams } from "next/navigation";
 
@@ -17,10 +18,17 @@ export function SelectedVariantPrice({ product }: { product: Product }) {
     selectedVariant?.price ?? product.priceRange.minVariantPrice;
 
   return (
-    <Price
-      className="text-base tracking-[0.1em] text-foreground"
-      amount={displayPrice.amount}
-      currencyCode={displayPrice.currencyCode}
-    />
+    <div className="flex flex-col gap-1.5">
+      <ProductPrice
+        size="lg"
+        amount={displayPrice.amount}
+        currencyCode={displayPrice.currencyCode}
+      />
+      {isFestiveSaleActive() ? (
+        <p className="font-sans text-xs tracking-wide text-[#9a7032]">
+           Festive Sale: {festiveSale.discountPercent}% OFF applied at checkout
+        </p>
+      ) : null}
+    </div>
   );
 }

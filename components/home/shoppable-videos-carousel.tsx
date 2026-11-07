@@ -8,7 +8,7 @@ import {
   SpeakerXMarkIcon,
 } from "@heroicons/react/24/outline";
 import clsx from "clsx";
-import Price from "components/price";
+import { ProductPrice } from "components/product/product-price";
 import type { CustomerReel } from "lib/editorial";
 import type { Product } from "lib/shopify/types";
 import Image from "next/image";
@@ -264,8 +264,8 @@ function VideoCard({ item }: { item: ShoppableVideoItem }) {
           </h3>
           {item.product?.priceRange?.maxVariantPrice ? (
             <div className="flex items-baseline gap-2">
-              <Price
-                className="text-sm text-muted-foreground"
+              <ProductPrice
+                size="sm"
                 amount={item.product.priceRange.maxVariantPrice.amount}
                 currencyCode={
                   item.product.priceRange.maxVariantPrice.currencyCode

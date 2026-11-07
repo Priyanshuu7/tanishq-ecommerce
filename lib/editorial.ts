@@ -76,6 +76,34 @@ export type FooterColumn = {
 };
 
 /* -------------------------------------------------------------------------- */
+/* Festive Sale Configuration                                                 */
+/* -------------------------------------------------------------------------- */
+
+export const festiveSale = {
+  /** Toggle festive sale across product cards and product details pages */
+  enabled: true,
+  /** Discount percentage (e.g., 35 for 35% off) */
+  discountPercent: 35,
+  /** Badge text */
+  badgeText: "35% OFF",
+  /**
+   * Optional ISO end date (e.g. "2026-11-20T23:59:59").
+   * When set, the sale automatically turns off past this time.
+   * Leave empty to keep active until enabled is set to false.
+   */
+  endDate: "",
+};
+
+export function isFestiveSaleActive(): boolean {
+  if (!festiveSale.enabled) return false;
+  if (festiveSale.endDate) {
+    const end = new Date(festiveSale.endDate).getTime();
+    if (!isNaN(end) && Date.now() > end) return false;
+  }
+  return true;
+}
+
+/* -------------------------------------------------------------------------- */
 /* Homepage                                                                    */
 /* -------------------------------------------------------------------------- */
 

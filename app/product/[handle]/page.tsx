@@ -1,9 +1,9 @@
 import Footer from "components/layout/footer";
 import { AnimatedReveal } from "components/motion/animated-reveal";
-import Price from "components/price";
 import { Gallery } from "components/product/gallery";
 import { ProductCardImage } from "components/product/product-card-image";
 import { ProductDescription } from "components/product/product-description";
+import { ProductPrice } from "components/product/product-price";
 import { PixelViewContent } from "components/product/pixel-view-content";
 import { HIDDEN_PRODUCT_TAG } from "lib/constants";
 import { productPage } from "lib/editorial";
@@ -181,13 +181,15 @@ async function RelatedProducts({ id }: { id: string }) {
                 />
                 <div className="mt-4">
                   <h3 className="t-product-title">{product.title}</h3>
-                  <Price
-                    className="mt-1 text-muted-foreground"
-                    amount={product.priceRange.maxVariantPrice.amount}
-                    currencyCode={
-                      product.priceRange.maxVariantPrice.currencyCode
-                    }
-                  />
+                  <div className="mt-1">
+                    <ProductPrice
+                      size="sm"
+                      amount={product.priceRange.maxVariantPrice.amount}
+                      currencyCode={
+                        product.priceRange.maxVariantPrice.currencyCode
+                      }
+                    />
+                  </div>
                 </div>
               </Link>
             </AnimatedReveal>

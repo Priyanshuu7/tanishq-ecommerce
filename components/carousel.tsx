@@ -1,5 +1,5 @@
 import { ProductCardImage } from "components/product/product-card-image";
-import Price from "components/price";
+import { ProductPrice } from "components/product/product-price";
 import { SectionHeading } from "components/ui/section-heading";
 import { featuredProducts } from "lib/editorial";
 import { getCollectionProducts } from "lib/shopify";
@@ -59,8 +59,8 @@ export async function Carousel() {
                 <div className="mt-4 flex flex-col gap-1.5">
                   <h3 className="t-product-title truncate">{product.title}</h3>
 
-                  <Price
-                    className="text-muted-foreground"
+                  <ProductPrice
+                    size="sm"
                     amount={product.priceRange.maxVariantPrice.amount}
                     currencyCode={
                       product.priceRange.maxVariantPrice.currencyCode

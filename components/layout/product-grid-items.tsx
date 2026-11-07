@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { AnimatedReveal } from "components/motion/animated-reveal";
-import Price from "components/price";
 import { ProductCardImage } from "components/product/product-card-image";
+import { ProductPrice } from "components/product/product-price";
 import { Product } from "lib/shopify/types";
 import Link from "next/link";
 
@@ -46,9 +46,9 @@ export default function ProductGridItems({
                 <h3 className="t-product-title text-foreground">
                   {product.title}
                 </h3>
-                <div className="flex items-baseline gap-3">
-                  <Price
-                    className="text-muted-foreground"
+                <div className="flex flex-wrap items-baseline gap-2">
+                  <ProductPrice
+                    size="sm"
                     amount={product.priceRange.maxVariantPrice.amount}
                     currencyCode={
                       product.priceRange.maxVariantPrice.currencyCode
