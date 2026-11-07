@@ -31,6 +31,8 @@ import Link from "next/link";
  */
 export function Hero() {
   const hasFilm = Boolean(heroFilm.src);
+  const ctaLabel = heroFilm.cta?.label || "SHOP NOW";
+  const ctaHref = heroFilm.cta?.href || "/search";
 
   return (
     <section
@@ -46,13 +48,39 @@ export function Hero() {
           sound={heroFilm.sound}
           headerScrim={false}
           priority
-          className="md:hero-editorial-image object-center"
+          className={heroFilm.objectPosition || "object-center"}
         />
       ) : (
         <div className="absolute inset-0 bg-surface" aria-hidden="true" />
       )}
 
-      {hasFilm ? <FilmCaption /> : <TypographicOpening />}
+      {hasFilm ? (
+        <>
+          {/* Entire banner is clickable to browse catalog */}
+          <Link
+            href={ctaHref}
+            className="absolute inset-0 z-10 block cursor-pointer"
+            aria-label="Shop Festive Sale"
+            tabIndex={-1}
+          />
+
+          {/* Centered Golden "SHOP NOW" pill button positioned directly beneath "UP TO 35% OFF" */}
+          <div className="absolute inset-x-0 top-[60%] sm:top-[62%] md:top-[calc(50%+11.8vw)] z-20 flex justify-center pointer-events-none px-4">
+            <AnimatedReveal variant="fade" delay={150}>
+              <Link
+                href={ctaHref}
+                className="pointer-events-auto inline-flex items-center justify-center rounded-full bg-[#c1995e] hover:bg-[#d4ab6e] active:bg-[#b0874c] text-[#241712] font-sans font-bold text-xs sm:text-sm md:text-[14px] tracking-[0.18em] uppercase px-8 py-3 sm:px-10 sm:py-3.5 md:px-12 md:py-4 shadow-[0_4px_24px_rgba(193,153,94,0.45)] transition-all duration-300 hover:scale-105 hover:shadow-[0_6px_32px_rgba(193,153,94,0.65)] active:scale-95"
+              >
+                {ctaLabel}
+              </Link>
+            </AnimatedReveal>
+          </div>
+
+          {heroFilm.title ? <FilmCaption /> : null}
+        </>
+      ) : (
+        <TypographicOpening />
+      )}
     </section>
   );
 }

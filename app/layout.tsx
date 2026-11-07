@@ -1,4 +1,5 @@
 import { CartProvider } from "components/cart/cart-context";
+import { DiwaliOverlay } from "components/home/diwali-overlay";
 import { Navbar } from "components/layout/navbar";
 import { WelcomeToast } from "components/welcome-toast";
 import { MetaPixel } from "components/meta-pixel";
@@ -181,6 +182,7 @@ export default async function RootLayout({
           <style>{`[data-reveal]{opacity:1!important;transform:none!important}[data-reveal-mask]{clip-path:none!important}`}</style>
         </noscript>
         <CartProvider cartPromise={cart}>
+          <DiwaliOverlay />
           <Navbar />
           {/* The header is fixed, so content is offset by its height. The
               homepage hero cancels this out with a negative margin so it can

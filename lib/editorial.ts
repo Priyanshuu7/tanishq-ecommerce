@@ -91,7 +91,7 @@ export const heroFilm: FilmSection = {
     "",
   ],
   mobileTagline: "",
-  cta: { label: "", href: "/search" },
+  cta: { label: "SHOP NOW", href: "/search" },
 };
 
 /**
