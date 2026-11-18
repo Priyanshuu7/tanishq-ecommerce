@@ -81,7 +81,7 @@ export type FooterColumn = {
 
 export const festiveSale = {
   /** Toggle festive sale across product cards and product details pages */
-  enabled: true,
+  enabled: false,
   /** Discount percentage (e.g., 35 for 35% off) */
   discountPercent: 35,
   /** Badge text */
@@ -92,6 +92,15 @@ export const festiveSale = {
    * Leave empty to keep active until enabled is set to false.
    */
   endDate: "",
+};
+
+export const diwaliDecoration = {
+  /**
+   * Set to `true` to show Diwali festive decorations (bottom glowing diyas,
+   * rising sparks, side bells & lights, cursor sparkler, fireworks celebration).
+   * Set to `false` to turn off and hide all decorations completely.
+   */
+  enabled: false,
 };
 
 export function isFestiveSaleActive(): boolean {
@@ -111,14 +120,15 @@ export function isFestiveSaleActive(): boolean {
  * Opening full-viewport editorial media (film or image).
  */
 export const heroFilm: FilmSection = {
-  src: "https://cdn.shivranjanisolanki.com/banners/festive-sale-desktop-1920x1080.png",
-  mobileSrc: "https://cdn.shivranjanisolanki.com/banners/festive-sale-mobile-1080x1920.png",
+  src: "https://cdn.shivranjanisolanki.com/banners/hero-banner.png",
+  mobileSrc: "https://cdn.shivranjanisolanki.com/banners/mobile-banner.png",
   sound: false,
-  title: "",
+  title: "ISHVA",
   desktopDescription: [
-    "",
+    "ISHVA is a tribute to my father the man who shaped my values, my strength, and unknowingly, my journey into fashion. Inspired by memories of beautiful fabrics, his eye for quality, and the discipline he lived by. This collection carries a part of him into my world.",
+    "Through rich fabrics, delicate details and timeless silhouettes, ISHVA turns memory into something that can be worn, cherished and carried forward.",
   ],
-  mobileTagline: "",
+  mobileTagline: "Turning Traditions into Confidence",
   cta: { label: "SHOP NOW", href: "/search" },
 };
 

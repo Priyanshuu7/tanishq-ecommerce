@@ -1,20 +1,40 @@
 // @ts-nocheck
 "use client";
 
+import { diwaliDecoration } from "lib/editorial";
 import { useEffect, useRef } from "react";
+
+export type DiwaliOverlayProps = {
+  /**
+   * Optional boolean override:
+   * - `true`: force decorations visible
+   * - `false`: force decorations hidden
+   * - `undefined`: falls back to `diwaliDecoration.enabled` in lib/editorial.ts
+   */
+  enabled?: boolean;
+};
 
 /**
  * Diwali Festive Celebration Suite
  *
- * Updated per requirements:
- * 1. Top swinging paper lanterns REMOVED completely.
- * 2. Flowers removed from both sides — keeping the golden chains,
- *    hanging brass bell, and warm glowing light / diya with flame intact.
- * 3. Bottom glowing realistic diyas & rising sparks preserved.
- * 4. Opening fireworks rocket show with "Happy Diwali" greeting preserved.
- * 5. Cute cursor sparkler trail preserved.
+ * Controlled by a boolean state/prop:
+ * - When `enabled` is true: renders bottom glowing diyas, rising sparks,
+ *   warm golden side entrance bells & lights, cursor sparkler, and fireworks celebration.
+ * - When `enabled` is false: completely unmounts, leaves zero DOM footprint,
+ *   and runs zero background loops or timers.
  */
-export function DiwaliOverlay() {
+export function DiwaliOverlay({ enabled }: DiwaliOverlayProps = {}) {
+  const isVisible =
+    enabled !== undefined ? Boolean(enabled) : Boolean(diwaliDecoration.enabled);
+
+  if (!isVisible) {
+    return null;
+  }
+
+  return <DiwaliOverlayContent />;
+}
+
+function DiwaliOverlayContent() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
